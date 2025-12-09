@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Head First!</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Head First! Character Sheet</h1>
+
+    <!-- Row 1: four boxes for other players -->
+    <div class="row row-4" id="other-players">
+      <!-- boxes added by JS -->
+    </div>
+
+    <!-- Row 2: three-part: left infos, middle info4, right scales -->
+    <div class="row row-3">
+      <div class="col col-left" id="infos-left">
+        <!-- info1-3 -->
+      </div>
+      <div class="col col-mid" id="info4">
+        <!-- info4 -->
+      </div>
+      <div class="col col-right" id="scales">
+        <!-- scale labels + inputs -->
+      </div>
+    </div>
+
+    <!-- Row 3: attributes in 3 columns -->
+    <div class="row attributes-row">
+      <div class="attr-col" id="attr-col-1"></div>
+      <div class="attr-col" id="attr-col-2"></div>
+      <div class="attr-col" id="attr-col-3"></div>
+    </div>
+
+    <!-- Row 4: buttons -->
+    <div class="row buttons-row">
+      <button id="edit-btn">Bearbeiten</button>
+      <button id="toggle-btn">Ausklappen</button>
+      <button id="ec-btn">Erfolgsklassen</button>
+      <button id="import-btn">Importieren</button>
+      <button id="export-btn">Exportieren</button>
+      <input type="file" id="file-input" accept="application/json" style="display:none">
+    </div>
+
+    <!-- Row 5: 3x2 grid for freetext1-6 -->
+    <div class="row freetext-grid" id="freetexts">
+      <!-- six textareas added by JS -->
+    </div>
+
+    <footer>
+      <small>Lädt `default.json` beim Start. Import/Export unterstützen JSON im angegebenen Format.</small>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

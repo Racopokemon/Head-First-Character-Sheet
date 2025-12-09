@@ -1,0 +1,123 @@
+{
+    "set_by_gm": {
+        "info1": "Name",
+        "info2": "Alter",
+        "info3": "Beruf/Hobby/Identität",
+        "info4": "Beschreibung",
+
+        "freetext1": "Wichtige Personen",
+        "freetext2": "Ziele",
+        "freetext3": "Stolz auf / Anekdote",
+        "freetext4": "Schlecht in / Angst vor",
+        "freetext5": "Dunkles Geheimnis?",
+        "freetext6": "Sagt immer ...",
+
+        "other_player1": "Char #1",
+        "other_player2": "Char #2",
+        "other_player3": "Char #3",
+        "other_player4": "Char #4",
+
+        "scale1": "Leben",
+        "scale2": "Stabilität",
+        "scale3": "Glück",
+
+        "attribute_points": 150,
+        "sub_attribute_points": 250,
+
+        "attributes": [
+            {
+                "name": "Miteinander",
+                "color": 1, 
+                "column": 1,
+                "sub_attribute_suggestions": [
+                    "Menschenkenntnis",
+                    "Beruhigen",
+                    "Überreden",
+                    "(An)führen",
+                    "Ausstrahlung",
+                    "Schauspielen",
+                    "Diplomatie"
+                ]
+            },
+            {
+                "name": "Gegeneinander",
+                "color": 1, 
+                "column": 1,
+                "sub_attribute_suggestions": [
+                    "Lügen",
+                    "Einschüchtern",
+                    "Manipulieren",
+                    "Feilschen",
+                    "Echauffieren",
+                    "Autorität",
+                    "Stabilität"
+                ]
+            },
+            {
+                "name": "Geschick",
+                "color": 2, 
+                "column": 2,
+                "sub_attribute_suggestions": [
+                    "Ausweichen",
+                    "Schusswaffen",
+                    "Tanzen",
+                    "Singen",
+                    "Klavier",
+                    "Klettern",
+                    "Schleichen",
+                    "Verstecken",
+                    "Autofahren",
+                    "Mechanische Reparaturen",
+                    "Holzverarbeitung",
+                    "Elektrische Reparaturen"
+                ]
+            },
+            {
+                "name": "Körper(bau)",
+                "color": 2, 
+                "column": 2,
+                "sub_attribute_suggestions": [
+                    "Schwimmen",
+                    "Handgemenge",
+                    "Zechen",
+                    "Boxen",
+                    "Stichwaffen",
+                    "Laufen",
+                    "Aussehen"
+                ]
+            },
+            {
+                "name": "Scharfsinn",
+                "color": 3, 
+                "column": 3,
+                "sub_attribute_suggestions": [
+                    "Auffassungsgabe",
+                    "Orientierung",
+                    "Mathematik",
+                    "Logik",
+                    "Erinnerungsvermögen",
+                    "Horchen",
+                    "Adleraugen"
+                ]
+            },
+            {
+                "name": "Gelerntes",
+                "color": 3, 
+                "column": 3,
+                "sub_attribute_suggestions": [
+                    "Chemie",
+                    "Latein",
+                    "High Society",
+                    "Okkultes",
+                    "Verkleiden",
+                    "Hacken",
+                    "Bibliotheksnutzung",
+                    "PC-Nutzung",
+                    "Schlösser knacken",
+                    "Social Media"
+                ]
+            }
+
+        ]
+    }
+}
