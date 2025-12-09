@@ -132,6 +132,7 @@ function renderAttributes() {
     // Main attribute box
     const box = document.createElement('div');
     box.className = 'box attr-box color-' + (attr.color || 1);
+    box.dataset.attrMainIdx = idx;
     const span = document.createElement('div');
     span.textContent = attr.name || ('Attr ' + (idx + 1));
     
@@ -154,7 +155,7 @@ function renderAttributes() {
         if (!playerData.attributes[idx]) playerData.attributes[idx] = { points: 0, sub_attributes: [] };
         playerData.attributes[idx].points = Number(e.target.value || 0);
         updatePointsDisplay();
-        renderAttributes(); // re-render to update total points
+        updateAttributePointLabels(); // only update labels, don't re-render
       });
       box.appendChild(span);
       box.appendChild(input);
@@ -162,6 +163,7 @@ function renderAttributes() {
       // Show label with stored value
       const label = document.createElement('div');
       label.className = 'attr-value-label';
+      label.dataset.attrLabel = idx;
       label.textContent = storedValue || '0';
       box.appendChild(span);
       box.appendChild(label);
@@ -174,6 +176,32 @@ function renderAttributes() {
       const subAttrs = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].sub_attributes : [];
       subAttrs.forEach((subAttr, subIdx) => {
         renderSubAttribute(container, idx, subIdx, attr.color || 1);
+      });
+    }
+  });
+}
+
+function updateAttributePointLabels() {
+  // Update all attribute and sub-attribute point labels without re-rendering
+  const attrs = gmTemplate.attributes || [];
+  attrs.forEach((attr, idx) => {
+    // Update main attribute label
+    const mainLabel = document.querySelector(`[data-attr-label="${idx}"]`);
+    if (mainLabel) {
+      const storedValue = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].points : 0;
+      mainLabel.textContent = storedValue || '0';
+    }
+    
+    // Update sub-attribute labels
+    if (expandMode) {
+      const subAttrs = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].sub_attributes : [];
+      subAttrs.forEach((subAttr, subIdx) => {
+        const subLabel = document.querySelector(`[data-sub-label="${idx}-${subIdx}"]`);
+        if (subLabel) {
+          const mainPoints = playerData.attributes[idx].points || 0;
+          const subPoints = subAttr.points || 0;
+          subLabel.textContent = mainPoints + subPoints;
+        }
       });
     }
   });
@@ -202,11 +230,12 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     valueInput.style.width = '60px';
     valueInput.addEventListener('input', (e) => {
       playerData.attributes[attrIdx].sub_attributes[subAttrIdx].points = Number(e.target.value || 0);
-      renderAttributes(); // re-render to update total
+      updateAttributePointLabels(); // only update labels, don't re-render
     });
     
     const totalLabel = document.createElement('div');
     totalLabel.className = 'attr-value-label';
+    totalLabel.dataset.subLabel = `${attrIdx}-${subAttrIdx}`;
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
     totalLabel.textContent = mainPoints + subPoints;
@@ -221,6 +250,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     
     const totalLabel = document.createElement('div');
     totalLabel.className = 'attr-value-label';
+    totalLabel.dataset.subLabel = `${attrIdx}-${subAttrIdx}`;
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
     totalLabel.textContent = mainPoints + subPoints;
