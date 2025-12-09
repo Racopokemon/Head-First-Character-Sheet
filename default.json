@@ -20,6 +20,9 @@
         "scale1": "Leben",
         "scale2": "Stabilität",
         "scale3": "Glück",
+        "scale_initial1": 100,
+        "scale_initial2": 100, 
+        "scale_initial3": 75,
 
         "attribute_points": 150,
         "sub_attribute_points": 250,

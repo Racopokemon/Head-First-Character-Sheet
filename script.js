@@ -15,10 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   fetch('default.json')
     .then(r => r.json())
     .then(data => {
-      gmTemplate = data.set_by_gm || data;
-      // initialize playerData with empty attributes
-      playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
-      renderAll();
+      applyImported(data);
     })
     .catch(err => {
       console.error('Fehler beim Laden von default.json', err);
@@ -260,8 +257,23 @@ function applyImported(json) {
     gmTemplate = json.set_by_gm;
     renderAll();
   }
-  const sp = json.set_by_player || json;
-  if (!sp) return;
+  const sp = json.set_by_player;
+
+  if (!sp) {
+    // initialize playerData with empty attributes
+    playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
+    // fill scales with initial values from gmTemplate
+    for (let i=1;i<=3;i++) {
+      const initialKey = 'scale_initial' + i;
+      if (gmTemplate[initialKey]) {
+        setInputValue('scale' + i, gmTemplate[initialKey]);
+      }
+    }
+    if (!editMode) {
+        toggleEditMode();
+    }
+    return;
+  }
 
   // fill simples
   ['info1','info2','info3','info4'].forEach(k => setInputValue(k, sp[k] || ''));
@@ -278,6 +290,11 @@ function applyImported(json) {
     renderAttributes();
     updatePointsDisplay();
   }
+
+  if (editMode) {
+    toggleEditMode();
+  }
+
 }
 
 function setInputValue(key, value) {
