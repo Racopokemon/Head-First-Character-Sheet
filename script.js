@@ -117,6 +117,11 @@ function renderInfos() {
     left.appendChild(box);
 
     if (i == 1) input.className += ' info-char-name';
+    // keyboard navigation: up/down/enter moves to next/prev input in infos-left
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, left); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, left); }
+    });
   }
 
   const mid = document.getElementById('info4');
@@ -151,6 +156,11 @@ function renderScales() {
     row.appendChild(input);
     box.appendChild(row);
     r.appendChild(box);
+    // keyboard navigation: up/down/enter moves to next/prev scale input
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, r); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, r); }
+    });
   }
 }
 
@@ -195,6 +205,11 @@ function renderAttributes() {
         updatePointsDisplay();
         updateAttributePointLabels(); // only update labels, don't re-render
         validateAttributeInput(input, idx); // check min/max bounds
+      });
+      // keyboard navigation: up/down/enter moves between all number inputs in the column
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextNumberInContainer(input, container); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevNumberInContainer(input, container); }
       });
       validateAttributeInput(input, idx); // initial validation
             // add subattribute button
@@ -443,6 +458,11 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       updatePointsDisplay(); // update specialization points
       validateSubAttributeInput(valueInput); // check max bound
     });
+    // keyboard navigation: up/down/enter moves between all number inputs in the column
+    valueInput.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextNumberInContainer(valueInput, container); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevNumberInContainer(valueInput, container); }
+    });
     validateSubAttributeInput(valueInput); // initial validation
     
     const totalLabel = document.createElement('div');
@@ -524,6 +544,44 @@ function focusSiblingSubInput(currentInput, dir) {
       const len = (inputs[target].value || '').length;
       if (inputs[target].setSelectionRange) inputs[target].setSelectionRange(len, len);
     } catch (e) {}
+  }
+}
+
+// Move focus to the next/previous input-like element within a container
+function focusNextInContainer(currentEl, container) {
+  const inputs = Array.from(container.querySelectorAll('input[type="text"], input[type="number"]'));
+  const idx = inputs.indexOf(currentEl);
+  if (idx !== -1 && idx + 1 < inputs.length) {
+    inputs[idx + 1].focus();
+    try { const len = (inputs[idx + 1].value || '').length; if (inputs[idx + 1].setSelectionRange) inputs[idx + 1].setSelectionRange(len, len); } catch (e) {}
+  }
+}
+
+function focusPrevInContainer(currentEl, container) {
+  const inputs = Array.from(container.querySelectorAll('input[type="text"], input[type="number"]'));
+  const idx = inputs.indexOf(currentEl);
+  if (idx > 0) {
+    inputs[idx - 1].focus();
+    try { const len = (inputs[idx - 1].value || '').length; if (inputs[idx - 1].setSelectionRange) inputs[idx - 1].setSelectionRange(len, len); } catch (e) {}
+  }
+}
+
+// Move focus to the next/previous number input only within a container (skip text inputs)
+function focusNextNumberInContainer(currentEl, container) {
+  const inputs = Array.from(container.querySelectorAll('input[type="number"]'));
+  const idx = inputs.indexOf(currentEl);
+  if (idx !== -1 && idx + 1 < inputs.length) {
+    inputs[idx + 1].focus();
+    try { const len = (inputs[idx + 1].value || '').length; if (inputs[idx + 1].setSelectionRange) inputs[idx + 1].setSelectionRange(len, len); } catch (e) {}
+  }
+}
+
+function focusPrevNumberInContainer(currentEl, container) {
+  const inputs = Array.from(container.querySelectorAll('input[type="number"]'));
+  const idx = inputs.indexOf(currentEl);
+  if (idx > 0) {
+    inputs[idx - 1].focus();
+    try { const len = (inputs[idx - 1].value || '').length; if (inputs[idx - 1].setSelectionRange) inputs[idx - 1].setSelectionRange(len, len); } catch (e) {}
   }
 }
 
