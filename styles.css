@@ -42,7 +42,7 @@ h1{margin:0 0 12px 0;font-size:20px}
   height: 28px;
   border-radius: 6px;
   border: none;
-  background: rgba(0,0,0,0.06);
+  background: rgba(255, 255, 255, 0.25);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -51,7 +51,7 @@ h1{margin:0 0 12px 0;font-size:20px}
 }
 
 .sub-add-btn:hover, .sub-del-btn:hover {
-  background: rgba(0,0,0,0.12);
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .textareabox{display:flex;flex-direction:column;min-height:150px;}
@@ -81,10 +81,17 @@ h1{margin:0 0 12px 0;font-size:20px}
 
 /* attr points row */
 .attr-points-row{margin-bottom:12px;gap:var(--gap)}
-.attr-points-label{flex:1;background:var(--box-bg);border:1px solid var(--box-border);padding:10px;border-radius:8px;display:flex;align-items:center;font-weight:600}
+.attr-points-label{flex:1;background:var(--box-bg);border:1px solid var(--box-border);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;text-align:center}
+.attr-points-label.warning{color:#d32f2f}
+.attr-points-label.warning{border-color:#d32f2f}
+
+/* validation warnings */
+.attr-value-input.warning{color:#d32f2f}
+.sub-attr-value-input.warning{color:#d32f2f}
 
 /* attr value label (when not in edit mode) */
 .attr-value-label{font-weight:600;width:40px;text-align:center}
+.attr-value-label.warning{color:#d32f2f}
 
 /* make title centered and larger */
 h1{text-align:center;margin:0 0 12px 0;font-size:28px}

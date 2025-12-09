@@ -147,6 +147,7 @@ function renderAttributes() {
       input.max = 999;
       input.dataset.attrIndex = idx;
       input.dataset.key = 'attribute_' + idx;
+      input.className = 'attr-value-input';
       //input.style.width = '80px';
       input.value = storedValue;
       input.addEventListener('input', (e) => {
@@ -156,9 +157,10 @@ function renderAttributes() {
         playerData.attributes[idx].points = Number(e.target.value || 0);
         updatePointsDisplay();
         updateAttributePointLabels(); // only update labels, don't re-render
+        validateAttributeInput(input, idx); // check min/max bounds
       });
-      
-      // add subattribute button
+      validateAttributeInput(input, idx); // initial validation
+            // add subattribute button
       if (expandMode) {
         const addBtn = document.createElement('button');
         addBtn.className = 'sub-add-btn';
@@ -265,12 +267,16 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     valueInput.min = 0;
     valueInput.max = 999;
     valueInput.value = subAttr.points || 0;
+    valueInput.className = 'sub-attr-value-input';
     //valueInput.style.width = '60px';
     valueInput.dataset.subInputVal = `${attrIdx}-${subAttrIdx}`;
     valueInput.addEventListener('input', (e) => {
       playerData.attributes[attrIdx].sub_attributes[subAttrIdx].points = Number(e.target.value || 0);
       updateAttributePointLabels(); // only update labels, don't re-render
+      updatePointsDisplay(); // update specialization points
+      validateSubAttributeInput(valueInput); // check max bound
     });
+    validateSubAttributeInput(valueInput); // initial validation
     
     const totalLabel = document.createElement('div');
     totalLabel.className = 'attr-value-label';
@@ -313,21 +319,77 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
   container.appendChild(box);
 }
 
+function validateAttributeInput(inputEl, attrIdx) {
+  const val = Number(inputEl.value || 0);
+  const minVal = gmTemplate.attribute_points_min || 10;
+  const maxVal = gmTemplate.attribute_points_max || 80;
+  
+  if (val < minVal || val > maxVal) {
+    inputEl.classList.add('warning');
+  } else {
+    inputEl.classList.remove('warning');
+  }
+}
+
+function validateSubAttributeInput(inputEl) {
+  // Mark the corresponding total label red if (attribute points + this sub) > max
+  const ds = inputEl.dataset.subInputVal || '';
+  const parts = ds.split('-');
+  if (parts.length < 2) return;
+  const attrIdx = Number(parts[0]);
+  const subIdx = Number(parts[1]);
+  const subVal = Number(inputEl.value || 0);
+  const mainVal = (playerData.attributes && playerData.attributes[attrIdx]) ? Number(playerData.attributes[attrIdx].points || 0) : 0;
+  const sum = mainVal + subVal;
+  const maxVal = gmTemplate.sub_attribute_points_max || 80;
+  const label = document.querySelector(`[data-sub-label="${attrIdx}-${subIdx}"]`);
+  if (!label) return;
+  if (sum > maxVal) {
+    label.classList.add('warning');
+  } else {
+    label.classList.remove('warning');
+  }
+}
 
 function updatePointsDisplay() {
   const row = document.getElementById('attr-points-row');
   if (!row || !editMode) return;
   
   let totalPoints = 0;
+  let totalSubPoints = 0;
   if (playerData.attributes) {
     playerData.attributes.forEach((a) => {
       totalPoints += Number(a.points || 0);
+      // Sum all subattribute points
+      if (a.sub_attributes) {
+        a.sub_attributes.forEach((sub) => {
+          totalSubPoints += Number(sub.points || 0);
+        });
+      }
     });
   }
   
   const maxPoints = gmTemplate.attribute_points || 150;
+  const maxSubPoints = gmTemplate.sub_attribute_points || 250;
   const label = document.getElementById('attr-points-label');
-  if (label) label.textContent = `Grundwerte ${totalPoints}/${maxPoints}`;
+  if (label) {
+    label.textContent = `Grundwerte ${totalPoints}/${maxPoints}`;
+    if (totalPoints > maxPoints) {
+      label.classList.add('warning');
+    } else {
+      label.classList.remove('warning');
+    }
+  }
+  
+  const subLabel = document.getElementById('sub-attr-points-label');
+  if (subLabel) {
+    subLabel.textContent = `Spezialisierung ${totalSubPoints}/${maxSubPoints}`;
+    if (totalSubPoints > maxSubPoints) {
+      subLabel.classList.add('warning');
+    } else {
+      subLabel.classList.remove('warning');
+    }
+  }
 }
 
 function renderFreetexts() {
