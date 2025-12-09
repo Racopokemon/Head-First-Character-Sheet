@@ -8,6 +8,14 @@
 </head>
 <body>
   <div class="container">
+    <!-- Top buttons -->
+    <div class="row buttons-row" id="top-buttons-row">
+      <button id="crew-btn" class="toggle-btn" data-active="false">Meine Crew</button>
+      <button id="bg-btn" class="toggle-btn" data-active="false">Mein Background</button>
+      <button id="import-btn" class="toggle-btn" data-active="false">Importieren</button>
+      <button id="export-btn" class="toggle-btn" data-active="false">Exportieren</button>
+      <input type="file" id="file-input" accept="application/json" style="display:none">
+    </div>
     <h1>Head First! Character Sheet</h1>
 
     <!-- Row 1: four boxes for other players -->
@@ -28,14 +36,11 @@
       </div>
     </div>
 
-    <!-- Button row -->
+    <!-- Main button row (controls) -->
     <div class="row buttons-row">
       <button id="edit-btn" class="toggle-btn" data-active="false">Bearbeiten</button>
       <button id="toggle-btn" class="toggle-btn" data-active="false">Ausklappen</button>
-      <button id="ec-btn" class="toggle-btn" data-active="false">Erfolgsklassen</button>
-      <button id="import-btn" class="toggle-btn" data-active="false">Importieren</button>
-      <button id="export-btn" class="toggle-btn" data-active="false">Exportieren</button>
-      <input type="file" id="file-input" accept="application/json" style="display:none">
+      <button id="ec-btn" class="toggle-btn ec-btn" data-active="false">Erfolgsklassen</button>
     </div>
 
     <!-- Row 3: attributes in 3 columns -->
@@ -57,7 +62,7 @@
     </div>
 
     <footer>
-      <small>Lädt `default.json` beim Start. Import/Export unterstützen JSON im angegebenen Format.</small>
+      <small>Just another little TTRPG ruleset, by Ramin. <a href="https://github.com/Racopokemon/Head-First-Character-Sheet">Source</a>.</small>
     </footer>
   </div>
 

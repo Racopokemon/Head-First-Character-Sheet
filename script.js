@@ -3,6 +3,8 @@ let playerData = {};
 let editMode = false;
 let expandMode = false;
 let ecMode = false; // Erfolgsklassen toggle
+let crewVisible = false;
+let bgVisible = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -19,6 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // wire Erfolgsklassen toggle (affects view-mode labels)
   const ecBtn = document.getElementById('ec-btn');
   if (ecBtn) ecBtn.addEventListener('click', toggleEcMode);
+
+  // wire crew/background toggles
+  const crewBtn = document.getElementById('crew-btn');
+  if (crewBtn) crewBtn.addEventListener('click', () => { crewVisible = !crewVisible; updateVisibility(); });
+  const bgBtn = document.getElementById('bg-btn');
+  if (bgBtn) bgBtn.addEventListener('click', () => { bgVisible = !bgVisible; updateVisibility(); });
 
   // load default.json
   fetch('default.json')
@@ -62,7 +70,20 @@ function renderAll() {
   renderScales();
   renderAttributes();
   renderFreetexts();
+  updateVisibility();
   updatePointsDisplay();
+}
+
+function updateVisibility() {
+  const other = document.getElementById('other-players');
+  const crewBtn = document.getElementById('crew-btn');
+  if (other) other.style.display = crewVisible ? '' : 'none';
+  if (crewBtn) crewBtn.dataset.active = crewVisible ? 'true' : 'false';
+
+  const freetexts = document.getElementById('freetexts');
+  const bgBtn = document.getElementById('bg-btn');
+  if (freetexts) freetexts.style.display = bgVisible ? '' : 'none';
+  if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
 }
 
 function renderOtherPlayers() {
@@ -267,7 +288,15 @@ function updateAttributePointLabels() {
         if (subLabel) {
           const mainPoints = playerData.attributes[idx].points || 0;
           const subPoints = subAttr.points || 0;
-          subLabel.textContent = mainPoints + subPoints;
+          const sum = mainPoints + subPoints;
+          if (ecMode) {
+            const right = Number(sum || 0);
+            const left = Math.round(right / 5);
+            const mid = Math.round(right / 2);
+            subLabel.innerHTML = `<span class="ec-light">${left}/${mid}</span>/<span>${right}</span>`;
+          } else {
+            subLabel.textContent = sum;
+          }
         }
       });
     }
