@@ -122,5 +122,88 @@
             }
 
         ]
+    },
+    "set_by_player": {
+        "info1": "Geronimo Röder",
+        "info2": "33",
+        "info3": "Jäger",
+        "info4": "Verschrobener Einzelgänger, gut mit Tieren.",
+
+        "freetext1": "...",
+        "freetext2": "...",
+        "freetext3": "...",
+        "freetext4": "...",
+        "freetext5": "...",
+        "freetext6": "...",
+
+        "other_player1":"Jens:\nSchmorf\n(Bürgermeister)",
+        "other_player2":"",
+        "other_player3":"",
+        "other_player4":"Jakob:\nMr. Wong\n(MMA Trainer)",
+
+        "scale1": "80",
+        "scale2": "100",
+        "scale3": "54",
+
+        "attributes": [
+            {
+                "points": 21,
+                "sub_attributes": [
+                    {
+                        "name": "Beruhigen",
+                        "points": 2
+                    }
+                ]
+
+            },
+            {
+                "points": 66,
+                "sub_attributes": []
+
+            },
+            {
+                "points": 55,
+                "sub_attributes": []
+
+            },
+            {
+                "points": 21,
+                "sub_attributes": [
+                    {
+                        "name": "Beruhigen",
+                        "points": 5
+                    },
+                    {
+                        "name": "Zechen",
+                        "points": 15
+                    }
+                ]
+
+            },
+            {
+                "points": 70,
+                "sub_attributes": [
+                    {
+                        "name": "Beruhigen",
+                        "points": 5
+                    },
+                    {
+                        "name": "Test1",
+                        "points": 10
+                    },
+                    {
+                        "name": "Psychologie",
+                        "points": 15
+                    }
+                ]
+
+            },
+            {
+                "points": 21,
+                "sub_attributes": []
+
+            }
+        ]
     }
+
 }

@@ -28,16 +28,26 @@ h1{margin:0 0 12px 0;font-size:20px}
 .info-big textarea{border:0;background:transparent;resize:none}
 .scale-row{display:flex;justify-content:space-between;align-items:center}
 .attr-box{display:flex;justify-content:space-between;align-items:center;padding:8px}
+.sub-attr-box{display:flex;justify-content:space-between;align-items:center;padding:8px;border-left-width:3px !important;margin-top:0;border-radius:4px}
+.sub-attr-box input[type="text"]{flex:1;padding:6px;border:1px solid #ccc;border-radius:4px;margin-right:8px}
+.sub-attr-box input[type="number"]{padding:6px;border:1px solid #ccc;border-radius:4px}
 .textareabox{display:flex;flex-direction:column;min-height:150px;}
 
-/* color classes for attributes (1-7) */
+/* color classes for attributes (1-7) and light variants for sub-attributes */
 .color-1{border-left:6px solid #ff8a80}
+.color-1-light{border-left:3px solid #ffcccc;background-color:#ffe6e6 !important}
 .color-2{border-left:6px solid #ffd180}
+.color-2-light{border-left:3px solid #ffe6b3;background-color:#fff4e6 !important}
 .color-3{border-left:6px solid #ffff8d}
+.color-3-light{border-left:3px solid #ffffc0;background-color:#fffff0 !important}
 .color-4{border-left:6px solid #c5e1a5}
+.color-4-light{border-left:3px solid #e8f5e9;background-color:#f1f8e9 !important}
 .color-5{border-left:6px solid #80d8ff}
+.color-5-light{border-left:3px solid #b3ebff;background-color:#e1f5fe !important}
 .color-6{border-left:6px solid #b39ddb}
+.color-6-light{border-left:3px solid #d9c9e8;background-color:#f3e5f5 !important}
 .color-7{border-left:6px solid #b0bec5}
+.color-7-light{border-left:3px solid #d4dce1;background-color:#eceff1 !important}
 
 .buttons-row button{padding:8px 12px;border-radius:6px;border:1px solid #bbb;background:white;flex:1}
 

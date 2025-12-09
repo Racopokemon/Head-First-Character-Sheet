@@ -1,6 +1,7 @@
 let gmTemplate = null;
 let playerData = {};
 let editMode = false;
+let expandMode = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -10,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // wire edit button toggle
   document.getElementById('edit-btn').addEventListener('click', toggleEditMode);
+  
+  // wire expand button toggle
+  document.getElementById('toggle-btn').addEventListener('click', toggleExpandMode);
 
   // load default.json
   fetch('default.json')
@@ -29,6 +33,13 @@ function toggleEditMode() {
   btn.dataset.active = editMode ? 'true' : 'false';
   renderAttributes();
   updatePointsDisplay();
+}
+
+function toggleExpandMode() {
+  expandMode = !expandMode;
+  const btn = document.getElementById('toggle-btn');
+  btn.dataset.active = expandMode ? 'true' : 'false';
+  renderAttributes();
 }
 
 function renderAll() {
@@ -117,6 +128,8 @@ function renderAttributes() {
   attrs.forEach((attr, idx) => {
     const col = (attr.column || 1);
     const container = document.getElementById('attr-col-' + col);
+    
+    // Main attribute box
     const box = document.createElement('div');
     box.className = 'box attr-box color-' + (attr.color || 1);
     const span = document.createElement('div');
@@ -141,6 +154,7 @@ function renderAttributes() {
         if (!playerData.attributes[idx]) playerData.attributes[idx] = { points: 0, sub_attributes: [] };
         playerData.attributes[idx].points = Number(e.target.value || 0);
         updatePointsDisplay();
+        renderAttributes(); // re-render to update total points
       });
       box.appendChild(span);
       box.appendChild(input);
@@ -154,8 +168,70 @@ function renderAttributes() {
     }
     
     container.appendChild(box);
+    
+    // Render subattributes if in expandMode
+    if (expandMode) {
+      const subAttrs = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].sub_attributes : [];
+      subAttrs.forEach((subAttr, subIdx) => {
+        renderSubAttribute(container, idx, subIdx, attr.color || 1);
+      });
+    }
   });
 }
+
+function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
+  const subAttr = playerData.attributes[attrIdx].sub_attributes[subAttrIdx];
+  const box = document.createElement('div');
+  box.className = 'box sub-attr-box color-' + parentColor + '-light';
+  
+  if (editMode) {
+    // Edit mode: name input + value input + total label
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'Subattribut-Name';
+    nameInput.value = subAttr.name || '';
+    nameInput.addEventListener('input', (e) => {
+      playerData.attributes[attrIdx].sub_attributes[subAttrIdx].name = e.target.value;
+    });
+    
+    const valueInput = document.createElement('input');
+    valueInput.type = 'number';
+    valueInput.min = 0;
+    valueInput.max = 999;
+    valueInput.value = subAttr.points || 0;
+    valueInput.style.width = '60px';
+    valueInput.addEventListener('input', (e) => {
+      playerData.attributes[attrIdx].sub_attributes[subAttrIdx].points = Number(e.target.value || 0);
+      renderAttributes(); // re-render to update total
+    });
+    
+    const totalLabel = document.createElement('div');
+    totalLabel.className = 'attr-value-label';
+    const mainPoints = playerData.attributes[attrIdx].points || 0;
+    const subPoints = subAttr.points || 0;
+    totalLabel.textContent = mainPoints + subPoints;
+    
+    box.appendChild(nameInput);
+    box.appendChild(valueInput);
+    box.appendChild(totalLabel);
+  } else {
+    // View mode: name + total label
+    const nameLabel = document.createElement('div');
+    nameLabel.textContent = subAttr.name || '';
+    
+    const totalLabel = document.createElement('div');
+    totalLabel.className = 'attr-value-label';
+    const mainPoints = playerData.attributes[attrIdx].points || 0;
+    const subPoints = subAttr.points || 0;
+    totalLabel.textContent = mainPoints + subPoints;
+    
+    box.appendChild(nameLabel);
+    box.appendChild(totalLabel);
+  }
+  
+  container.appendChild(box);
+}
+
 
 function updatePointsDisplay() {
   const row = document.getElementById('attr-points-row');
