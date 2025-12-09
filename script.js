@@ -147,7 +147,7 @@ function renderAttributes() {
       input.max = 999;
       input.dataset.attrIndex = idx;
       input.dataset.key = 'attribute_' + idx;
-      input.style.width = '80px';
+      //input.style.width = '80px';
       input.value = storedValue;
       input.addEventListener('input', (e) => {
         // Save to playerData immediately
@@ -157,6 +157,21 @@ function renderAttributes() {
         updatePointsDisplay();
         updateAttributePointLabels(); // only update labels, don't re-render
       });
+      
+      // add subattribute button
+      if (expandMode) {
+        const addBtn = document.createElement('button');
+        addBtn.className = 'sub-add-btn';
+        addBtn.title = 'Subattribut hinzufügen';
+        addBtn.textContent = '+';
+        addBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            addSubAttribute(idx);
+        });
+        box.appendChild(addBtn);
+      }
+
+      span.style.flex=1;
       box.appendChild(span);
       box.appendChild(input);
     } else {
@@ -170,7 +185,7 @@ function renderAttributes() {
     }
     
     container.appendChild(box);
-    
+
     // Render subattributes if in expandMode
     if (expandMode) {
       const subAttrs = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].sub_attributes : [];
@@ -179,6 +194,26 @@ function renderAttributes() {
       });
     }
   });
+}
+
+function addSubAttribute(attrIdx) {
+  if (!playerData.attributes) playerData.attributes = [];
+  if (!playerData.attributes[attrIdx]) playerData.attributes[attrIdx] = { points: 0, sub_attributes: [] };
+  playerData.attributes[attrIdx].sub_attributes.push({ name: '', points: 0 });
+  renderAttributes();
+  updatePointsDisplay();
+  // focus the new subattr name input
+  const newIndex = playerData.attributes[attrIdx].sub_attributes.length - 1;
+  const selector = `[data-sub-input="${attrIdx}-${newIndex}"]`;
+  const el = document.querySelector(selector);
+  if (el) el.focus();
+}
+
+function removeSubAttribute(attrIdx, subIdx) {
+  if (!playerData.attributes || !playerData.attributes[attrIdx]) return;
+  playerData.attributes[attrIdx].sub_attributes.splice(subIdx, 1);
+  renderAttributes();
+  updatePointsDisplay();
 }
 
 function updateAttributePointLabels() {
@@ -210,14 +245,17 @@ function updateAttributePointLabels() {
 function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
   const subAttr = playerData.attributes[attrIdx].sub_attributes[subAttrIdx];
   const box = document.createElement('div');
-  box.className = 'box sub-attr-box color-' + parentColor + '-light';
+  box.className = 'box attr-box sub-attr-box color-' + parentColor + '-light';
   
   if (editMode) {
+    //box.className += ' sub-attr-box-edit';
+
     // Edit mode: name input + value input + total label
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
-    nameInput.placeholder = 'Subattribut-Name';
+    // nameInput.placeholder = 'Subattribut-Name';
     nameInput.value = subAttr.name || '';
+    nameInput.dataset.subInput = `${attrIdx}-${subAttrIdx}`;
     nameInput.addEventListener('input', (e) => {
       playerData.attributes[attrIdx].sub_attributes[subAttrIdx].name = e.target.value;
     });
@@ -227,7 +265,8 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     valueInput.min = 0;
     valueInput.max = 999;
     valueInput.value = subAttr.points || 0;
-    valueInput.style.width = '60px';
+    //valueInput.style.width = '60px';
+    valueInput.dataset.subInputVal = `${attrIdx}-${subAttrIdx}`;
     valueInput.addEventListener('input', (e) => {
       playerData.attributes[attrIdx].sub_attributes[subAttrIdx].points = Number(e.target.value || 0);
       updateAttributePointLabels(); // only update labels, don't re-render
@@ -240,6 +279,17 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     const subPoints = subAttr.points || 0;
     totalLabel.textContent = mainPoints + subPoints;
     
+    // delete button for this subattribute
+    const delBtn = document.createElement('button');
+    delBtn.className = 'sub-del-btn';
+    delBtn.title = 'Subattribut entfernen';
+    delBtn.textContent = '-';//'×';
+    delBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      removeSubAttribute(attrIdx, subAttrIdx);
+    });
+
+    box.appendChild(delBtn);
     box.appendChild(nameInput);
     box.appendChild(valueInput);
     box.appendChild(totalLabel);
@@ -247,6 +297,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     // View mode: name + total label
     const nameLabel = document.createElement('div');
     nameLabel.textContent = subAttr.name || '';
+    //nameLabel.className = 'flex';
     
     const totalLabel = document.createElement('div');
     totalLabel.className = 'attr-value-label';
