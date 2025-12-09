@@ -38,9 +38,11 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .sub-attr-box input[type="number"]{border-radius:4px}
 
 /* suggestion dropdown for subattribute names */
-.sub-suggestions{position:absolute;left:8px;right:120px;top:100%;margin-top:6px;background:white;border:1px solid #ccc;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.08);max-height:180px;overflow:auto;z-index:30}
+.sub-suggestions{position:absolute;left:8px;right:120px;top:100%;margin-top:6px;background:white;border:1px solid #ccc;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.08);max-height:200px;overflow:auto;z-index:30}
 .sub-suggestion{padding:8px 10px;cursor:pointer}
 .sub-suggestion:hover{background:#f0f0f0}
+/* highlighted suggestion for keyboard navigation */
+.sub-suggestion.highlight{background:#0366d6;color:white}
 /*.sub-attr-box-edit{padding:4px}*/
 
 /* subattribute controls */

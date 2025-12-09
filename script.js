@@ -242,17 +242,27 @@ function renderAttributes() {
   });
 }
 
-function addSubAttribute(attrIdx) {
+function addSubAttribute(attrIdx, atIndex) {
   if (!playerData.attributes) playerData.attributes = [];
   if (!playerData.attributes[attrIdx]) playerData.attributes[attrIdx] = { points: 0, sub_attributes: [] };
-  playerData.attributes[attrIdx].sub_attributes.push({ name: '', points: 0 });
+  const arr = playerData.attributes[attrIdx].sub_attributes;
+  const newObj = { name: '', points: 0 };
+  if (typeof atIndex === 'number' && atIndex >= 0 && atIndex <= arr.length) {
+    arr.splice(atIndex, 0, newObj);
+    var newIndex = atIndex;
+  } else {
+    arr.push(newObj);
+    var newIndex = arr.length - 1;
+  }
   renderAttributes();
   updatePointsDisplay();
   // focus the new subattr name input
-  const newIndex = playerData.attributes[attrIdx].sub_attributes.length - 1;
   const selector = `[data-sub-input="${attrIdx}-${newIndex}"]`;
   const el = document.querySelector(selector);
-  if (el) el.focus();
+  if (el) {
+    el.focus();
+    try { const len = (el.value || '').length; if (el.setSelectionRange) el.setSelectionRange(len, len); } catch (e) {}
+  }
 }
 
 function removeSubAttribute(attrIdx, subIdx) {
@@ -323,35 +333,101 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     suggestionsDiv.style.display = 'none';
     box.appendChild(suggestionsDiv);
 
+    // highlight index for keyboard navigation
+    let highlightedIndex = -1;
+
     function populateSuggestions(query) {
       suggestionsDiv.innerHTML = '';
+      highlightedIndex = -1;
       const list = (gmTemplate && gmTemplate.attributes && gmTemplate.attributes[attrIdx] && gmTemplate.attributes[attrIdx].sub_attribute_suggestions) || [];
       const q = (query || '').toLowerCase();
       const filtered = list.filter(s => s && s.toLowerCase().includes(q) && s.toLowerCase() !== (nameInput.value||'').toLowerCase());
-      filtered.forEach(s => {
+      filtered.forEach((s, i) => {
         const it = document.createElement('div');
         it.className = 'sub-suggestion';
         it.textContent = s;
+        it.dataset.suggIndex = i;
         it.addEventListener('mousedown', (ev) => {
           ev.preventDefault();
-          nameInput.value = s;
-          playerData.attributes[attrIdx].sub_attributes[subAttrIdx].name = s;
-          suggestionsDiv.style.display = 'none';
-          validateSubAttributeInput(valueInput);
-          updateAttributePointLabels();
-          updatePointsDisplay();
+          selectSuggestion(i, s);
         });
         suggestionsDiv.appendChild(it);
       });
       suggestionsDiv.style.display = filtered.length ? '' : 'none';
+      if (filtered.length) {
+        // position the dropdown to align with the name input
+        try {
+          suggestionsDiv.style.right = 'auto';
+          suggestionsDiv.style.left = (nameInput.offsetLeft) + 'px';
+          suggestionsDiv.style.width = (nameInput.offsetWidth) + 'px';
+          suggestionsDiv.style.boxSizing = 'border-box';
+        } catch (e) {}
+      }
+    }
+
+    function moveHighlight(dir) {
+      const items = suggestionsDiv.querySelectorAll('.sub-suggestion');
+      if (!items || items.length === 0) return;
+      // compute next index
+      if (highlightedIndex === -1) {
+        highlightedIndex = dir > 0 ? 0 : items.length - 1;
+      } else {
+        highlightedIndex = (highlightedIndex + dir + items.length) % items.length;
+      }
+      items.forEach((it, i) => it.classList.toggle('highlight', i === highlightedIndex));
+      const el = items[highlightedIndex];
+      if (el) el.scrollIntoView({ block: 'nearest' });
+    }
+
+    function selectSuggestion(index, value) {
+      // pick the suggestion at index (value provided for convenience)
+      const items = suggestionsDiv.querySelectorAll('.sub-suggestion');
+      const it = items[index];
+      const chosen = value || (it && it.textContent) || '';
+      nameInput.value = chosen;
+      if (!playerData.attributes[attrIdx]) playerData.attributes[attrIdx] = { points: 0, sub_attributes: [] };
+      if (!playerData.attributes[attrIdx].sub_attributes[subAttrIdx]) playerData.attributes[attrIdx].sub_attributes[subAttrIdx] = { name: '', points: 0 };
+      playerData.attributes[attrIdx].sub_attributes[subAttrIdx].name = chosen;
+      suggestionsDiv.style.display = 'none';
+      highlightedIndex = -1;
+      validateSubAttributeInput(valueInput);
+      updateAttributePointLabels();
+      updatePointsDisplay();
     }
 
     nameInput.addEventListener('input', (e) => {
       playerData.attributes[attrIdx].sub_attributes[subAttrIdx].name = e.target.value;
       populateSuggestions(e.target.value);
     });
-    nameInput.addEventListener('focus', () => populateSuggestions(nameInput.value || ''));
-    nameInput.addEventListener('blur', () => setTimeout(() => { suggestionsDiv.style.display = 'none'; }, 150));
+    nameInput.addEventListener('blur', () => setTimeout(() => { suggestionsDiv.style.display = 'none'; highlightedIndex = -1; }, 150));
+    // keyboard navigation for suggestions and field-jumping when no suggestions
+    nameInput.addEventListener('keydown', (e) => {
+      const visible = suggestionsDiv.style.display !== 'none' && suggestionsDiv.children.length > 0;
+      if (visible) {
+        if (e.key === 'ArrowDown') { e.preventDefault(); moveHighlight(1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); moveHighlight(-1); }
+        else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (highlightedIndex >= 0) {
+            // select highlighted
+            const items = suggestionsDiv.querySelectorAll('.sub-suggestion');
+            const it = items[highlightedIndex];
+            if (it) selectSuggestion(highlightedIndex, it.textContent);
+          } else {
+            // no highlight but suggestions exist: pick first
+            const items = suggestionsDiv.querySelectorAll('.sub-suggestion');
+            if (items.length) selectSuggestion(0, items[0].textContent);
+          }
+        } else if (e.key === 'Escape') {
+          suggestionsDiv.style.display = 'none'; highlightedIndex = -1;
+        }
+      } else {
+        // no suggestions - arrow keys jump between subattribute name fields in the column
+        if (e.key === 'ArrowDown') { e.preventDefault(); focusSiblingSubInput(nameInput, 1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); focusSiblingSubInput(nameInput, -1); }
+        else if (e.key === 'Enter') { e.preventDefault(); addSubAttribute(attrIdx, subAttrIdx + 1); }
+      }
+    });
     
     const valueInput = document.createElement('input');
     valueInput.type = 'number';
@@ -416,6 +492,39 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
   }
   
   container.appendChild(box);
+}
+
+// Move focus to the next/previous subattribute name input within the same column
+function focusSiblingSubInput(currentInput, dir) {
+  // find the column ancestor (id starts with 'attr-col-')
+  let el = currentInput.parentElement;
+  while (el && !el.id?.startsWith('attr-col-')) el = el.parentElement;
+  if (!el) return;
+  const inputs = Array.from(el.querySelectorAll('input[data-sub-input]'));
+  if (!inputs.length) return;
+  // find current index
+  const curIndex = inputs.indexOf(currentInput);
+  if (curIndex === -1) {
+    // perhaps the currentInput is not the same reference (re-render happened) - match by dataset
+    const curDs = currentInput.dataset.subInput;
+    for (let i = 0; i < inputs.length; i++) if (inputs[i].dataset.subInput === curDs) {
+      const target = i + dir;
+      if (target >= 0 && target < inputs.length) {
+        inputs[target].focus();
+        try { const len = (inputs[target].value || '').length; if (inputs[target].setSelectionRange) inputs[target].setSelectionRange(len, len); } catch (e) {}
+      }
+      return;
+    }
+    return;
+  }
+  const target = curIndex + dir;
+  if (target >= 0 && target < inputs.length) {
+    inputs[target].focus();
+    try {
+      const len = (inputs[target].value || '').length;
+      if (inputs[target].setSelectionRange) inputs[target].setSelectionRange(len, len);
+    } catch (e) {}
+  }
 }
 
 function validateAttributeInput(inputEl, attrIdx) {
