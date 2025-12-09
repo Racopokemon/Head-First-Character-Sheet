@@ -41,6 +41,18 @@ h1{margin:0 0 12px 0;font-size:20px}
 
 .buttons-row button{padding:8px 12px;border-radius:6px;border:1px solid #bbb;background:white;flex:1}
 
+/* toggle button styling */
+.toggle-btn{cursor:pointer}
+.toggle-btn[data-active="true"]{background:#4CAF50;color:white}
+.toggle-btn[data-active="false"]{background:white;color:inherit}
+
+/* attr points row */
+.attr-points-row{margin-bottom:12px;gap:var(--gap)}
+.attr-points-label{flex:1;background:var(--box-bg);border:1px solid var(--box-border);padding:10px;border-radius:8px;display:flex;align-items:center;font-weight:600}
+
+/* attr value label (when not in edit mode) */
+.attr-value-label{font-weight:600;min-width:60px;text-align:right}
+
 /* make title centered and larger */
 h1{text-align:center;margin:0 0 12px 0;font-size:28px}
 

@@ -1,5 +1,6 @@
 let gmTemplate = null;
 let playerData = {};
+let editMode = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -7,11 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('file-input').addEventListener('change', handleFileImport);
   document.getElementById('export-btn').addEventListener('click', handleExport);
 
+  // wire edit button toggle
+  document.getElementById('edit-btn').addEventListener('click', toggleEditMode);
+
   // load default.json
   fetch('default.json')
     .then(r => r.json())
     .then(data => {
       gmTemplate = data.set_by_gm || data;
+      // initialize playerData with empty attributes
+      playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
       renderAll();
     })
     .catch(err => {
@@ -20,6 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+function toggleEditMode() {
+  editMode = !editMode;
+  const btn = document.getElementById('edit-btn');
+  btn.dataset.active = editMode ? 'true' : 'false';
+  renderAttributes();
+  updatePointsDisplay();
+}
+
 function renderAll() {
   if (!gmTemplate) return;
   renderOtherPlayers();
@@ -27,6 +41,7 @@ function renderAll() {
   renderScales();
   renderAttributes();
   renderFreetexts();
+  updatePointsDisplay();
 }
 
 function renderOtherPlayers() {
@@ -98,6 +113,9 @@ function renderAttributes() {
   // clear columns
   for (let c = 1; c <= 3; c++) document.getElementById('attr-col-' + c).innerHTML = '';
 
+  // show/hide attr-points-row based on editMode
+  document.getElementById('attr-points-row').style.display = editMode ? 'flex' : 'none';
+
   const attrs = gmTemplate.attributes || [];
   attrs.forEach((attr, idx) => {
     const col = (attr.column || 1);
@@ -106,16 +124,56 @@ function renderAttributes() {
     box.className = 'box attr-box color-' + (attr.color || 1);
     const span = document.createElement('div');
     span.textContent = attr.name || ('Attr ' + (idx + 1));
-    const input = document.createElement('input');
-    input.type = 'number'; input.min = 0; input.max = 999;
-    input.dataset.attrIndex = idx;
-    input.dataset.key = 'attribute_' + idx;
-    input.style.width = '80px';
-    input.value = 0;
-    box.appendChild(span);
-    box.appendChild(input);
+    
+    // Get stored value from playerData
+    const storedValue = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].points : 0;
+    
+    if (editMode) {
+      // Show input field
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = 0;
+      input.max = 999;
+      input.dataset.attrIndex = idx;
+      input.dataset.key = 'attribute_' + idx;
+      input.style.width = '80px';
+      input.value = storedValue;
+      input.addEventListener('input', (e) => {
+        // Save to playerData immediately
+        if (!playerData.attributes) playerData.attributes = [];
+        if (!playerData.attributes[idx]) playerData.attributes[idx] = { points: 0, sub_attributes: [] };
+        playerData.attributes[idx].points = Number(e.target.value || 0);
+        updatePointsDisplay();
+      });
+      box.appendChild(span);
+      box.appendChild(input);
+    } else {
+      // Show label with stored value
+      const label = document.createElement('div');
+      label.className = 'attr-value-label';
+      label.textContent = storedValue || '0';
+      box.appendChild(span);
+      box.appendChild(label);
+    }
+    
     container.appendChild(box);
   });
+}
+
+function updatePointsDisplay() {
+  const row = document.getElementById('attr-points-row');
+  if (!row || !editMode) return;
+  
+  let totalPoints = 0;
+  if (playerData.attributes) {
+    playerData.attributes.forEach((a) => {
+      totalPoints += Number(a.points || 0);
+    });
+  }
+  
+  const maxPoints = gmTemplate.attribute_points || 150;
+  const label = document.getElementById('attr-points-label');
+  if (label) label.textContent = `Grundwerte ${totalPoints}/${maxPoints}`;
 }
 
 function renderFreetexts() {
@@ -146,13 +204,11 @@ function handleExport() {
   for (let i=1;i<=4;i++) out.set_by_player['other_player'+i] = getValueByKey('other_player'+i);
   for (let i=1;i<=3;i++) out.set_by_player['scale'+i] = getValueByKey('scale'+i);
 
-  // attributes
-  const attrs = gmTemplate.attributes || [];
-  out.set_by_player.attributes = attrs.map((a, idx) => {
-    const input = document.querySelector(`input[data-attr-index='${idx}']`);
-    const points = input && input.value ? Number(input.value) : 0;
-    return { points: points, sub_attributes: [] };
-  });
+  // attributes from playerData
+  out.set_by_player.attributes = (playerData.attributes || []).map(a => ({
+    points: a.points || 0,
+    sub_attributes: a.sub_attributes || []
+  }));
 
   const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -213,12 +269,14 @@ function applyImported(json) {
   for (let i=1;i<=4;i++) setInputValue('other_player'+i, sp['other_player'+i] || '');
   for (let i=1;i<=3;i++) setInputValue('scale'+i, sp['scale'+i] || '');
 
-  // attributes array
+  // attributes array - store in playerData and re-render
   if (Array.isArray(sp.attributes)) {
-    sp.attributes.forEach((a, idx) => {
-      const input = document.querySelector(`input[data-attr-index='${idx}']`);
-      if (input) input.value = a.points || '';
-    });
+    playerData.attributes = sp.attributes.map(a => ({
+      points: a.points || 0,
+      sub_attributes: a.sub_attributes || []
+    }));
+    renderAttributes();
+    updatePointsDisplay();
   }
 }
 

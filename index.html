@@ -28,16 +28,9 @@
       </div>
     </div>
 
-    <!-- Row 3: attributes in 3 columns -->
-    <div class="row attributes-row">
-      <div class="attr-col" id="attr-col-1"></div>
-      <div class="attr-col" id="attr-col-2"></div>
-      <div class="attr-col" id="attr-col-3"></div>
-    </div>
-
-    <!-- Row 4: buttons -->
+    <!-- Button row -->
     <div class="row buttons-row">
-      <button id="edit-btn">Bearbeiten</button>
+      <button id="edit-btn" class="toggle-btn" data-active="false">Bearbeiten</button>
       <button id="toggle-btn">Ausklappen</button>
       <button id="ec-btn">Erfolgsklassen</button>
       <button id="import-btn">Importieren</button>
@@ -45,7 +38,20 @@
       <input type="file" id="file-input" accept="application/json" style="display:none">
     </div>
 
-    <!-- Row 5: 3x2 grid for freetext1-6 -->
+    <!-- Row 3: attributes in 3 columns -->
+    <div class="row attributes-row">
+      <div class="attr-col" id="attr-col-1"></div>
+      <div class="attr-col" id="attr-col-2"></div>
+      <div class="attr-col" id="attr-col-3"></div>
+    </div>
+
+    <!-- Row: attribute points display (only in edit mode) -->
+    <div class="row attr-points-row" id="attr-points-row" style="display:none">
+      <div class="attr-points-label" id="attr-points-label"></div>
+      <div class="attr-points-label">Spezialisierung: 250/250</div>
+    </div>
+
+    <!-- Row 4: 3x2 grid for freetext1-6 -->
     <div class="row freetext-grid" id="freetexts">
       <!-- six textareas added by JS -->
     </div>
