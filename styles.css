@@ -90,8 +90,10 @@ h1{margin:0 0 12px 0;font-size:20px}
 .sub-attr-value-input.warning{color:#d32f2f}
 
 /* attr value label (when not in edit mode) */
-.attr-value-label{font-weight:600;width:40px;text-align:center}
+.attr-value-label{font-weight:600;min-width:40px;text-align:center;word-spacing:-2px}
 .attr-value-label.warning{color:#d32f2f}
+/* Erfolgsklassen light styling for the two left numbers */
+.ec-light{opacity:0.66;font-weight:600;color:inherit;font-size:small;}
 
 /* make title centered and larger */
 h1{text-align:center;margin:0 0 12px 0;font-size:28px}
@@ -107,4 +109,5 @@ footer{margin-top:8px;color:#666}
   .row-3{flex-direction:column}
   .attributes-row{flex-direction:column}
   .freetext-grid{grid-template-columns:1fr}
+  .row-4{flex-direction:column}
 }

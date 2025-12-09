@@ -2,6 +2,7 @@ let gmTemplate = null;
 let playerData = {};
 let editMode = false;
 let expandMode = false;
+let ecMode = false; // Erfolgsklassen toggle
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -14,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // wire expand button toggle
   document.getElementById('toggle-btn').addEventListener('click', toggleExpandMode);
+
+  // wire Erfolgsklassen toggle (affects view-mode labels)
+  const ecBtn = document.getElementById('ec-btn');
+  if (ecBtn) ecBtn.addEventListener('click', toggleEcMode);
 
   // load default.json
   fetch('default.json')
@@ -40,6 +45,14 @@ function toggleExpandMode() {
   const btn = document.getElementById('toggle-btn');
   btn.dataset.active = expandMode ? 'true' : 'false';
   renderAttributes();
+}
+
+function toggleEcMode() {
+  ecMode = !ecMode;
+  const btn = document.getElementById('ec-btn');
+  if (btn) btn.dataset.active = ecMode ? 'true' : 'false';
+  // only affects view-mode labels
+  if (!editMode) renderAttributes();
 }
 
 function renderAll() {
@@ -181,7 +194,14 @@ function renderAttributes() {
       const label = document.createElement('div');
       label.className = 'attr-value-label';
       label.dataset.attrLabel = idx;
-      label.textContent = storedValue || '0';
+      if (ecMode) {
+        const right = Number(storedValue || 0);
+        const left = Math.round(right / 5);
+        const mid = Math.round(right / 2);
+        label.innerHTML = `<span class="ec-light">${left} / ${mid}</span> / <span>${right}</span>`;
+      } else {
+        label.textContent = storedValue || '0';
+      }
       box.appendChild(span);
       box.appendChild(label);
     }
@@ -226,7 +246,14 @@ function updateAttributePointLabels() {
     const mainLabel = document.querySelector(`[data-attr-label="${idx}"]`);
     if (mainLabel) {
       const storedValue = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].points : 0;
-      mainLabel.textContent = storedValue || '0';
+      if (ecMode) {
+        const right = Number(storedValue || 0);
+        const left = Math.round(right / 5);
+        const mid = Math.round(right / 2);
+        mainLabel.innerHTML = `<span class="ec-light">${left}/${mid}</span>/<span>${right}</span>`;
+      } else {
+        mainLabel.textContent = storedValue || '0';
+      }
     }
     
     // Update sub-attribute labels
