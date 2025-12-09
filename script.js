@@ -317,9 +317,41 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     // nameInput.placeholder = 'Subattribut-Name';
     nameInput.value = subAttr.name || '';
     nameInput.dataset.subInput = `${attrIdx}-${subAttrIdx}`;
+    // suggestions dropdown element
+    const suggestionsDiv = document.createElement('div');
+    suggestionsDiv.className = 'sub-suggestions';
+    suggestionsDiv.style.display = 'none';
+    box.appendChild(suggestionsDiv);
+
+    function populateSuggestions(query) {
+      suggestionsDiv.innerHTML = '';
+      const list = (gmTemplate && gmTemplate.attributes && gmTemplate.attributes[attrIdx] && gmTemplate.attributes[attrIdx].sub_attribute_suggestions) || [];
+      const q = (query || '').toLowerCase();
+      const filtered = list.filter(s => s && s.toLowerCase().includes(q) && s.toLowerCase() !== (nameInput.value||'').toLowerCase());
+      filtered.forEach(s => {
+        const it = document.createElement('div');
+        it.className = 'sub-suggestion';
+        it.textContent = s;
+        it.addEventListener('mousedown', (ev) => {
+          ev.preventDefault();
+          nameInput.value = s;
+          playerData.attributes[attrIdx].sub_attributes[subAttrIdx].name = s;
+          suggestionsDiv.style.display = 'none';
+          validateSubAttributeInput(valueInput);
+          updateAttributePointLabels();
+          updatePointsDisplay();
+        });
+        suggestionsDiv.appendChild(it);
+      });
+      suggestionsDiv.style.display = filtered.length ? '' : 'none';
+    }
+
     nameInput.addEventListener('input', (e) => {
       playerData.attributes[attrIdx].sub_attributes[subAttrIdx].name = e.target.value;
+      populateSuggestions(e.target.value);
     });
+    nameInput.addEventListener('focus', () => populateSuggestions(nameInput.value || ''));
+    nameInput.addEventListener('blur', () => setTimeout(() => { suggestionsDiv.style.display = 'none'; }, 150));
     
     const valueInput = document.createElement('input');
     valueInput.type = 'number';
