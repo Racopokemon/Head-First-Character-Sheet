@@ -75,6 +75,7 @@ function renderOtherPlayers() {
     const ta = document.createElement('textarea');
     ta.placeholder = gmTemplate[key] || '';
     ta.dataset.key = key;
+    ta.className = 'other-player';
     box.appendChild(ta);
     container.appendChild(box);
   }
@@ -93,6 +94,8 @@ function renderInfos() {
     input.dataset.key = key;
     box.appendChild(input);
     left.appendChild(box);
+
+    if (i == 1) input.className += ' info-char-name';
   }
 
   const mid = document.getElementById('info4');
@@ -337,7 +340,15 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     totalLabel.dataset.subLabel = `${attrIdx}-${subAttrIdx}`;
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
-    totalLabel.textContent = mainPoints + subPoints;
+    const sum = mainPoints + subPoints;
+    if (ecMode) {
+      const right = Number(sum || 0);
+      const left = Math.round(right / 5);
+      const mid = Math.round(right / 2);
+      totalLabel.innerHTML = `<span class="ec-light">${left} / ${mid}</span> / <span>${right}</span>`;
+    } else {
+      totalLabel.textContent = sum;
+    }
     
     box.appendChild(nameLabel);
     box.appendChild(totalLabel);
