@@ -1,24 +1,26 @@
 :root{
   --max-width: 1000px;
   --gap: 12px;
-  --box-bg: #f7f7f8;
+  --box-bg: #fff;/*f7f7f8;*/
   --number-width:49px;
   --text-size-normal:18px;
   --text-size-numbers:19px;
   --text-size-descr:16px;
+  --height:44px;
 }
 *{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size:var(--text-size-normal);border:0px}
-body{background:#fafafa;margin:0;padding:20px;display:flex;justify-content:center}
+/*#fafafa*/
+body{background:#f3f3f3;margin:0;padding:20px;display:flex;justify-content:center}
 .container{width:100%;max-width:var(--max-width)}
 h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
 .row-4{margin-bottom:30px}
 .row-4 > div{flex:1}
-.row-3 .col-left{flex:0.85;display:flex;flex-direction:column;gap:8px}
-.row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:8px}
-.row-3 .col-right{flex:0.85;display:flex;flex-direction:column;gap:8px}
+.row-3 .col-left{flex:0.85;display:flex;flex-direction:column;gap:var(--gap)}
+.row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
+.row-3 .col-right{flex:0.85;display:flex;flex-direction:column;gap:var(--gap)}
 .attributes-row{display:flex;gap:var(--gap);margin-bottom: 30px;}
-.attr-col{flex:1;display:flex;flex-direction:column;gap:12px}
+.attr-col{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
 .freetext-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(150px,1fr);gap:var(--gap)}
 
 .box{background:var(--box-bg);padding:10px;border-radius:8px}
@@ -33,7 +35,7 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .info-big textarea{border:0;background:transparent;resize:none;}
 .scale-row{display:flex;justify-content:space-between;align-items:center}
 .scale-row > div:first-child{} /*<- Scale label*/
-.attr-box{display:flex;align-items:center;gap:8px;padding:0px;padding-left:8px;padding-right:8px;height:44px}
+.attr-box{display:flex;align-items:center;gap:8px;padding:0px 8px;height:var(--height)}
 .attr-box > div:first-child{flex:1}
 .attr-name{flex:1}
 
@@ -90,8 +92,9 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .buttons-row button{padding:8px 12px;border-radius:6px;background:white;flex:1}
 
 /* toggle button styling */
-.toggle-btn{cursor:pointer;font-size: medium;color:#454545}
+.toggle-btn{cursor:pointer;font-size: medium;color:#454545;border-bottom: 3px solid #e2e2e2;}
 .toggle-btn[data-active="true"]{background:#c8c8c8}
+.toggle-btn:hover{border-bottom: 2px solid #e2e2e2;}
 /*.toggle-btn[data-active="false"]{}*/
 
 /* attr points row */
