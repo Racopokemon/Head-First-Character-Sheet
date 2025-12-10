@@ -2,10 +2,12 @@
   --max-width: 1000px;
   --gap: 12px;
   --box-bg: #f7f7f8;
-  --box-border: #ddd;
-  --number-width:45px;
+  --number-width:49px;
+  --text-size-normal:18px;
+  --text-size-numbers:19px;
+  --text-size-descr:16px;
 }
-*{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size: large;}
+*{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size:var(--text-size-normal);border:0px}
 body{background:#fafafa;margin:0;padding:20px;display:flex;justify-content:center}
 .container{width:100%;max-width:var(--max-width)}
 h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
@@ -19,10 +21,10 @@ h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .attr-col{flex:1;display:flex;flex-direction:column;gap:12px}
 .freetext-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(150px,1fr);gap:var(--gap)}
 
-.box{background:var(--box-bg);border:1px solid var(--box-border);padding:10px;border-radius:8px}
+.box{background:var(--box-bg);padding:10px;border-radius:8px}
 .box .label{margin-bottom:6px;color:#585858; font-style: italic;}
-.box textarea{width:100%;flex:1;min-height:0}
-.box input[type="number"]{padding:6px;border:1px solid #ccc;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600}
+.box textarea{width:100%;flex:1;min-height:0;font-size:var(--text-size-descr);}
+.box input[type="number"]{padding:6px;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600;font-size:var(--text-size-numbers);border:1px solid #ccc;}
 /*.box .scale{flex-direction: column;}*/
 textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .info-single input{width:100%;padding:6px;border:0;background:transparent}
@@ -40,55 +42,6 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .sub-attr-box > div:first-child{flex:1}
 .sub-attr-box input[type="text"]{flex:1;padding:6px;border:1px solid #ccc;border-radius:4px;margin-left:8px;width:0px}
 .sub-attr-box input[type="number"]{border-radius:4px}
-
-/* Subattribute expand/collapse animation (view mode only) */
-@keyframes slideDown {
-  from {
-    opacity: 0.3;
-    max-height: 0;
-    overflow: hidden;
-  }
-  to {
-    opacity: 1;
-    max-height: 100px;
-    overflow: visible;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 1;
-    max-height: 100px;
-    overflow: hidden;
-  }
-  to {
-    opacity: 0.3;
-    max-height: 0;
-    overflow: hidden;
-  }
-}
-
-.sub-attr-box.expanding {
-  animation: slideDown 0.4s ease-out forwards;
-}
-
-.sub-attr-box.collapsing {
-  animation: slideUp 0.3s ease-out forwards;
-}
-
-/* Generic expanding/collapsing helpers (re-usable for other sections) */
-.expanding {
-  animation: slideDown 0.4s ease-out forwards;
-  /*overflow: hidden;*/
-}
-
-.collapsing {
-  animation: slideUp 0.3s ease-out forwards;
-  /*overflow: hidden;*/
-}
-
-/* Generic hidden helper used as animation start state */
-.hidden { opacity: 0; max-height: 0; overflow: hidden; }
 
 /* suggestion dropdown for subattribute names */
 .sub-suggestions{position:absolute;left:8px;right:120px;top:100%;margin-top:6px;background:white;border:1px solid #ccc;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.08);max-height:200px;overflow:auto;z-index:30}
@@ -120,21 +73,21 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 
 /* color classes for attributes (1-7) and light variants for sub-attributes */
 .color-1{border-left:6px solid #ff8a80;background-color:#ffcccc}
-.color-1-light{border-left:4px solid #ffcccc;background-color:#ffe6e6 !important}
+.color-1-light{border-left:6px solid #ffcccc;background-color:#ffe6e6}
 .color-2{border-left:6px solid #ffd180;background-color:#ffe6b3}
-.color-2-light{border-left:4px solid #ffe6b3;background-color:#fff4e6 !important}
+.color-2-light{border-left:6px solid #ffe6b3;background-color:#fff4e6}
 .color-3{border-left:6px solid #ffff8d;background-color:#ffffc0}
-.color-3-light{border-left:4px solid #ffffc0;background-color:#fffff0 !important}
+.color-3-light{border-left:6px solid #ffffc0;background-color:#fffff0}
 .color-4{border-left:6px solid #c5e1a5;background-color:#e8f5e9}
-.color-4-light{border-left:4px solid #e8f5e9;background-color:#f1f8e9 !important}
+.color-4-light{border-left:6px solid #e8f5e9;background-color:#f1f8e9}
 .color-5{border-left:6px solid #80d8ff;background-color:#b3ebff}
-.color-5-light{border-left:4px solid #b3ebff;background-color:#e1f5fe !important}
+.color-5-light{border-left:6px solid #b3ebff;background-color:#e1f5fe}
 .color-6{border-left:6px solid #b39ddb;background-color:#d9c9e8}
-.color-6-light{border-left:4px solid #d9c9e8;background-color:#f3e5f5 !important}
+.color-6-light{border-left:6px solid #d9c9e8;background-color:#f3e5f5}
 .color-7{border-left:6px solid #b0bec5;background-color:#d4dce1}
-.color-7-light{border-left:4px solid #d4dce1;background-color:#eceff1 !important}
+.color-7-light{border-left:6px solid #d4dce1;background-color:#eceff1}
 
-.buttons-row button{padding:8px 12px;border-radius:6px;border:1px solid #bbb;background:white;flex:1}
+.buttons-row button{padding:8px 12px;border-radius:6px;background:white;flex:1}
 
 /* toggle button styling */
 .toggle-btn{cursor:pointer;font-size: medium;color:#454545}
@@ -143,16 +96,15 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 
 /* attr points row */
 .attr-points-row{margin-bottom:12px;gap:var(--gap)}
-.attr-points-label{flex:1;background:var(--box-bg);border:1px solid var(--box-border);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;text-align:center}
+.attr-points-label{flex:1;background:var(--box-bg);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;text-align:center}
 .attr-points-label.warning{color:#d32f2f}
-.attr-points-label.warning{border-color:#d32f2f}
 
 /* validation warnings */
 .attr-value-input.warning{color:#d32f2f}
 .sub-attr-value-input.warning{color:#d32f2f}
 
 /* attr value label (when not in edit mode) */
-.attr-value-label{font-weight:600;min-width:var(--number-width);text-align:center;word-spacing:-3px}
+.attr-value-label{font-weight:600;min-width:var(--number-width);text-align:center;word-spacing:-3px;font-size:var(--text-size-numbers)}
 .attr-value-label.warning{color:#d32f2f}
 /* Erfolgsklassen light styling for the two left numbers */
 .ec-light{opacity:0.66;font-weight:600;color:inherit;font-size:medium;}
@@ -163,6 +115,50 @@ input[type=number]::-webkit-inner-spin-button{
   -webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
 footer{margin-top:8px;color:#666;text-align: right;}
+
+/* Subattribute expand/collapse animation (view mode only) */
+@keyframes slideDown {
+  from {
+    opacity: 0.3;
+    max-height: 0;
+    overflow: hidden;
+  }
+  to {
+    opacity: 1;
+    max-height: 100px;
+    overflow: visible;
+  }
+}
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    max-height: 100px;
+    overflow: hidden;
+  }
+  to {
+    opacity: 0.3;
+    max-height: 0;
+    overflow: hidden;
+  }
+}
+.sub-attr-box.expanding {
+  animation: slideDown 0.4s ease-out forwards;
+}
+.sub-attr-box.collapsing {
+  animation: slideUp 0.3s ease-out forwards;
+}
+/* Generic expanding/collapsing helpers (re-usable for other sections) */
+.expanding {
+  animation: slideDown 0.4s ease-out forwards;
+  /*overflow: hidden;*/
+}
+.collapsing {
+  animation: slideUp 0.3s ease-out forwards;
+  /*overflow: hidden;*/
+}
+/* Generic hidden helper used as animation start state */
+.hidden { opacity: 0; max-height: 0; overflow: hidden; }
+
 
 @media(max-width:720px){
   .row-3{flex-direction:column}
