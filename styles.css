@@ -73,6 +73,20 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
   animation: slideUp 0.3s ease-out forwards;
 }
 
+/* Generic expanding/collapsing helpers (re-usable for other sections) */
+.expanding {
+  animation: slideDown 0.4s ease-out forwards;
+  /*overflow: hidden;*/
+}
+
+.collapsing {
+  animation: slideUp 0.3s ease-out forwards;
+  /*overflow: hidden;*/
+}
+
+/* Generic hidden helper used as animation start state */
+.hidden { opacity: 0; max-height: 0; overflow: hidden; }
+
 /* suggestion dropdown for subattribute names */
 .sub-suggestions{position:absolute;left:8px;right:120px;top:100%;margin-top:6px;background:white;border:1px solid #ccc;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.08);max-height:200px;overflow:auto;z-index:30}
 .sub-suggestion{padding:8px 10px;cursor:pointer}

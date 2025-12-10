@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // wire crew/background toggles
   const crewBtn = document.getElementById('crew-btn');
-  if (crewBtn) crewBtn.addEventListener('click', () => { crewVisible = !crewVisible; updateVisibility(); });
+  if (crewBtn) crewBtn.addEventListener('click', toggleCrewVisibility);
   const bgBtn = document.getElementById('bg-btn');
-  if (bgBtn) bgBtn.addEventListener('click', () => { bgVisible = !bgVisible; updateVisibility(); });
+  if (bgBtn) bgBtn.addEventListener('click', toggleBgVisibility);
 
   // load default.json
   fetch('default.json')
@@ -41,11 +41,52 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function toggleEditMode() {
+  const prev = editMode;
   editMode = !editMode;
   const btn = document.getElementById('edit-btn');
   btn.dataset.active = editMode ? 'true' : 'false';
+
+  // If we are leaving edit mode (was true -> now false), animate collapse of the points labels then re-render
+  if (prev && !editMode) {
+    const lblMain = document.getElementById('attr-points-label');
+    const lblSub = document.getElementById('sub-attr-points-label');
+    const toAnimate = [lblMain, lblSub].filter(Boolean);
+    if (!toAnimate.length) {
+      renderAttributes();
+      updatePointsDisplay();
+      return;
+    }
+    let ended = 0;
+    toAnimate.forEach((el) => {
+      el.classList.add('collapsing');
+      el.addEventListener('animationend', () => {
+        el.classList.remove('collapsing');
+        ended++;
+        if (ended === toAnimate.length) {
+          renderAttributes();
+          updatePointsDisplay();
+        }
+      }, { once: true });
+    });
+    return;
+  }
+
+  // Entering edit mode: render first then animate labels expand
   renderAttributes();
   updatePointsDisplay();
+  const lblMain = document.getElementById('attr-points-label');
+  const lblSub = document.getElementById('sub-attr-points-label');
+  [lblMain, lblSub].forEach((el) => {
+    if (!el) return;
+    el.classList.add('hidden');
+    // force reflow so hidden state is applied
+    void el.offsetHeight;
+    el.classList.remove('hidden');
+    el.classList.add('expanding');
+    el.addEventListener('animationend', () => {
+      el.classList.remove('expanding');
+    }, { once: true });
+  });
 }
 
 function toggleCompactMode() {
@@ -108,6 +149,50 @@ function updateVisibility() {
   const freetexts = document.getElementById('freetexts');
   const bgBtn = document.getElementById('bg-btn');
   if (freetexts) freetexts.style.display = bgVisible ? '' : 'none';
+  if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
+}
+
+// Toggle crew section with animation
+function toggleCrewVisibility() {
+  crewVisible = !crewVisible;
+  const other = document.getElementById('other-players');
+  const crewBtn = document.getElementById('crew-btn');
+  if (!other) { updateVisibility(); return; }
+
+  if (crewVisible) {
+    // show then animate expand
+    other.style.display = '';
+    other.classList.add('hidden');
+    void other.offsetHeight;
+    other.classList.remove('hidden');
+    other.classList.add('expanding');
+    other.addEventListener('animationend', () => { other.classList.remove('expanding'); updateVisibility(); }, { once: true });
+  } else {
+    // animate collapse then hide
+    other.classList.add('collapsing');
+    other.addEventListener('animationend', () => { other.classList.remove('collapsing'); updateVisibility(); }, { once: true });
+  }
+  if (crewBtn) crewBtn.dataset.active = crewVisible ? 'true' : 'false';
+}
+
+// Toggle freetexts/background section with animation
+function toggleBgVisibility() {
+  bgVisible = !bgVisible;
+  const freetexts = document.getElementById('freetexts');
+  const bgBtn = document.getElementById('bg-btn');
+  if (!freetexts) { updateVisibility(); return; }
+
+  if (bgVisible) {
+    freetexts.style.display = '';
+    freetexts.classList.add('hidden');
+    void freetexts.offsetHeight;
+    freetexts.classList.remove('hidden');
+    freetexts.classList.add('expanding');
+    freetexts.addEventListener('animationend', () => { freetexts.classList.remove('expanding'); updateVisibility(); }, { once: true });
+  } else {
+    freetexts.classList.add('collapsing');
+    freetexts.addEventListener('animationend', () => { freetexts.classList.remove('collapsing'); updateVisibility(); }, { once: true });
+  }
   if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
 }
 
