@@ -1,7 +1,7 @@
 let gmTemplate = null;
 let playerData = {};
 let editMode = false;
-let compactMode = true;
+let compactMode = false;
 let ecMode = false; // Erfolgsklassen toggle
 let crewVisible = false;
 let bgVisible = false;
@@ -292,6 +292,7 @@ function renderAttributes() {
     box.dataset.attrMainIdx = idx;
     const span = document.createElement('div');
     span.textContent = attr.name || ('Attr ' + (idx + 1));
+    span.className = "attr-name";
     
     // Get stored value from playerData
     const storedValue = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].points : 0;
@@ -335,7 +336,6 @@ function renderAttributes() {
         box.appendChild(addBtn);
       }
 
-      span.style.flex=1;
       box.appendChild(span);
       box.appendChild(input);
     } else {
@@ -715,7 +715,7 @@ function validateAttributeInput(inputEl, attrIdx) {
   const minVal = gmTemplate.attribute_points_min || 10;
   const maxVal = gmTemplate.attribute_points_max || 80;
   
-  if (val < minVal || val > maxVal) {
+  if (val != 0 && (val < minVal || val > maxVal)) {
     inputEl.classList.add('warning');
   } else {
     inputEl.classList.remove('warning');
@@ -889,7 +889,7 @@ function applyImported(json) {
         setInputValue('scale' + i, gmTemplate[initialKey]);
       }
     }
-    if (!editMode) {
+    if (editMode) {
         toggleEditMode();
     }
     return;

@@ -29,7 +29,7 @@
         "attribute_points": 150,
         "sub_attribute_points": 250,
         "attribute_points_min": 10, 
-        "attribute_points_max": 80, 
+        "attribute_points_max": 40, 
         "sub_attribute_points_max": 80,
 
         "attributes": [

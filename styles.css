@@ -3,6 +3,7 @@
   --gap: 12px;
   --box-bg: #f7f7f8;
   --box-border: #ddd;
+  --number-width:45px;
 }
 *{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size: large;}
 body{background:#fafafa;margin:0;padding:20px;display:flex;justify-content:center}
@@ -20,17 +21,19 @@ h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 
 .box{background:var(--box-bg);border:1px solid var(--box-border);padding:10px;border-radius:8px}
 .box .label{margin-bottom:6px;color:#585858; font-style: italic;}
-.box textarea{width:100%;border:0;background:transparent;resize:none;flex:1;min-height:0}
-.box input[type="number"]{padding:6px;border:1px solid #ccc;border-radius:6px;text-align:center;width:40px;font-weight:600}
+.box textarea{width:100%;flex:1;min-height:0}
+.box input[type="number"]{padding:6px;border:1px solid #ccc;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600}
 /*.box .scale{flex-direction: column;}*/
 textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .info-single input{width:100%;padding:6px;border:0;background:transparent}
 .info-char-name{font-weight: 600;font-size: large;}
 .info-big{flex:1}
-.info-big textarea{border:0;background:transparent;resize:none}
+.info-big textarea{border:0;background:transparent;resize:none;}
 .scale-row{display:flex;justify-content:space-between;align-items:center}
+.scale-row > div:first-child{} /*<- Scale label*/
 .attr-box{display:flex;align-items:center;gap:8px;padding:0px;padding-left:8px;padding-right:8px;height:44px}
 .attr-box > div:first-child{flex:1}
+.attr-name{flex:1}
 
 .sub-attr-box{gap:0px;margin-top:-12px;position:relative}
 .sub-attr-box.hidden{opacity:0;max-height:0;overflow:hidden}
@@ -149,7 +152,7 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .sub-attr-value-input.warning{color:#d32f2f}
 
 /* attr value label (when not in edit mode) */
-.attr-value-label{font-weight:600;min-width:40px;text-align:center;word-spacing:-3px}
+.attr-value-label{font-weight:600;min-width:var(--number-width);text-align:center;word-spacing:-3px}
 .attr-value-label.warning{color:#d32f2f}
 /* Erfolgsklassen light styling for the two left numbers */
 .ec-light{opacity:0.66;font-weight:600;color:inherit;font-size:medium;}
@@ -166,4 +169,5 @@ footer{margin-top:8px;color:#666;text-align: right;}
   .attributes-row{flex-direction:column}
   .freetext-grid{grid-template-columns:1fr}
   .row-4{flex-direction:column}
+  .box textarea{min-height: 160px}
 }
