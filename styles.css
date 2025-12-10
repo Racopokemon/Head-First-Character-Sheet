@@ -135,7 +135,7 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .sub-attr-value-input.warning{color:#d32f2f}
 
 /* attr value label (when not in edit mode) */
-.attr-value-label{font-weight:600;min-width:40px;text-align:center;word-spacing:-2px}
+.attr-value-label{font-weight:600;min-width:40px;text-align:center;word-spacing:-3px}
 .attr-value-label.warning{color:#d32f2f}
 /* Erfolgsklassen light styling for the two left numbers */
 .ec-light{opacity:0.66;font-weight:600;color:inherit;font-size:medium;}
