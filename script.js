@@ -52,7 +52,34 @@ function toggleExpandMode() {
   expandMode = !expandMode;
   const btn = document.getElementById('toggle-btn');
   btn.dataset.active = expandMode ? 'true' : 'false';
-  renderAttributes();
+  
+  // If in edit mode, just re-render (no animation)
+  if (editMode) {
+    renderAttributes();
+    return;
+  }
+  
+  // In view mode: animate subattribute visibility
+  if (expandMode) {
+    // Expanding: render and add animation class
+    renderAttributes();
+    // Get newly rendered sub-attr boxes and add animation
+    setTimeout(() => {
+      document.querySelectorAll('.sub-attr-box').forEach(box => {
+        box.classList.add('expanding');
+        box.addEventListener('animationend', () => box.classList.remove('expanding'), { once: true });
+      });
+    }, 0);
+  } else {
+    // Collapsing: add animation class before removal
+    document.querySelectorAll('.sub-attr-box').forEach(box => {
+      box.classList.add('collapsing');
+      box.addEventListener('animationend', () => {
+        renderAttributes();
+        // Re-render which removes the sub-attr boxes
+      }, { once: true });
+    });
+  }
 }
 
 function toggleEcMode() {
