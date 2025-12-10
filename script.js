@@ -1,7 +1,7 @@
 let gmTemplate = null;
 let playerData = {};
 let editMode = false;
-let expandMode = false;
+let compactMode = true;
 let ecMode = false; // Erfolgsklassen toggle
 let crewVisible = false;
 let bgVisible = false;
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('edit-btn').addEventListener('click', toggleEditMode);
   
   // wire expand button toggle
-  document.getElementById('toggle-btn').addEventListener('click', toggleExpandMode);
+  document.getElementById('toggle-btn').addEventListener('click', toggleCompactMode);
 
   // wire Erfolgsklassen toggle (affects view-mode labels)
   const ecBtn = document.getElementById('ec-btn');
@@ -48,10 +48,10 @@ function toggleEditMode() {
   updatePointsDisplay();
 }
 
-function toggleExpandMode() {
-  expandMode = !expandMode;
+function toggleCompactMode() {
+  compactMode = !compactMode;
   const btn = document.getElementById('toggle-btn');
-  btn.dataset.active = expandMode ? 'true' : 'false';
+  btn.dataset.active = compactMode ? 'true' : 'false';
   
   // If in edit mode, just re-render (no animation)
   if (editMode) {
@@ -60,22 +60,22 @@ function toggleExpandMode() {
   }
   
   // In view mode: animate subattribute visibility
-  if (expandMode) {
-      renderAttributes();
-      // Expanding: render with .hidden, then animate slideDown
+  if (compactMode) {
+      // Collapsing: add animation class then remove elements
       document.querySelectorAll('.sub-attr-box').forEach(box => {
-          box.classList.add('expanding');
-          box.addEventListener('animationend', () => {
-          box.classList.remove('expanding');});
+        box.classList.add('collapsing');
+        box.addEventListener('animationend', () => {
+          renderAttributes();
+          // Re-render which removes the sub-attr boxes
+        }, { once: true });
       });
   } else {
-    // Collapsing: add animation class then remove elements
+    renderAttributes();
+    // Expanding: render with .hidden, then animate slideDown
     document.querySelectorAll('.sub-attr-box').forEach(box => {
-      box.classList.add('collapsing');
-      box.addEventListener('animationend', () => {
-        renderAttributes();
-        // Re-render which removes the sub-attr boxes
-      }, { once: true });
+        box.classList.add('expanding');
+        box.addEventListener('animationend', () => {
+        box.classList.remove('expanding');});
     });
   }
 }
@@ -238,7 +238,7 @@ function renderAttributes() {
       });
       validateAttributeInput(input, idx); // initial validation
             // add subattribute button
-      if (expandMode) {
+      if (!compactMode) {
         const addBtn = document.createElement('button');
         addBtn.className = 'sub-add-btn';
         addBtn.title = 'Subattribut hinzufügen';
@@ -272,8 +272,8 @@ function renderAttributes() {
     
     container.appendChild(box);
 
-    // Render subattributes if in expandMode
-    if (expandMode) {
+    // Render subattributes if in not compactMode
+    if (!compactMode) {
       const subAttrs = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].sub_attributes : [];
       subAttrs.forEach((subAttr, subIdx) => {
         renderSubAttribute(container, idx, subIdx, attr.color || 1);
@@ -331,7 +331,7 @@ function updateAttributePointLabels() {
     }
     
     // Update sub-attribute labels
-    if (expandMode) {
+    if (!compactMode) {
       const subAttrs = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].sub_attributes : [];
       subAttrs.forEach((subAttr, subIdx) => {
         const subLabel = document.querySelector(`[data-sub-label="${idx}-${subIdx}"]`);
@@ -466,6 +466,21 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
         if (e.key === 'ArrowDown') { e.preventDefault(); focusSiblingSubInput(nameInput, 1); }
         else if (e.key === 'ArrowUp') { e.preventDefault(); focusSiblingSubInput(nameInput, -1); }
         else if (e.key === 'Enter') { e.preventDefault(); addSubAttribute(attrIdx, subAttrIdx + 1); }
+        else if (e.key === 'Backspace' && nameInput.value === '') {
+          e.preventDefault();
+          // Precompute the expected data-sub-input for the previous subattribute
+          const prevSubIdx = subAttrIdx - 1;
+          const expectedDataSubInput = `${attrIdx}-${prevSubIdx}`;
+          // Remove this subattribute (which will trigger re-render)
+          removeSubAttribute(attrIdx, subAttrIdx);
+          // After re-render, find and focus the previous subattribute's name field
+          const prevInput = document.querySelector(`input[data-sub-input="${expectedDataSubInput}"]`);
+          if (prevInput) {
+            prevInput.focus();
+            const len = (prevInput.value || '').length;
+            if (prevInput.setSelectionRange) prevInput.setSelectionRange(len, len);
+          }
+        }
       }
     });
     
