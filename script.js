@@ -661,19 +661,19 @@ function updatePointsDisplay() {
 function renderFreetexts() {
   const container = document.getElementById('freetexts');
   container.innerHTML = '';
-  for (let i = 1; i <= 6; i++) {
-    const key = 'freetext' + i;
+  const freetexts = gmTemplate.freetexts || [];
+  freetexts.forEach((label, i) => {
     const box = document.createElement('div');
     box.className = 'box textareabox';
-    const label = document.createElement('div');
-    label.className = 'label';
-    label.textContent = gmTemplate[key] || key;
+    const lbl = document.createElement('div');
+    lbl.className = 'label';
+    lbl.textContent = label;
     const ta = document.createElement('textarea');
-    ta.dataset.key = key;
-    box.appendChild(label);
+    ta.dataset.freetextIndex = i;
+    box.appendChild(lbl);
     box.appendChild(ta);
     container.appendChild(box);
-  }
+  });
 }
 
 function handleExport() {
@@ -682,7 +682,13 @@ function handleExport() {
 
   // infos and freetexts and other players and scales
   ['info1','info2','info3','info4'].forEach(k => out.set_by_player[k] = getValueByKey(k));
-  for (let i=1;i<=6;i++) out.set_by_player['freetext'+i] = getValueByKey('freetext'+i);
+  const freetextValues = [];
+  const freetextInputs = document.querySelectorAll('textarea[data-freetextIndex]');
+  freetextInputs.forEach((ta) => {
+    const idx = Number(ta.dataset.freetextIndex);
+    freetextValues[idx] = ta.value || '';
+  });
+  out.set_by_player.freetexts = freetextValues;
   for (let i=1;i<=4;i++) out.set_by_player['other_player'+i] = getValueByKey('other_player'+i);
   for (let i=1;i<=3;i++) out.set_by_player['scale'+i] = getValueByKey('scale'+i);
 
@@ -691,6 +697,10 @@ function handleExport() {
     points: a.points || 0,
     sub_attributes: a.sub_attributes || []
   }));
+
+  // save visibility flags
+  out.set_by_player.crewVisible = crewVisible;
+  out.set_by_player.bgVisible = bgVisible;
 
   const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -762,7 +772,13 @@ function applyImported(json) {
 
   // fill simples
   ['info1','info2','info3','info4'].forEach(k => setInputValue(k, sp[k] || ''));
-  for (let i=1;i<=6;i++) setInputValue('freetext'+i, sp['freetext'+i] || '');
+  if (Array.isArray(sp.freetexts)) {
+    const freetextInputs = document.querySelectorAll('textarea[data-freetextIndex]');
+    freetextInputs.forEach((ta) => {
+      const idx = Number(ta.dataset.freetextIndex);
+      ta.value = sp.freetexts[idx] || '';
+    });
+  }
   for (let i=1;i<=4;i++) setInputValue('other_player'+i, sp['other_player'+i] || '');
   for (let i=1;i<=3;i++) setInputValue('scale'+i, sp['scale'+i] || '');
 
@@ -775,6 +791,15 @@ function applyImported(json) {
     renderAttributes();
     updatePointsDisplay();
   }
+
+  // restore visibility flags
+  if (typeof sp.crewVisible === 'boolean') {
+    crewVisible = sp.crewVisible;
+  }
+  if (typeof sp.bgVisible === 'boolean') {
+    bgVisible = sp.bgVisible;
+  }
+  updateVisibility();
 
   if (editMode) {
     toggleEditMode();
