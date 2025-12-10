@@ -61,17 +61,15 @@ function toggleExpandMode() {
   
   // In view mode: animate subattribute visibility
   if (expandMode) {
-    // Expanding: render and add animation class
-    renderAttributes();
-    // Get newly rendered sub-attr boxes and add animation
-    setTimeout(() => {
+      renderAttributes();
+      // Expanding: render with .hidden, then animate slideDown
       document.querySelectorAll('.sub-attr-box').forEach(box => {
-        box.classList.add('expanding');
-        box.addEventListener('animationend', () => box.classList.remove('expanding'), { once: true });
+          box.classList.add('expanding');
+          box.addEventListener('animationend', () => {
+          box.classList.remove('expanding');});
       });
-    }, 0);
   } else {
-    // Collapsing: add animation class before removal
+    // Collapsing: add animation class then remove elements
     document.querySelectorAll('.sub-attr-box').forEach(box => {
       box.classList.add('collapsing');
       box.addEventListener('animationend', () => {

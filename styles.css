@@ -33,6 +33,7 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .attr-box > div:first-child{flex:1}
 
 .sub-attr-box{gap:0px;margin-top:-12px;position:relative}
+.sub-attr-box.hidden{opacity:0;max-height:0;overflow:hidden}
 .sub-attr-box > div:first-child{flex:1}
 .sub-attr-box input[type="text"]{flex:1;padding:6px;border:1px solid #ccc;border-radius:4px;margin-left:8px;width:0px}
 .sub-attr-box input[type="number"]{border-radius:4px}
@@ -40,7 +41,7 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 /* Subattribute expand/collapse animation (view mode only) */
 @keyframes slideDown {
   from {
-    opacity: 0;
+    opacity: 0.3;
     max-height: 0;
     overflow: hidden;
   }
@@ -58,14 +59,14 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
     overflow: hidden;
   }
   to {
-    opacity: 0;
+    opacity: 0.3;
     max-height: 0;
     overflow: hidden;
   }
 }
 
 .sub-attr-box.expanding {
-  animation: slideDown 0.3s ease-out forwards;
+  animation: slideDown 0.4s ease-out forwards;
 }
 
 .sub-attr-box.collapsing {
