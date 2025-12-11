@@ -251,10 +251,8 @@ function renderScales() {
   r.innerHTML = '';
   for (let i = 1; i <= 3; i++) {
     const key = 'scale' + i;
-    const box = document.createElement('div');
-    box.className = 'box';
     const row = document.createElement('div');
-    row.className = 'scale-row';
+    row.className = 'box scale-row';
     const lbl = document.createElement('div');
     lbl.textContent = gmTemplate[key] || key;
     const input = document.createElement('input');
@@ -264,8 +262,7 @@ function renderScales() {
     input.dataset.key = key;
     row.appendChild(lbl);
     row.appendChild(input);
-    box.appendChild(row);
-    r.appendChild(box);
+    r.appendChild(row);
     // keyboard navigation: up/down/enter moves to next/prev scale input
     input.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, r); }
