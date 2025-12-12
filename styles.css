@@ -7,6 +7,7 @@
   --text-size-numbers:19px;
   --text-size-descr:16px;
   --height:44px;
+  --anim-margin-bottom:30px;
 }
 *{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size:var(--text-size-normal);border:0px}
 /*#fafafa*/
@@ -14,14 +15,14 @@ body{background:#fbfbfb;margin:0;padding:20px;display:flex;justify-content:cente
 .container{width:100%;max-width:var(--max-width)}
 h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
-.row-4{margin-bottom:30px}
+.row-4{margin-bottom:var(--anim-margin-bottom);}
 .row-4 > div{flex:1}
 .row-3 .col-left{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-right{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .attributes-row{display:flex;gap:var(--gap);margin-bottom: 30px;}
 .attr-col{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
-.freetext-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(150px,1fr);gap:var(--gap)}
+.freetext-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(150px,1fr);gap:var(--gap);margin-bottom:var(--anim-margin-bottom);}
 
 .box{background:var(--box-bg);padding:3px 12px;border-radius:8px;/*! background-color: #dde2e5; */background-color: #f1f1f1;}
 .box .label{margin-bottom:6px;color:#585858; font-style: italic;}
@@ -100,7 +101,7 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 /*.toggle-btn[data-active="false"]{}*/
 
 /* attr points row */
-.attr-points-row{}
+.attr-points-row{margin-bottom:var(--anim-margin-bottom);}
 .attr-points-label{flex:1;background:var(--box-bg);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;text-align:center}
 .attr-points-label.warning{color:#d32f2f}
 
@@ -119,9 +120,8 @@ input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button{
   -webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
-footer{margin-top:8px;color:#666;text-align: right;}
+footer{color:#666;text-align: right;}
 
-/* Subattribute expand/collapse animation (view mode only) */
 @keyframes slideDown {
   from {
     opacity: 0.3;
@@ -146,6 +146,34 @@ footer{margin-top:8px;color:#666;text-align: right;}
     overflow: hidden;
   }
 }
+@keyframes slideDownRow {
+  from {
+    opacity: 0.3;
+    max-height: 0;
+    overflow: hidden;
+    margin-bottom:0px;
+  }
+  to {
+    opacity: 1;
+    max-height: 100px;
+    overflow: visible;
+    margin-bottom:var(--anim-margin-bottom);
+  }
+}
+@keyframes slideUpRow {
+  from {
+    opacity: 1;
+    max-height: 100px;
+    overflow: hidden;
+    margin-bottom:var(--anim-margin-bottom);
+  }
+  to {
+    opacity: 0.3;
+    max-height: 0;
+    overflow: hidden;
+    margin-bottom:0px;
+  }
+}
 .sub-attr-box.expanding {
   animation: slideDown 0.4s ease-out forwards;
 }
@@ -154,11 +182,11 @@ footer{margin-top:8px;color:#666;text-align: right;}
 }
 /* Generic expanding/collapsing helpers (re-usable for other sections) */
 .expanding {
-  animation: slideDown 0.4s ease-out forwards;
+  animation: slideDownRow 0.4s ease-out forwards;
   /*overflow: hidden;*/
 }
 .collapsing {
-  animation: slideUp 0.3s ease-out forwards;
+  animation: slideUpRow 0.3s ease-out forwards;
   /*overflow: hidden;*/
 }
 /* Generic hidden helper used as animation start state */
@@ -169,7 +197,7 @@ footer{margin-top:8px;color:#666;text-align: right;}
   .row-3{flex-direction:column}
   .attributes-row{flex-direction:column}
   .freetext-grid{grid-template-columns:1fr}
-  .row-4{flex-direction:column}
+  .row-4{flex-direction:column;}
   .box textarea{min-height: 160px}
   .toggle-btn:hover{border-bottom-width: 4px;}
 }
