@@ -47,46 +47,49 @@ function toggleEditMode() {
   btn.dataset.active = editMode ? 'true' : 'false';
 
   // If we are leaving edit mode (was true -> now false), animate collapse of the points labels then re-render
-  if (prev && !editMode) {
-    const lblMain = document.getElementById('attr-points-label');
-    const lblSub = document.getElementById('sub-attr-points-label');
-    const toAnimate = [lblMain, lblSub].filter(Boolean);
-    if (!toAnimate.length) {
-      renderAttributes();
-      updatePointsDisplay();
-      return;
-    }
-    let ended = 0;
-    toAnimate.forEach((el) => {
-      el.classList.add('collapsing');
-      el.addEventListener('animationend', () => {
-        el.classList.remove('collapsing');
-        ended++;
-        if (ended === toAnimate.length) {
-          renderAttributes();
-          updatePointsDisplay();
-        }
+  //if (prev && !editMode) {
+  //  const lblMain = document.getElementById('attr-points-label');
+  //  const lblSub = document.getElementById('attr-points-row');
+  //  const toAnimate = [lblMain, lblSub].filter(Boolean);
+  //  if (!toAnimate.length) {
+  //    renderAttributes();
+  //    updatePointsDisplay();
+  //    return;
+  //  }
+  //  let ended = 0;
+  //  toAnimate.forEach((el) => {
+  //    el.classList.add('collapsing');
+  //    el.addEventListener('animationend', () => {
+  //      el.classList.remove('collapsing');
+  //      ended++;
+  //      if (ended === toAnimate.length) {
+  //        renderAttributes();
+  //        updatePointsDisplay();
+  //      }
+  //    }, { once: true });
+  //  });
+  //  return;
+  //}
+
+  if (prev) {
+    const row = document.getElementById('attr-points-row');
+    row.classList.add('collapsing');
+    row.addEventListener('animationend', () => {
+      row.classList.remove('collapsing');
+        renderAttributes();
+        updatePointsDisplay();
       }, { once: true });
-    });
     return;
   }
 
   // Entering edit mode: render first then animate labels expand
   renderAttributes();
   updatePointsDisplay();
-  const lblMain = document.getElementById('attr-points-label');
-  const lblSub = document.getElementById('sub-attr-points-label');
-  [lblMain, lblSub].forEach((el) => {
-    if (!el) return;
-    el.classList.add('hidden');
-    // force reflow so hidden state is applied
-    void el.offsetHeight;
-    el.classList.remove('hidden');
-    el.classList.add('expanding');
-    el.addEventListener('animationend', () => {
-      el.classList.remove('expanding');
-    }, { once: true });
-  });
+  const row = document.getElementById('attr-points-row');
+  row.classList.add('expanding');
+  row.addEventListener('animationend', () => {
+    row.classList.remove('expanding');
+  }, { once: true });
 }
 
 function toggleCompactMode() {

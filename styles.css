@@ -96,10 +96,11 @@ textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
 .toggle-btn{cursor:pointer;font-size: medium;color:#454545;border-bottom: 4px solid #e2e2e2;}
 .toggle-btn[data-active="true"]{background:#f3f3f3;border-bottom-width: 2px;}
 .toggle-btn:hover{border-bottom: 2px solid #d2d2d2;}
+.toggle-btn:active{border-bottom: 0px;}
 /*.toggle-btn[data-active="false"]{}*/
 
 /* attr points row */
-.attr-points-row{margin-bottom:12px;gap:var(--gap)}
+.attr-points-row{}
 .attr-points-label{flex:1;background:var(--box-bg);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;text-align:center}
 .attr-points-label.warning{color:#d32f2f}
 
@@ -170,4 +171,5 @@ footer{margin-top:8px;color:#666;text-align: right;}
   .freetext-grid{grid-template-columns:1fr}
   .row-4{flex-direction:column}
   .box textarea{min-height: 160px}
+  .toggle-btn:hover{border-bottom-width: 4px;}
 }
