@@ -28,6 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const bgBtn = document.getElementById('bg-btn');
   if (bgBtn) bgBtn.addEventListener('click', toggleBgVisibility);
 
+  // wire drag and drop import
+  document.addEventListener('dragover', handleDragOver);
+  document.addEventListener('drop', handleDrop);
+  document.addEventListener('dragleave', (e) => {
+    //if (e.clientX === 0 && e.clientY === 0) {
+      hideDragOverlay();
+    //}
+  });
+
   // load default.json
   fetch('default.json')
     .then(r => r.json())
@@ -869,6 +878,52 @@ function handleFileImport(e) {
   reader.readAsText(f);
   // reset input so same file can be selected again
   e.target.value = '';
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  e.dataTransfer.dropEffect = 'copy';
+  showDragOverlay();
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  hideDragOverlay();
+  
+  const files = e.dataTransfer.files;
+  if (!files || files.length === 0) return;
+  
+  const file = files[0];
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const json = JSON.parse(ev.target.result);
+      applyImported(json);
+    } catch (err) {
+      alert('Ungültige JSON-Datei');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function showDragOverlay() {
+  let overlay = document.getElementById('drag-over-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'drag-over-overlay';
+    overlay.className = 'drag-over-overlay';
+    overlay.textContent = 'Datei importieren';
+    document.body.appendChild(overlay);
+  }
+}
+
+function hideDragOverlay() {
+  const overlay = document.getElementById('drag-over-overlay');
+  if (overlay) {
+    overlay.remove();
+  }
 }
 
 function applyImported(json) {

@@ -193,6 +193,24 @@ footer{color:#666;text-align: right;}
 .hidden { opacity: 0; max-height: 0; overflow: hidden; }
 
 
+/* drag and drop overlay */
+.drag-over-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(208, 208, 208, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  font-size: 32px;
+  color: rgb(26, 26, 26);
+  font-weight: 600;
+  pointer-events: none;
+}
+
 @media(max-width:720px){
   .row-3{flex-direction:column}
   .attributes-row{flex-direction:column}
