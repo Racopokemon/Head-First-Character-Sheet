@@ -30,7 +30,7 @@ h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .box textarea{width:100%;flex:1;min-height:0;font-size:var(--text-size-normal);border:0;background:transparent;resize:none;}
 .box input[type="number"]{padding:6px;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600;font-size:var(--text-size-numbers);border:1px solid #ccc;}
 /*.box .scale{flex-direction: column;}*/
-textarea.other-player{min-height:80px;color:#585858; font-style: italic;}
+textarea.other-player{min-height:80px;color:#676767; font-style: italic;}
 .info-single{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height)}
 .info-single input{width:100%;padding:6px;border:0;background:transparent}
 .info-char-name{font-weight: 600;font-size: large;}
