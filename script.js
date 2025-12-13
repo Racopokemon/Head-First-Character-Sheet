@@ -505,7 +505,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       playerData.attributes[attrIdx].sub_attributes[subAttrIdx].name = e.target.value;
       populateSuggestions(e.target.value);
     });
-    nameInput.addEventListener('blur', () => setTimeout(() => { suggestionsDiv.style.display = 'none'; highlightedIndex = -1; }, 150));
+    nameInput.addEventListener('blur', () => setTimeout(() => { suggestionsDiv.style.display = 'none'; highlightedIndex = -1; }, 25));
     // keyboard navigation for suggestions and field-jumping when no suggestions
     nameInput.addEventListener('keydown', (e) => {
       const visible = suggestionsDiv.style.display !== 'none' && suggestionsDiv.children.length > 0;
@@ -546,6 +546,19 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
             const len = (prevInput.value || '').length;
             if (prevInput.setSelectionRange) prevInput.setSelectionRange(len, len);
           }
+        }
+      }
+    });
+    nameInput.addEventListener('mousedown', (e) => {
+      const visible = suggestionsDiv.style.display !== 'none' && suggestionsDiv.children.length > 0;
+      const focussed = document.activeElement == nameInput;
+      if (focussed && nameInput.value.length == 0) {
+        if (visible) {
+          suggestionsDiv.style.display = 'none';
+          highlightedIndex = -1;
+        } else {
+          //e.target.value
+          populateSuggestions('');
         }
       }
     });
