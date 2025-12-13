@@ -85,9 +85,9 @@ function toggleEditMode() {
     row.classList.add('collapsing');
     row.addEventListener('animationend', () => {
       row.classList.remove('collapsing');
-        renderAttributes();
-        updatePointsDisplay();
-      }, { once: true });
+    }, { once: true });
+    renderAttributes();
+    updatePointsDisplay();
     return;
   }
 
