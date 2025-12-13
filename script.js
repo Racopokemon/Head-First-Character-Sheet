@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('dragover', handleDragOver);
   document.addEventListener('drop', handleDrop);
   document.addEventListener('dragleave', (e) => {
-    //if (e.clientX === 0 && e.clientY === 0) {
+    //if (e.clientX === 0 && e.clientY === 0) { // works on chrome to detect leaving the window, but not on firefox, where the ui never changes then
       hideDragOverlay();
     //}
   });
@@ -908,7 +908,9 @@ function handleDrop(e) {
   reader.readAsText(file);
 }
 
+var dropHideTimer1;
 function showDragOverlay() {
+  window.clearTimeout(dropHideTimer1);
   let overlay = document.getElementById('drag-over-overlay');
   if (!overlay) {
     overlay = document.createElement('div');
@@ -920,10 +922,13 @@ function showDragOverlay() {
 }
 
 function hideDragOverlay() {
-  const overlay = document.getElementById('drag-over-overlay');
-  if (overlay) {
-    overlay.remove();
-  }
+  window.clearTimeout(dropHideTimer1);
+  dropHideTimer1 = window.setTimeout(() => {
+      const overlay = document.getElementById('drag-over-overlay');
+      if (overlay) {
+        overlay.remove();
+      }
+  }, 30);
 }
 
 function applyImported(json) {
