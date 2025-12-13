@@ -220,6 +220,8 @@ input[type=number]{-moz-appearance:textfield}
   .freetext-grid{grid-template-columns:1fr}
   .row-4{flex-direction:column;}
   .box textarea{min-height: 160px}
-  .toggle-btn:hover{border-bottom-width: 4px;}
+  .top-buttons-row{display:grid;grid-template-columns:repeat(2,1fr);}
+  .toggle-btn:hover{border-bottom: 4px solid #e2e2e2;}
   .attr-points-row{position:fixed;bottom:0px;left:0px;width:100%;} /*padding:20px*/
+  textarea.other-player{min-height:80px;}
 }
