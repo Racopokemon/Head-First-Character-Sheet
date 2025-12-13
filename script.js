@@ -56,39 +56,15 @@ function toggleEditMode() {
   btn.dataset.active = editMode ? 'true' : 'false';
 
   // If we are leaving edit mode (was true -> now false), animate collapse of the points labels then re-render
-  //if (prev && !editMode) {
-  //  const lblMain = document.getElementById('attr-points-label');
-  //  const lblSub = document.getElementById('attr-points-row');
-  //  const toAnimate = [lblMain, lblSub].filter(Boolean);
-  //  if (!toAnimate.length) {
-  //    renderAttributes();
-  //    updatePointsDisplay();
-  //    return;
-  //  }
-  //  let ended = 0;
-  //  toAnimate.forEach((el) => {
-  //    el.classList.add('collapsing');
-  //    el.addEventListener('animationend', () => {
-  //      el.classList.remove('collapsing');
-  //      ended++;
-  //      if (ended === toAnimate.length) {
-  //        renderAttributes();
-  //        updatePointsDisplay();
-  //      }
-  //    }, { once: true });
-  //  });
-  //  return;
-  //}
-
   if (prev) {
     const row = document.getElementById('attr-points-row');
     row.classList.add('collapsing');
     row.addEventListener('animationend', () => {
       row.classList.remove('collapsing');
-        renderAttributes();
-        updatePointsDisplay();
-      }, { once: true });
-    return;
+      renderAttributes();
+      updatePointsDisplay();
+    }, { once: true });
+      return;
   }
 
   // Entering edit mode: render first then animate labels expand
@@ -806,6 +782,15 @@ function renderFreetexts() {
     ta.dataset.freetextIndex = i;
     box.appendChild(lbl);
     box.appendChild(ta);
+    // Focus textarea when clicking anywhere in the box
+    box.addEventListener('click', (e) => {
+      // Only focus if not already focused or if clicked on label/box
+      if (e.target !== ta) {
+        ta.focus();
+        const len = ta.value.length;
+        ta.setSelectionRange(len, len);
+      }
+    });
     container.appendChild(box);
   });
 }
@@ -1000,3 +985,4 @@ function setInputValue(key, value) {
   if (!el) return;
   el.value = value;
 }
+

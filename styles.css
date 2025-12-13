@@ -219,4 +219,5 @@ footer{color:#666;text-align: right;}
   .row-4{flex-direction:column;}
   .box textarea{min-height: 160px}
   .toggle-btn:hover{border-bottom-width: 4px;}
+  .attr-points-row{position:fixed;bottom:0px;left:0px;width:100%;} /*padding:20px*/
 }
