@@ -884,7 +884,10 @@ function handleDragOver(e) {
   e.preventDefault();
   e.stopPropagation();
   e.dataTransfer.dropEffect = 'copy';
-  showDragOverlay();
+  // Only show overlay if dragging files
+  if (e.dataTransfer.types.includes('Files')) {
+    showDragOverlay();
+  }
 }
 
 function handleDrop(e) {
