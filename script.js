@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('dragover', handleDragOver);
   document.addEventListener('drop', handleDrop);
   document.addEventListener('dragleave', (e) => {
-    //if (e.clientX === 0 && e.clientY === 0) { // works on chrome to detect leaving the window, but not on firefox, where the ui never changes then
+    //if (e.clientX === 0 && e.clientY === 0) { // works on chrome to detect leaving the window, but not on firefox, where the ui never changes then, so were doing a delay based approach instead
       hideDragOverlay();
     //}
   });
@@ -55,16 +55,15 @@ function toggleEditMode() {
   const btn = document.getElementById('edit-btn');
   btn.dataset.active = editMode ? 'true' : 'false';
 
-  // If we are leaving edit mode (was true -> now false), animate collapse of the points labels then re-render
   if (prev) {
     const row = document.getElementById('attr-points-row');
     row.classList.add('collapsing');
     row.addEventListener('animationend', () => {
       row.classList.remove('collapsing');
-      renderAttributes();
       updatePointsDisplay();
     }, { once: true });
-      return;
+    renderAttributes();
+    return;
   }
 
   // Entering edit mode: render first then animate labels expand
@@ -262,9 +261,6 @@ function renderScales() {
 function renderAttributes() {
   // clear columns
   for (let c = 1; c <= 3; c++) document.getElementById('attr-col-' + c).innerHTML = '';
-
-  // show/hide attr-points-row based on editMode
-  document.getElementById('attr-points-row').style.display = editMode ? 'flex' : 'none';
 
   const attrs = gmTemplate.attributes || [];
   attrs.forEach((attr, idx) => {
@@ -528,7 +524,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
             const items = suggestionsDiv.querySelectorAll('.sub-suggestion');
             if (items.length) selectSuggestion(0, items[0].textContent);
           }
-        } else if (e.key === 'Escape') {
+        } else if (e.key === 'Escape' || (e.key === 'Backspace' && e.target.value.length == 0)) {
           suggestionsDiv.style.display = 'none'; highlightedIndex = -1;
         }
       } else {
@@ -729,6 +725,10 @@ function validateSubAttributeInput(inputEl) {
 
 function updatePointsDisplay() {
   const row = document.getElementById('attr-points-row');
+
+  // show/hide attr-points-row based on editMode
+  row.style.display = editMode ? 'flex' : 'none';
+
   if (!row || !editMode) return;
   
   let totalPoints = 0;
@@ -779,6 +779,7 @@ function renderFreetexts() {
     lbl.className = 'label';
     lbl.textContent = label;
     const ta = document.createElement('textarea');
+    ta.className = 'freetext-textarea';
     ta.dataset.freetextIndex = i;
     box.appendChild(lbl);
     box.appendChild(ta);
