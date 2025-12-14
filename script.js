@@ -81,12 +81,6 @@ function toggleCompactMode() {
   const btn = document.getElementById('toggle-btn');
   btn.dataset.active = compactMode ? 'true' : 'false';
   
-  // If in edit mode, just re-render (no animation)
-  if (editMode) {
-    renderAttributes();
-    return;
-  }
-  
   // In view mode: animate subattribute visibility
   if (compactMode) {
       // Collapsing: add animation class then remove elements
@@ -97,13 +91,16 @@ function toggleCompactMode() {
           // Re-render which removes the sub-attr boxes
         }, { once: true });
       });
+      document.querySelectorAll('.sub-add-btn').forEach(box => {
+        box.style.display = 'none';
+      });
   } else {
     renderAttributes();
-    // Expanding: render with .hidden, then animate slideDown
     document.querySelectorAll('.sub-attr-box').forEach(box => {
         box.classList.add('expanding');
         box.addEventListener('animationend', () => {
-        box.classList.remove('expanding');});
+          box.classList.remove('expanding');}
+        );
     });
   }
 }
@@ -149,9 +146,6 @@ function toggleCrewVisibility() {
   if (crewVisible) {
     // show then animate expand
     other.style.display = '';
-    other.classList.add('hidden');
-    void other.offsetHeight;
-    other.classList.remove('hidden');
     other.classList.add('expanding');
     other.addEventListener('animationend', () => { other.classList.remove('expanding'); updateVisibility(); }, { once: true });
   } else {
@@ -171,9 +165,6 @@ function toggleBgVisibility() {
 
   if (bgVisible) {
     freetexts.style.display = '';
-    freetexts.classList.add('hidden');
-    void freetexts.offsetHeight;
-    freetexts.classList.remove('hidden');
     freetexts.classList.add('expanding');
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('expanding'); updateVisibility(); }, { once: true });
   } else {
