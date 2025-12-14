@@ -56,24 +56,53 @@ function toggleEditMode() {
   btn.dataset.active = editMode ? 'true' : 'false';
 
   if (prev) {
+    // leaving edit mode 
     const row = document.getElementById('attr-points-row');
     row.classList.add('collapsing');
     row.addEventListener('animationend', () => {
       row.classList.remove('collapsing');
       updatePointsDisplay();
     }, { once: true });
-    renderAttributes();
-    return;
-  }
 
-  // Entering edit mode: render first then animate labels expand
-  renderAttributes();
-  updatePointsDisplay();
-  const row = document.getElementById('attr-points-row');
-  row.classList.add('expanding');
-  row.addEventListener('animationend', () => {
-    row.classList.remove('expanding');
-  }, { once: true });
+    if (compactMode) {
+      renderAttributes();
+    } else {
+      let firstOne = true;
+      document.querySelectorAll('.sub-attr-box').forEach(box => {
+        box.classList.add('outro');
+        //if (firstOne) {
+          // Re-render which removes the sub-attr boxes
+          box.addEventListener('animationend', () => {
+            renderAttributes();
+          }, { once: true });
+          firstOne = false;
+        //}
+      });
+      document.querySelectorAll('.sub-add-btn').forEach(box => {
+        box.classList.add('outro');
+      });
+    }
+  } else {
+
+    // Entering edit mode: render first then animate labels expand
+    renderAttributes();
+    updatePointsDisplay();
+    const row = document.getElementById('attr-points-row');
+    row.classList.add('expanding');
+    row.addEventListener('animationend', () => {
+      row.classList.remove('expanding');
+    }, { once: true });
+
+    if (!compactMode) {
+      // show buttons
+        document.querySelectorAll('.sub-add-btn').forEach(box => {
+        box.classList.add('intro');
+        box.addEventListener('animationend', () => {
+          box.classList.remove('intro');
+        }, { once: true });
+      });
+    }
+  }
 }
 
 function toggleCompactMode() {
