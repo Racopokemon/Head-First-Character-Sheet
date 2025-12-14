@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // load default.json
-  fetch('default.json')
+  fetch('2025_12_10-01_02_Geronimo_Rder.json')
     .then(r => r.json())
     .then(data => {
       applyImported(data);
@@ -92,7 +92,7 @@ function toggleCompactMode() {
         }, { once: true });
       });
       document.querySelectorAll('.sub-add-btn').forEach(box => {
-        box.style.display = 'none';
+        box.classList.add('outro');
       });
   } else {
     renderAttributes();
@@ -101,6 +101,13 @@ function toggleCompactMode() {
         box.addEventListener('animationend', () => {
           box.classList.remove('expanding');}
         );
+    });
+    document.querySelectorAll('.sub-add-btn').forEach(box => {
+      box.classList.add('intro');
+      box.addEventListener('animationend', () => {
+          box.classList.remove('intro')
+        ;}
+      );
     });
   }
 }

@@ -8,6 +8,8 @@
   --text-size-descr:16px;
   --height:44px;
   --anim-margin-bottom:30px;
+  --attr-box-gap:8px;
+  --add-btn-size:28px;
 }
 *{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size:var(--text-size-normal);border:0px}
 /*#fafafa*/
@@ -38,7 +40,7 @@ textarea.other-player{min-height:80px;color:#676767; font-style: italic;}
 .info-big textarea{font-size: var(--text-size-descr);}
 .scale-row{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height);border-left: 6px solid #e8bde7;background-color: #e8e0e6;background-color: #eee6ec;}
 .scale-row > div:first-child{} /*<- Scale label*/
-.attr-box{display:flex;align-items:center;gap:8px;padding:0px 8px;height:var(--height)}
+.attr-box{display:flex;align-items:center;gap:var(--attr-box-gap);padding:0px 8px;height:var(--height)}
 .attr-box > div:first-child{flex:1}
 .attr-name{flex:1}
 
@@ -57,8 +59,8 @@ textarea.other-player{min-height:80px;color:#676767; font-style: italic;}
 
 /* subattribute controls */
 .sub-add-btn, .sub-del-btn {
-  width: 28px;
-  height: 28px;
+  width: var(--add-btn-size);
+  height: var(--add-btn-size);
   border-radius: 6px;
   border: none;
   background: rgba(255, 255, 255, 0.25);
@@ -175,28 +177,38 @@ input[type=number]{-moz-appearance:textfield}
     margin-bottom:0px;
   }
 }
-@keyframes fadeIn {
+@keyframes fadeIn {from { background: transparent;} to {background: var(--box-bg);}}
+@keyframes fadeOut { from { background: var(--box-bg);} to {background: transparent;}}
+@keyframes addButtonIntro {
   from {
-    background: transparent;
-  }
-  to {
-    background: var(--box-bg);
-  }
-}
-@keyframes fadeOut {
+    opacity:0;
+    width:10px;
+    margin-right:calc(-10px - var(--attr-box-gap));
+  } to {
+    opacity:1;
+    width:var(--add-btn-size);
+    margin-right:0px;
+}}
+@keyframes addButtonOutro {
   from {
-    background: var(--box-bg);
-  }
-  to {
-      background: transparent;
-  }
-}
+    opacity:1;
+    width:var(--add-btn-size);
+    margin-right:0px;
+  } to {
+    opacity:0;
+    width:10px;
+    margin-right:calc(-10px - var(--attr-box-gap));
+}}
+
 .sub-attr-box.expanding {
   animation: slideDown 0.25s ease-out forwards;
 }
 .sub-attr-box.expanding input{
   border: 0;
   animation: fadeIn 0.25s ease-out forwards;
+}
+.sub-attr-box.expanding button{
+  /*color:transparent;*/
 }
 
 .sub-attr-box.collapsing {
@@ -205,6 +217,9 @@ input[type=number]{-moz-appearance:textfield}
 .sub-attr-box.collapsing input{
   border: 0;
   animation: fadeOut 0.25s ease-out forwards;
+}
+.sub-attr-box.collapsing button{
+  color:transparent;
 }
 
 /* Generic expanding/collapsing helpers (re-usable for other sections) */
@@ -215,6 +230,16 @@ input[type=number]{-moz-appearance:textfield}
 .collapsing {
   animation: slideUpRow 0.3s ease-out forwards;
   /*overflow: hidden;*/
+}
+
+.sub-add-btn.intro {
+  animation: addButtonIntro 0.25s ease-out forwards;
+  /*color:transparent;*/
+}
+
+.sub-add-btn.outro {
+  animation: addButtonOutro 0.25s ease-out forwards;
+  color:transparent;
 }
 
 /* drag and drop overlay */
