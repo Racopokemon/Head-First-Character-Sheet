@@ -64,22 +64,23 @@ function toggleEditMode() {
       updatePointsDisplay();
     }, { once: true });
 
-    if (compactMode) {
-      renderAttributes();
-    } else {
-      let firstOne = true;
+    renderAttributes();
+    if (!compactMode) {
       document.querySelectorAll('.sub-add-btn').forEach(box => {
+        box.style.display = '';
         box.classList.add('outro');
-        if (firstOne) {
-          box.addEventListener('animationend', () => {
-          // Re-render which removes the sub-attr boxes
-            renderAttributes();
-          });
-          firstOne = false;
-        }
+        //if (firstOne) {
+        box.addEventListener('animationend', () => {
+          box.remove();
+        });
+        //}
       });
       document.querySelectorAll('.sub-del-btn').forEach(box => {
+        box.style.display = '';
         box.classList.add('outro');
+        box.addEventListener('animationend', () => {
+          box.remove();
+        });
       });
     }
   } else {
@@ -299,7 +300,7 @@ function renderAttributes() {
     box.dataset.attrMainIdx = idx;
     const span = document.createElement('div');
     span.textContent = attr.name || ('Attr ' + (idx + 1));
-    span.className = "attr-name";
+    span.className = 'attr-name';
     
     // Get stored value from playerData
     const storedValue = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].points : 0;
@@ -334,7 +335,6 @@ function renderAttributes() {
       if (!compactMode) {
         const addBtn = document.createElement('button');
         addBtn.className = 'sub-add-btn';
-        addBtn.title = 'Subattribut hinzufügen';
         addBtn.textContent = '+';
         addBtn.addEventListener('click', (ev) => {
             ev.stopPropagation();
@@ -357,6 +357,14 @@ function renderAttributes() {
         label.innerHTML = `<span class="ec-light">${left} / ${mid}</span> / <span>${right}</span>`;
       } else {
         label.textContent = storedValue || '0';
+      }
+      if (!compactMode) {
+        //this button is only needed for the fade-out animation
+        const addBtn = document.createElement('button');
+        addBtn.className = 'sub-add-btn';
+        addBtn.textContent = '+';
+        addBtn.style.display = 'none'; //quick n dirty, but for one animation its probably ok
+        box.append(addBtn);
       }
       box.appendChild(span);
       box.appendChild(label);
@@ -451,8 +459,6 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
   box.className = 'box attr-box sub-attr-box color-' + parentColor + '-light';
   
   if (editMode) {
-    //box.className += ' sub-attr-box-edit';
-
     // Edit mode: name input + value input + total label
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
@@ -635,6 +641,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     // View mode: name + total label
     const nameLabel = document.createElement('div');
     nameLabel.textContent = subAttr.name || '';
+    nameLabel.className = 'sub-attr-name';
     //nameLabel.className = 'flex';
     
     const totalLabel = document.createElement('div');
@@ -652,6 +659,15 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       totalLabel.textContent = sum;
     }
     
+    if (!compactMode) {
+      //this button is only needed (again) for the fade-out animation
+      const addBtn = document.createElement('button');
+      addBtn.className = 'sub-del-btn';
+      addBtn.textContent = '-';
+      addBtn.style.display = 'none'; //quick n dirty, but for one animation its probably ok
+      box.append(addBtn);
+    }
+
     box.appendChild(nameLabel);
     box.appendChild(totalLabel);
   }

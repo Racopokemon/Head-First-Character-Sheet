@@ -43,11 +43,12 @@ textarea.other-player{min-height:80px;color:#676767; font-style: italic;}
 .attr-box{display:flex;align-items:center;gap:var(--attr-box-gap);padding:0px 8px;height:var(--height)}
 .attr-box > div:first-child{flex:1}
 .attr-name{flex:1}
+.sub-attr-name{flex:1;}
 
-.sub-attr-box{gap:0px;margin-top:-12px;position:relative}
-.sub-attr-box > div:first-child{flex:1}
-.sub-attr-box input[type="text"]{flex:1;padding:6px;border:1px solid #ccc;border-radius:4px;margin-left:8px;width:0px}
-.sub-attr-box input[type="number"]{border-radius:4px}
+.sub-attr-box{margin-top:-12px;position:relative}
+/*.sub-attr-box > div:first-child{flex:1}*/
+.sub-attr-box input[type="text"]{flex:1;padding:6px;border:1px solid #ccc;border-radius:4px;width:0px}
+.sub-attr-box input[type="number"]{border-radius:4px;margin-left:calc(0px - var(--attr-box-gap));margin-right:calc(0px - var(--attr-box-gap));}
 
 /* suggestion dropdown for subattribute names */
 .sub-suggestions{position:absolute;left:8px;right:120px;top:100%;margin-top:6px;background:white;border:1px solid #ccc;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.08);max-height:200px;overflow:auto;z-index:30}
