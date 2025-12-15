@@ -232,12 +232,12 @@ input[type=number]{-moz-appearance:textfield}
   /*overflow: hidden;*/
 }
 
-.sub-add-btn.intro {
+.sub-add-btn.intro, .sub-del-btn.intro {
   animation: addButtonIntro 0.25s ease-out forwards;
   /*color:transparent;*/
 }
 
-.sub-add-btn.outro {
+.sub-add-btn.outro, .sub-del-btn.outro {
   animation: addButtonOutro 0.25s ease-out forwards;
   color:transparent;
 }

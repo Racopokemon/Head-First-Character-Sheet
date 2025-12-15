@@ -68,22 +68,21 @@ function toggleEditMode() {
       renderAttributes();
     } else {
       let firstOne = true;
-      document.querySelectorAll('.sub-attr-box').forEach(box => {
-        box.classList.add('outro');
-        //if (firstOne) {
-          // Re-render which removes the sub-attr boxes
-          box.addEventListener('animationend', () => {
-            renderAttributes();
-          }, { once: true });
-          firstOne = false;
-        //}
-      });
       document.querySelectorAll('.sub-add-btn').forEach(box => {
+        box.classList.add('outro');
+        if (firstOne) {
+          box.addEventListener('animationend', () => {
+          // Re-render which removes the sub-attr boxes
+            renderAttributes();
+          });
+          firstOne = false;
+        }
+      });
+      document.querySelectorAll('.sub-del-btn').forEach(box => {
         box.classList.add('outro');
       });
     }
   } else {
-
     // Entering edit mode: render first then animate labels expand
     renderAttributes();
     updatePointsDisplay();
@@ -95,11 +94,11 @@ function toggleEditMode() {
 
     if (!compactMode) {
       // show buttons
-        document.querySelectorAll('.sub-add-btn').forEach(box => {
-        box.classList.add('intro');
-        box.addEventListener('animationend', () => {
-          box.classList.remove('intro');
-        }, { once: true });
+        document.querySelectorAll('.sub-add-btn, .sub-del-btn').forEach(box => {
+          box.classList.add('intro');
+          box.addEventListener('animationend', () => {
+            box.classList.remove('intro');
+          }, { once: true });
       });
     }
   }
