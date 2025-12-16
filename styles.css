@@ -27,9 +27,9 @@ h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .freetext-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(150px,1fr);gap:var(--gap);margin-bottom:var(--anim-margin-bottom);}
 .freetext-textarea{}
 
-.box{background:var(--box-bg);padding:3px 12px;border-radius:8px;/*! background-color: #dde2e5; */background-color: #f1f1f1;}
-.box .label{margin-bottom:6px;color:#585858; font-style: italic;}
-.box textarea{width:100%;flex:1;min-height:0;font-size:var(--text-size-normal);border:0;background:transparent;resize:none;}
+.box{border-radius:8px;background-color: #f1f1f1;}
+.label{color:#585858; font-style: italic;}
+.textareabox textarea{width:100%;flex:1;min-height:0;border:0;background:transparent;resize:none;}
 .box input[type="number"]{padding:6px;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600;font-size:var(--text-size-numbers);border:1px solid #ccc;}
 /*.box .scale{flex-direction: column;}*/
 textarea.other-player{min-height:80px;color:#676767; font-style: italic;}
@@ -76,7 +76,7 @@ textarea.other-player{min-height:80px;color:#676767; font-style: italic;}
   background: rgba(255, 255, 255, 0.45);
 }
 
-.textareabox{display:flex;flex-direction:column;}
+.textareabox{padding:7px 16px; display:flex;flex-direction:column;}
 
 /* color classes for attributes (1-7) and light variants for sub-attributes */
 .color-1{border-left:6px solid #ff8a80;background-color:#ffcccc}
@@ -270,7 +270,7 @@ input[type=number]{-moz-appearance:textfield}
   .attributes-row{flex-direction:column}
   .freetext-grid{grid-template-columns:1fr}
   .row-4{flex-direction:column;}
-  .box textarea{min-height: 160px}
+  .box textareabox{min-height: 160px}
   .top-buttons-row{display:grid;grid-template-columns:repeat(2,1fr);}
   .toggle-btn:hover{border-bottom: 4px solid #e2e2e2;}
   .attr-points-row{position:fixed;bottom:0px;left:0px;width:100%;} /*padding:20px*/
