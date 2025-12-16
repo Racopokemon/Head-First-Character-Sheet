@@ -10,6 +10,7 @@
   --anim-margin-bottom:30px;
   --attr-box-gap:8px;
   --add-btn-size:28px;
+  --button-size:43px;
 }
 *{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size:var(--text-size-normal);border:0px}
 /*#fafafa*/
@@ -32,7 +33,7 @@ h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .textareabox textarea{width:100%;flex:1;min-height:0;border:0;background:transparent;resize:none;}
 .box input[type="number"]{padding:6px;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600;font-size:var(--text-size-numbers);border:1px solid #ccc;}
 /*.box .scale{flex-direction: column;}*/
-textarea.other-player{min-height:80px;color:#676767; font-style: italic;}
+textarea.other-player{min-height:80px;color:#6c6c6c; font-style: italic;}
 .info-single{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height)}
 .info-single input{width:100%;padding:6px;border:0;background:transparent}
 .info-char-name{font-weight: 600;font-size: large;}
@@ -97,7 +98,7 @@ textarea.other-player{min-height:80px;color:#676767; font-style: italic;}
 .buttons-row button{padding:8px 12px;border-radius:6px;/*! background:#e5e6e7; */flex:1;background: #fff;}
 
 /* toggle button styling */
-.toggle-btn{cursor:pointer;font-size: var(--text-size-descr);;color:#454545;border-bottom: 4px solid #e2e2e2;}
+.toggle-btn{cursor:pointer;font-size: var(--text-size-descr);height:var(--button-size);color:#454545;border-bottom: 4px solid #e2e2e2;}
 .toggle-btn[data-active="true"]{background:#f3f3f3;border-bottom-width: 2px;}
 .toggle-btn:hover{border-bottom: 2px solid #d2d2d2;}
 .toggle-btn:active{border-bottom: 0px;}
