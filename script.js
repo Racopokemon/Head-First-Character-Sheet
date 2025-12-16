@@ -55,6 +55,16 @@ function toggleEditMode() {
   const btn = document.getElementById('edit-btn');
   btn.dataset.active = editMode ? 'true' : 'false';
 
+  // Disable EC button in edit mode
+  const ecBtn = document.getElementById('ec-btn');
+  if (ecBtn) {
+    if (editMode) {
+      ecBtn.classList.add('disabled');
+    } else {
+      ecBtn.classList.remove('disabled');
+    }
+  }
+
   if (prev) {
     // leaving edit mode 
     const row = document.getElementById('attr-points-row');
@@ -142,11 +152,14 @@ function toggleCompactMode() {
 }
 
 function toggleEcMode() {
+  // Don't toggle if in edit mode
+  if (editMode) return;
+
   ecMode = !ecMode;
   const btn = document.getElementById('ec-btn');
   if (btn) btn.dataset.active = ecMode ? 'true' : 'false';
   // only affects view-mode labels
-  if (!editMode) renderAttributes();
+  renderAttributes();
 }
 
 function renderAll() {
