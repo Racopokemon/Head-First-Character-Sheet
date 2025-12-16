@@ -151,6 +151,7 @@ function toggleEcMode() {
 
 function renderAll() {
   if (!gmTemplate) return;
+  applyLocalization();
   renderOtherPlayers();
   renderInfos();
   renderScales();
@@ -158,6 +159,36 @@ function renderAll() {
   renderFreetexts();
   updateVisibility();
   updatePointsDisplay();
+}
+
+function applyLocalization() {
+  const loc = gmTemplate.localization || {};
+
+  // Set title
+  const titleEl = document.getElementById('main-title');
+  if (titleEl) titleEl.textContent = loc.title || 'Head First! Character Sheet';
+
+  // Set button labels
+  const crewBtn = document.getElementById('crew-btn');
+  if (crewBtn) crewBtn.textContent = loc.btn_crew || 'Meine Crew';
+
+  const bgBtn = document.getElementById('bg-btn');
+  if (bgBtn) bgBtn.textContent = loc.btn_background || 'Mein Background';
+
+  const importBtn = document.getElementById('import-btn');
+  if (importBtn) importBtn.textContent = loc.btn_import || 'Import';
+
+  const exportBtn = document.getElementById('export-btn');
+  if (exportBtn) exportBtn.textContent = loc.btn_export || 'Download';
+
+  const editBtn = document.getElementById('edit-btn');
+  if (editBtn) editBtn.textContent = loc.btn_edit || 'Bearbeiten';
+
+  const toggleBtn = document.getElementById('toggle-btn');
+  if (toggleBtn) toggleBtn.textContent = loc.btn_compact || 'Kompakt';
+
+  const ecBtn = document.getElementById('ec-btn');
+  if (ecBtn) ecBtn.textContent = loc.btn_ec || 'Erfolgsklassen';
 }
 
 function updateVisibility() {
@@ -627,7 +658,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     const delBtn = document.createElement('button');
     delBtn.className = 'sub-del-btn';
     delBtn.title = 'Subattribut entfernen';
-    delBtn.textContent = '-';//'×';
+    delBtn.textContent = '×';//'×';
     delBtn.addEventListener('click', (ev) => {
       ev.stopPropagation();
       removeSubAttribute(attrIdx, subAttrIdx);
@@ -663,7 +694,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       //this button is only needed (again) for the fade-out animation
       const addBtn = document.createElement('button');
       addBtn.className = 'sub-del-btn';
-      addBtn.textContent = '-';
+      addBtn.textContent = '×';
       addBtn.style.display = 'none'; //quick n dirty, but for one animation its probably ok
       box.append(addBtn);
     }
@@ -802,19 +833,23 @@ function updatePointsDisplay() {
   
   const maxPoints = gmTemplate.attribute_points || 150;
   const maxSubPoints = gmTemplate.sub_attribute_points || 250;
+  const loc = gmTemplate.localization || {};
+  const labelGrundwerte = loc.label_grundwerte || 'Grundwerte';
+  const labelSpezialisierung = loc.label_spezialisierung || 'Spezialisierung';
+
   const label = document.getElementById('attr-points-label');
   if (label) {
-    label.textContent = `Grundwerte ${totalPoints}/${maxPoints}`;
+    label.textContent = `${labelGrundwerte} ${totalPoints}/${maxPoints}`;
     if (totalPoints > maxPoints) {
       label.classList.add('warning');
     } else {
       label.classList.remove('warning');
     }
   }
-  
+
   const subLabel = document.getElementById('sub-attr-points-label');
   if (subLabel) {
-    subLabel.textContent = `Spezialisierung ${totalSubPoints}/${maxSubPoints}`;
+    subLabel.textContent = `${labelSpezialisierung} ${totalSubPoints}/${maxSubPoints}`;
     if (totalSubPoints > maxSubPoints) {
       subLabel.classList.add('warning');
     } else {

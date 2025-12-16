@@ -10,13 +10,13 @@
   <div class="container">
     <!-- Top buttons -->
     <div class="row buttons-row top-buttons-row" id="top-buttons-row">
-      <button id="crew-btn" class="toggle-btn" data-active="false">Meine Crew</button>
-      <button id="bg-btn" class="toggle-btn" data-active="false">Mein Background</button>
-      <button id="import-btn" class="toggle-btn" data-active="false">Import</button>
-      <button id="export-btn" class="toggle-btn" data-active="false">Download</button>
+      <button id="crew-btn" class="toggle-btn" data-active="false"></button>
+      <button id="bg-btn" class="toggle-btn" data-active="false"></button>
+      <button id="import-btn" class="toggle-btn" data-active="false"></button>
+      <button id="export-btn" class="toggle-btn" data-active="false"></button>
       <input type="file" id="file-input" accept="application/json" style="display:none">
     </div>
-    <h1>Head First! Character Sheet</h1>
+    <h1 id="main-title"></h1>
 
     <!-- Row 1: four boxes for other players -->
     <div class="row row-4" id="other-players">
@@ -38,9 +38,9 @@
 
     <!-- Main button row (controls) -->
     <div class="row buttons-row">
-      <button id="edit-btn" class="toggle-btn" data-active="false">Bearbeiten</button>
-      <button id="toggle-btn" class="toggle-btn" data-active="false">Kompakt</button>
-      <button id="ec-btn" class="toggle-btn ec-btn" data-active="false">Erfolgsklassen</button>
+      <button id="edit-btn" class="toggle-btn" data-active="false"></button>
+      <button id="toggle-btn" class="toggle-btn" data-active="false"></button>
+      <button id="ec-btn" class="toggle-btn ec-btn" data-active="false"></button>
     </div>
 
     <!-- Row 3: attributes in 3 columns -->
@@ -52,8 +52,8 @@
 
     <!-- Row: attribute points display (only in edit mode) -->
     <div class="row attr-points-row" id="attr-points-row" style="display:none">
-      <div class="attr-points-label" id="attr-points-label">Grundwerte: 0/0</div>
-      <div class="attr-points-label" id="sub-attr-points-label">Spezialisierung: 0/0</div>
+      <div class="attr-points-label" id="attr-points-label"></div>
+      <div class="attr-points-label" id="sub-attr-points-label"></div>
     </div>
 
     <!-- Row 4: 3x2 grid for freetext1-6 -->
