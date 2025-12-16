@@ -38,14 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // load default.json
-  fetch('2025_12_10-01_02_Geronimo_Rder.json')
+  fetch('default.json')
     .then(r => r.json())
     .then(data => {
       applyImported(data);
     })
     .catch(err => {
-      console.error('Fehler beim Laden von default.json', err);
-      alert('Konnte default.json nicht laden. Stelle sicher, dass die Datei vorhanden ist und die Seite über einen Server läuft.');
+      console.error('Could not load default.json', err);
+      alert('Could not load default.json. Make sure that the file exists and the website is hosted on a server :)');
     });
 });
 
@@ -852,7 +852,7 @@ function renderFreetexts() {
 }
 
 function handleExport() {
-  if (!gmTemplate) return alert('Noch keine Vorlage geladen');
+  if (!gmTemplate) return alert('No sheet loaded to export');
   const out = { set_by_gm: gmTemplate, set_by_player: {} };
 
   // infos and freetexts and other players and scales
@@ -892,7 +892,7 @@ function handleExport() {
   name = (name || 'character').toString().trim();
   // sanitize name to safe filename
   name = name.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_\-]/g,'');
-  a.href = url; a.download = `${y}_${mo}_${d}-${hh}_${mm}_${name}.json`;
+  a.href = url; a.download = `${y}_${mo}_${d}-${hh}_${mm}_${name}.char`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
 }
@@ -913,7 +913,7 @@ function handleFileImport(e) {
       const json = JSON.parse(ev.target.result);
       applyImported(json);
     } catch (err) {
-      alert('Ungültige JSON-Datei');
+      alert('Could not parse json data :(');
     }
   };
   reader.readAsText(f);
@@ -946,7 +946,7 @@ function handleDrop(e) {
       const json = JSON.parse(ev.target.result);
       applyImported(json);
     } catch (err) {
-      alert('Ungültige JSON-Datei');
+      alert('Could not parse json data :(');
     }
   };
   reader.readAsText(file);
