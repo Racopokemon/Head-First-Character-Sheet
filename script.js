@@ -288,8 +288,8 @@ function renderInfos() {
     if (i == 1) input.className += ' info-char-name';
     // keyboard navigation: up/down/enter moves to next/prev input in infos-left
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container); }
+      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container, 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container, 1); }
     });
   }
 
@@ -311,13 +311,13 @@ function renderInfos() {
 
     if (e.key === 'ArrowUp' && isAtStart) {
       e.preventDefault();
-      focusPrevInContainer(ta4, container);
+      focusPrevInContainer(ta4, container, 1);
     } else if (e.key === 'ArrowDown' && isAtEnd) {
       e.preventDefault();
-      focusNextInContainer(ta4, container);
+      focusNextInContainer(ta4, container, 1);
     } else if (e.key === 'Enter' && (e.ctrlKey || e.shiftKey)) {
       e.preventDefault();
-      focusNextInContainer(ta4, container);
+      focusNextInContainer(ta4, container, 1);
     }
   });
 
@@ -345,8 +345,8 @@ function renderScales() {
     r.appendChild(row);
     // keyboard navigation: up/down/enter moves to next/prev scale input
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container); }
+      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container, 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container, 1); }
     });
   }
 }
@@ -359,6 +359,7 @@ function renderAttributes() {
   attrs.forEach((attr, idx) => {
     const col = (attr.column || 1);
     const container = document.getElementById('attr-col-' + col);
+    const allColumnsContainer = document.getElementById('attributes-row');
     
     // Main attribute box
     const box = document.createElement('div');
@@ -393,8 +394,8 @@ function renderAttributes() {
       });
       // keyboard navigation: up/down/enter moves between all number inputs in the column
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextNumberInContainer(input, container); }
-        else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevNumberInContainer(input, container); }
+        if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, allColumnsContainer, 2); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, allColumnsContainer, 2); }
       });
       validateAttributeInput(input, idx); // initial validation
             // add subattribute button
@@ -525,6 +526,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
   box.className = 'box attr-box sub-attr-box color-' + parentColor + '-light';
   
   if (editMode) {
+    const allColumnsContainer = document.getElementById('attributes-row');
     // Edit mode: name input + value input + total label
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
@@ -627,9 +629,16 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
         }
       } else {
         // no suggestions - arrow keys jump between subattribute name fields in the column
-        if (e.key === 'ArrowDown') { e.preventDefault(); focusSiblingSubInput(nameInput, 1); }
-        else if (e.key === 'ArrowUp') { e.preventDefault(); focusSiblingSubInput(nameInput, -1); }
-        else if (e.key === 'Enter') { e.preventDefault(); addSubAttribute(attrIdx, subAttrIdx + 1); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); focusNextInContainer(nameInput, allColumnsContainer, 3); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(nameInput, allColumnsContainer, 3); }
+        else if (e.key === 'Enter') { 
+          e.preventDefault(); 
+          if (e.ctrlKey || e.shiftKey) {
+            focusNextInContainer(nameInput, allColumnsContainer, 3);
+          } else {
+            addSubAttribute(attrIdx, subAttrIdx + 1); 
+          }
+        }
         else if (e.key === 'Backspace' && nameInput.value === '') {
           e.preventDefault();
           // Precompute the expected data-sub-input for the previous subattribute
@@ -677,8 +686,8 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     });
     // keyboard navigation: up/down/enter moves between all number inputs in the column
     valueInput.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextNumberInContainer(valueInput, container); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevNumberInContainer(valueInput, container); }
+      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(valueInput, allColumnsContainer, 2); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(valueInput, allColumnsContainer, 2); }
     });
     validateSubAttributeInput(valueInput); // initial validation
     
@@ -741,42 +750,19 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
   container.appendChild(box);
 }
 
-// Move focus to the next/previous subattribute name input within the same column
-function focusSiblingSubInput(currentInput, dir) {
-  // find the column ancestor (id starts with 'attr-col-')
-  let el = currentInput.parentElement;
-  while (el && !el.id?.startsWith('attr-col-')) el = el.parentElement;
-  if (!el) return;
-  const inputs = Array.from(el.querySelectorAll('input[data-sub-input]'));
-  if (!inputs.length) return;
-  // find current index
-  const curIndex = inputs.indexOf(currentInput);
-  if (curIndex === -1) {
-    // perhaps the currentInput is not the same reference (re-render happened) - match by dataset
-    const curDs = currentInput.dataset.subInput;
-    for (let i = 0; i < inputs.length; i++) if (inputs[i].dataset.subInput === curDs) {
-      const target = i + dir;
-      if (target >= 0 && target < inputs.length) {
-        inputs[target].focus();
-        try { const len = (inputs[target].value || '').length; if (inputs[target].setSelectionRange) inputs[target].setSelectionRange(len, len); } catch (e) {}
-      }
-      return;
-    }
-    return;
-  }
-  const target = curIndex + dir;
-  if (target >= 0 && target < inputs.length) {
-    inputs[target].focus();
-    try {
-      const len = (inputs[target].value || '').length;
-      if (inputs[target].setSelectionRange) inputs[target].setSelectionRange(len, len);
-    } catch (e) {}
+function getSelectorFromType(type) {
+  if (type == 1) {
+    return 'input[type="text"], input[type="number"], textarea';
+  } else if (type == 2) {
+    return 'input[type="number"]';
+  } else {
+    return 'input[type="text"]';
   }
 }
 
 // Move focus to the next/previous input-like element within a container
-function focusNextInContainer(currentEl, container) {
-  const inputs = Array.from(container.querySelectorAll('input[type="text"], input[type="number"], textarea'));
+function focusNextInContainer(currentEl, container, type) {
+  const inputs = Array.from(container.querySelectorAll(getSelectorFromType(type)));
   const idx = inputs.indexOf(currentEl);
   if (idx !== -1 && idx + 1 < inputs.length) {
     inputs[idx + 1].focus();
@@ -784,27 +770,8 @@ function focusNextInContainer(currentEl, container) {
   }
 }
 
-function focusPrevInContainer(currentEl, container) {
-  const inputs = Array.from(container.querySelectorAll('input[type="text"], input[type="number"], textarea'));
-  const idx = inputs.indexOf(currentEl);
-  if (idx > 0) {
-    inputs[idx - 1].focus();
-    try { const len = (inputs[idx - 1].value || '').length; if (inputs[idx - 1].setSelectionRange) inputs[idx - 1].setSelectionRange(len, len); } catch (e) {}
-  }
-}
-
-// Move focus to the next/previous number input only within a container (skip text inputs)
-function focusNextNumberInContainer(currentEl, container) {
-  const inputs = Array.from(container.querySelectorAll('input[type="number"]'));
-  const idx = inputs.indexOf(currentEl);
-  if (idx !== -1 && idx + 1 < inputs.length) {
-    inputs[idx + 1].focus();
-    try { const len = (inputs[idx + 1].value || '').length; if (inputs[idx + 1].setSelectionRange) inputs[idx + 1].setSelectionRange(len, len); } catch (e) {}
-  }
-}
-
-function focusPrevNumberInContainer(currentEl, container) {
-  const inputs = Array.from(container.querySelectorAll('input[type="number"]'));
+function focusPrevInContainer(currentEl, container, type) {
+  const inputs = Array.from(container.querySelectorAll(getSelectorFromType(type)));
   const idx = inputs.indexOf(currentEl);
   if (idx > 0) {
     inputs[idx - 1].focus();
