@@ -273,6 +273,7 @@ function renderOtherPlayers() {
 function renderInfos() {
   const left = document.getElementById('infos-left');
   left.innerHTML = '';
+  const container = document.getElementById('infos-container');
   for (let i = 1; i <= 3; i++) {
     const key = 'info' + i;
     const box = document.createElement('div');
@@ -287,8 +288,8 @@ function renderInfos() {
     if (i == 1) input.className += ' info-char-name';
     // keyboard navigation: up/down/enter moves to next/prev input in infos-left
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, left); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, left); }
+      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container); }
     });
   }
 
@@ -300,6 +301,26 @@ function renderInfos() {
   const ta4 = document.createElement('textarea');
   ta4.placeholder = gmTemplate[key4] || '';
   ta4.dataset.key = key4;
+
+  // Keyboard navigation for textarea
+  ta4.addEventListener('keydown', (e) => {
+    const cursorPos = e.target.selectionStart;
+    const textLength = e.target.value.length;
+    const isAtStart = cursorPos === 0;
+    const isAtEnd = cursorPos === textLength;
+
+    if (e.key === 'ArrowUp' && isAtStart) {
+      e.preventDefault();
+      focusPrevInContainer(ta4, container);
+    } else if (e.key === 'ArrowDown' && isAtEnd) {
+      e.preventDefault();
+      focusNextInContainer(ta4, container);
+    } else if (e.key === 'Enter' && (e.ctrlKey || e.shiftKey)) {
+      e.preventDefault();
+      focusNextInContainer(ta4, container);
+    }
+  });
+
   box4.appendChild(ta4);
   mid.appendChild(box4);
 }
@@ -307,6 +328,7 @@ function renderInfos() {
 function renderScales() {
   const r = document.getElementById('scales');
   r.innerHTML = '';
+  const container = document.getElementById('infos-container');
   for (let i = 1; i <= 3; i++) {
     const key = 'scale' + i;
     const row = document.createElement('div');
@@ -323,8 +345,8 @@ function renderScales() {
     r.appendChild(row);
     // keyboard navigation: up/down/enter moves to next/prev scale input
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, r); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, r); }
+      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container); }
     });
   }
 }
@@ -754,7 +776,7 @@ function focusSiblingSubInput(currentInput, dir) {
 
 // Move focus to the next/previous input-like element within a container
 function focusNextInContainer(currentEl, container) {
-  const inputs = Array.from(container.querySelectorAll('input[type="text"], input[type="number"]'));
+  const inputs = Array.from(container.querySelectorAll('input[type="text"], input[type="number"], textarea'));
   const idx = inputs.indexOf(currentEl);
   if (idx !== -1 && idx + 1 < inputs.length) {
     inputs[idx + 1].focus();
@@ -763,7 +785,7 @@ function focusNextInContainer(currentEl, container) {
 }
 
 function focusPrevInContainer(currentEl, container) {
-  const inputs = Array.from(container.querySelectorAll('input[type="text"], input[type="number"]'));
+  const inputs = Array.from(container.querySelectorAll('input[type="text"], input[type="number"], textarea'));
   const idx = inputs.indexOf(currentEl);
   if (idx > 0) {
     inputs[idx - 1].focus();

@@ -238,12 +238,12 @@ input[type=number]{-moz-appearance:textfield}
 }
 
 .sub-add-btn.intro, .sub-del-btn.intro {
-  animation: addButtonIntro 0.25s ease-out forwards;
+  animation: addButtonIntro 0.20s ease-out forwards;
   /*color:transparent;*/
 }
 
 .sub-add-btn.outro, .sub-del-btn.outro {
-  animation: addButtonOutro 0.25s ease-out forwards;
+  animation: addButtonOutro 0.20s ease-out forwards;
   color:transparent;
 }
 
