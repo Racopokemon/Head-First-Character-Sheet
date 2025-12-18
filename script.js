@@ -352,10 +352,25 @@ function renderScales() {
 }
 
 function renderAttributes() {
-  // clear columns
-  for (let c = 1; c <= 3; c++) document.getElementById('attr-col-' + c).innerHTML = '';
-
   const attrs = gmTemplate.attributes || [];
+
+  // Determine the maximum column number
+  let maxColumn = 1;
+  attrs.forEach((attr) => {
+    const col = attr.column || 1;
+    if (col > maxColumn) maxColumn = col;
+  });
+
+  // Clear and recreate columns
+  const attributesRow = document.getElementById('attributes-row');
+  attributesRow.innerHTML = '';
+  for (let c = 1; c <= maxColumn; c++) {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'attr-col';
+    colDiv.id = 'attr-col-' + c;
+    attributesRow.appendChild(colDiv);
+  }
+
   attrs.forEach((attr, idx) => {
     const col = (attr.column || 1);
     const container = document.getElementById('attr-col-' + col);
@@ -533,6 +548,11 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     // nameInput.placeholder = 'Subattribut-Name';
     nameInput.value = subAttr.name || '';
     nameInput.dataset.subInput = `${attrIdx}-${subAttrIdx}`;
+
+    // Bring to front on focus, move back on blur
+    nameInput.addEventListener('focus', () => { nameInput.style.zIndex = '1'; });
+    nameInput.addEventListener('blur', () => { nameInput.style.zIndex = ''; });
+
     // suggestions dropdown element
     const suggestionsDiv = document.createElement('div');
     suggestionsDiv.className = 'sub-suggestions';
