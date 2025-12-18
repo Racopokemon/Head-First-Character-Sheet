@@ -55,6 +55,13 @@ function toggleEditMode() {
   const btn = document.getElementById('edit-btn');
   btn.dataset.active = editMode ? 'true' : 'false';
 
+  // Toggle edit-mode class on body for mobile bottom padding
+  if (editMode) {
+    document.body.classList.add('edit-mode');
+  } else {
+    document.body.classList.remove('edit-mode');
+  }
+
   // Disable EC button in edit mode
   const ecBtn = document.getElementById('ec-btn');
   if (ecBtn) {

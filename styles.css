@@ -74,7 +74,7 @@ textarea.other-player{min-height:80px;color:#6c6c6c; font-style: italic;}
 }
 
 .sub-del-btn {
-  color:#b66c6c;
+  color:#908c8c;
 }
 
 .sub-add-btn:hover, .sub-del-btn:hover {
@@ -278,6 +278,21 @@ input[type=number]{-moz-appearance:textfield}
   .info-big{min-height: 160px};
   .top-buttons-row{display:grid;grid-template-columns:repeat(2,1fr);}
   .toggle-btn:hover{border-bottom: 4px solid #e2e2e2;}
-  .attr-points-row{position:fixed;bottom:0px;left:0px;width:100%;} /*padding:20px*/
+  .attr-points-row{
+    position:fixed;
+    bottom:calc(12px - var(--anim-margin-bottom));
+    left:12px;
+    right:12px;
+    width:auto;
+    background:#fbfbfb;
+    padding:12px;
+    border-radius:8px;
+    box-shadow:0 -2px 12px rgba(0,0,0,0.1);
+    z-index:100;
+  }
   textarea.other-player{min-height:80px;}
+  /* Add padding at bottom when in edit mode so content is not hidden behind fixed attr-points-row */
+  body.edit-mode .container{
+    padding-bottom:120px;
+  }
 }
