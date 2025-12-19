@@ -35,7 +35,7 @@ h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 /*.box .scale{flex-direction: column;}*/
 textarea.other-player{min-height:80px;color:#6c6c6c; font-style: italic;}
 .info-single{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height)}
-.info-single input{width:100%;padding:6px;border:0;background:transparent}
+.info-single input{width:100%;padding:6px;border:0;background:transparent;height:auto;}
 .info-char-name{font-weight: 600;font-size: large;}
 .info-big{flex:1}
 .info-big textarea{font-size: var(--text-size-descr);}
@@ -131,6 +131,7 @@ input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button{
   -webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
+input{height:38px;}
 .footer{color:#666;text-align:right;font-size:var(--text-size-descr);}
 .footer a{color:#666;font-size:var(--text-size-descr);}
 
