@@ -55,13 +55,6 @@ function toggleEditMode() {
   const btn = document.getElementById('edit-btn');
   btn.dataset.active = editMode ? 'true' : 'false';
 
-  // Toggle edit-mode class on body for mobile bottom padding
-  if (editMode) {
-    document.body.classList.add('edit-mode');
-  } else {
-    document.body.classList.remove('edit-mode');
-  }
-
   // Disable EC button in edit mode
   const ecBtn = document.getElementById('ec-btn');
   if (ecBtn) {
@@ -73,12 +66,20 @@ function toggleEditMode() {
   }
 
   if (prev) {
-    // leaving edit mode 
+    // leaving edit mode
     const row = document.getElementById('attr-points-row');
     row.classList.add('collapsing');
     row.addEventListener('animationend', () => {
       row.classList.remove('collapsing');
       updatePointsDisplay();
+    }, { once: true });
+
+    // Animate container padding out
+    const container = document.querySelector('.container');
+    container.classList.remove('padding-in');
+    container.classList.add('padding-out');
+    container.addEventListener('animationend', () => {
+      container.classList.remove('padding-out');
     }, { once: true });
 
     renderAttributes();
@@ -108,6 +109,14 @@ function toggleEditMode() {
     row.classList.add('expanding');
     row.addEventListener('animationend', () => {
       row.classList.remove('expanding');
+    }, { once: true });
+
+    // Animate container padding in
+    const container = document.querySelector('.container');
+    container.classList.remove('padding-out');
+    container.classList.add('padding-in');
+    container.addEventListener('animationend', () => {
+      //container.classList.remove('padding-in');
     }, { once: true });
 
     if (!compactMode) {

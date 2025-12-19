@@ -209,6 +209,22 @@ input[type=number]{-moz-appearance:textfield}
     margin-right:calc(-10px - var(--attr-box-gap));
 }}
 
+@keyframes paddingBottomIn {
+  from {
+    padding-bottom:0;
+  } to {
+    padding-bottom:120px;
+  }
+}
+
+@keyframes paddingBottomOut {
+  from {
+    padding-bottom:120px;
+  } to {
+    padding-bottom:0;
+  }
+}
+
 .sub-attr-box.expanding {
   animation: slideDown 0.25s ease-out forwards;
 }
@@ -292,7 +308,10 @@ input[type=number]{-moz-appearance:textfield}
   }
   textarea.other-player{min-height:80px;}
   /* Add padding at bottom when in edit mode so content is not hidden behind fixed attr-points-row */
-  body.edit-mode .container{
-    padding-bottom:120px;
+  .container.padding-in{
+    animation: paddingBottomIn 0.4s ease-out forwards;
+  }
+  .container.padding-out{
+    animation: paddingBottomOut 0.3s ease-out forwards;
   }
 }
