@@ -295,6 +295,9 @@ input{height:38px;}
   .info-big{min-height: 160px};
   .top-buttons-row{display:grid;grid-template-columns:repeat(2,1fr);}
   .toggle-btn:hover{border-bottom: 4px solid #e2e2e2;}
+  .toggle-btn:hover[data-active="true"]{border-bottom-width:2px;}
+    
+    /*border-bottom: 4px solid #e2e2e2;}*/
   .attr-points-row{
     position:fixed;
     bottom:calc(12px - var(--anim-margin-bottom));
