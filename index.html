@@ -19,8 +19,10 @@
     <h1 id="main-title"></h1>
 
     <!-- Row 1: four boxes for other players -->
-    <div class="row row-4" id="other-players">
-      <!-- boxes added by JS -->
+    <div class="slide-expander" id="other-players-expander">
+      <div class="row row-4" id="other-players">
+        <!-- boxes added by JS -->
+      </div>
     </div>
 
     <!-- Row 2: three-part: left infos, middle info4, right scales -->
@@ -49,14 +51,18 @@
     </div>
 
     <!-- Row: attribute points display (only in edit mode) -->
-    <div class="row attr-points-row" id="attr-points-row" style="display:none">
-      <div class="attr-points-label" id="attr-points-label"></div>
-      <div class="attr-points-label" id="sub-attr-points-label"></div>
+    <div class="slide-expander" id="points-expander">
+      <div class="row attr-points-row" id="attr-points-row">
+        <div class="attr-points-label" id="attr-points-label"></div>
+        <div class="attr-points-label" id="sub-attr-points-label"></div>
+      </div>
     </div>
 
-    <!-- Row 4: 3x2 grid for freetext1-6 -->
-    <div class="row freetext-grid" id="freetexts">
-      <!-- six textareas added by JS -->
+    <div class="slide-expander" id="freetext-expander">
+      <!-- Row 4: 3x2 grid for freetext1-6 -->
+      <div class="row freetext-grid" id="freetexts">
+        <!-- six textareas added by JS -->
+      </div>
     </div>
 
     <footer class="footer">
