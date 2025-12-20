@@ -5,6 +5,7 @@ let compactMode = false;
 let ecMode = false; // Erfolgsklassen toggle
 let crewVisible = false;
 let bgVisible = false;
+let hasEnteredEditMode = false; // Track if user ever entered edit mode
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -35,6 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
     //if (e.clientX === 0 && e.clientY === 0) { // works on chrome to detect leaving the window, but not on firefox, where the ui never changes then, so were doing a delay based approach instead
       hideDragOverlay();
     //}
+  });
+
+  // Warn user before leaving if they've entered edit mode
+  window.addEventListener('beforeunload', (e) => {
+    if (hasEnteredEditMode) {
+      e.preventDefault();
+      e.returnValue = ''; // Chrome requires returnValue to be set
+    }
   });
 
   // load default.json
@@ -103,6 +112,7 @@ function toggleEditMode() {
     }
   } else {
     // Entering edit mode: render first then animate labels expand
+    hasEnteredEditMode = true; // Set flag for beforeunload warning
     renderAttributes();
     updatePointsDisplay();
     const row = document.getElementById('points-expander');
