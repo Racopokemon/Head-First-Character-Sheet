@@ -11,6 +11,7 @@
   --attr-box-gap:8px;
   --add-btn-size:28px;
   --button-size:43px;
+  --mobile-edit-additional-height:80px;
 }
 *{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size:var(--text-size-normal);border:0px}
 /*#fafafa*/
@@ -214,13 +215,13 @@ input{height:38px;}
   from {
     padding-bottom:0;
   } to {
-    padding-bottom:120px;
+    padding-bottom:var(--mobile-edit-additional-height);
   }
 }
 
 @keyframes paddingBottomOut {
   from {
-    padding-bottom:120px;
+    padding-bottom:var(--mobile-edit-additional-height);
   } to {
     padding-bottom:0;
   }
@@ -311,6 +312,7 @@ input{height:38px;}
     z-index:100;
   }
   textarea.other-player{min-height:80px;}
+  /*.container[data-extended="true"]{margin-bottom: var(--mobile-edit-additional-height);}*/
   /* Add padding at bottom when in edit mode so content is not hidden behind fixed attr-points-row */
   .container.padding-in{
     animation: paddingBottomIn 0.4s ease-out forwards;

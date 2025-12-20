@@ -79,7 +79,7 @@ function toggleEditMode() {
     container.classList.remove('padding-in');
     container.classList.add('padding-out');
     container.addEventListener('animationend', () => {
-      container.classList.remove('padding-out');
+      //container.classList.remove('padding-out');
     }, { once: true });
 
     renderAttributes();
@@ -852,6 +852,9 @@ function updatePointsDisplay() {
 
   // show/hide attr-points-row based on editMode
   row.style.display = editMode ? 'flex' : 'none';
+
+  const container = document.querySelector('.container');
+  //container.dataset.extended = editMode ? 'true' : 'false';
 
   if (!row || !editMode) return;
   
