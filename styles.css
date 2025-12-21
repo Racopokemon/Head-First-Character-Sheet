@@ -29,6 +29,7 @@ h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .freetext-textarea{}
 .slide-expander{display:grid; margin-bottom:var(--anim-margin-bottom);min-height:0;grid-template-rows:1fr;}
 .slide-expander > div:first-child{overflow: hidden;}
+/*.buttons-row{justify-content:center}*/
 
 .box{border-radius:8px;background-color: #f1f1f1;}
 .label{color:#585858; font-style: italic; margin-bottom:1px;font-size: var(--text-size-descr);margin-left:-4px;margin-right:-1px;}
@@ -102,10 +103,8 @@ textarea.other-player{min-height:80px;color:#6c6c6c; font-style: italic;}
 .color-7{border-left:6px solid #b0bec5;background-color:#d4dce1}
 .color-7-light{border-left:6px solid #d4dce1;background-color:#eceff1}
 
-.buttons-row button{padding:8px 12px;border-radius:6px;/*! background:#e5e6e7; */flex:1;background: #fff;}
-
 /* toggle button styling */
-.toggle-btn{cursor:pointer;font-size: var(--text-size-descr);height:var(--button-size);color:#454545;border-bottom: 4px solid #e2e2e2;}
+.toggle-btn{cursor:pointer;font-size: var(--text-size-descr);height:var(--button-size);border-bottom: 4px solid #e2e2e2;/*max-width: 325.33px*/;padding:8px 12px;border-radius:6px;flex:1;background: #fff;}
 .toggle-btn[data-active="true"]{background:#f3f3f3;border-bottom-width: 2px;}
 .toggle-btn:hover{border-bottom: 2px solid #d2d2d2;}
 .toggle-btn:active{border-bottom: 0px;}
