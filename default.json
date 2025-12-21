@@ -39,6 +39,9 @@
         "scale_initial2": 100, 
         "scale_initial3": 75,
 
+        "show_subattributes": true,
+        "show_success_levels": true,
+
         "attribute_points": 150,
         "sub_attribute_points": 250,
         "attribute_points_min": 10, 

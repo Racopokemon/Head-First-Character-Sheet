@@ -2,7 +2,7 @@ let gmTemplate = null;
 let playerData = {};
 let editMode = false;
 let compactMode = false;
-let ecMode = false; // Erfolgsklassen toggle
+let ecMode = false; // Success level toggle
 let crewVisible = false;
 let bgVisible = false;
 let hasEnteredEditMode = false; // Track if user ever entered edit mode
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // wire expand button toggle
   document.getElementById('toggle-btn').addEventListener('click', toggleCompactMode);
 
-  // wire Erfolgsklassen toggle (affects view-mode labels)
+  // wire success level toggle (affects view-mode labels)
   const ecBtn = document.getElementById('ec-btn');
   if (ecBtn) ecBtn.addEventListener('click', toggleEcMode);
 
