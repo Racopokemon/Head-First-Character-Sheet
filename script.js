@@ -1069,6 +1069,32 @@ function applyImported(json) {
   }
   const sp = json.set_by_player;
 
+  // Handle show_subattributes and show_success_levels
+  const showSubattributes = gmTemplate.show_subattributes !== false; // default true
+  const showSuccessLevels = gmTemplate.show_success_levels !== false; // default true
+
+  // Update compact button visibility and state
+  const toggleBtn = document.getElementById('toggle-btn');
+  if (toggleBtn) {
+    if (!showSubattributes) {
+      toggleBtn.style.display = 'none';
+      compactMode = true; // force compact mode
+    } else {
+      toggleBtn.style.display = '';
+    }
+  }
+
+  // Update EC button visibility and state
+  const ecBtn = document.getElementById('ec-btn');
+  if (ecBtn) {
+    if (!showSuccessLevels) {
+      ecBtn.style.display = 'none';
+      ecMode = false; // force ecMode off
+    } else {
+      ecBtn.style.display = '';
+    }
+  }
+
   if (!sp) {
     // initialize playerData with empty attributes
     playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
@@ -1082,39 +1108,39 @@ function applyImported(json) {
     if (editMode) {
         toggleEditMode();
     }
-    return;
+  } else {
+    // fill simples
+    ['info1','info2','info3','info4'].forEach(k => setInputValue(k, sp[k] || ''));
+    if (Array.isArray(sp.freetexts)) {
+      const freetextInputs = document.querySelectorAll('textarea[data-freetextIndex]');
+      freetextInputs.forEach((ta) => {
+        const idx = Number(ta.dataset.freetextIndex);
+        ta.value = sp.freetexts[idx] || '';
+      });
+    }
+    for (let i=1;i<=4;i++) setInputValue('other_player'+i, sp['other_player'+i] || '');
+    for (let i=1;i<=3;i++) setInputValue('scale'+i, sp['scale'+i] || '');
+
+    // attributes array - store in playerData and re-render
+    if (Array.isArray(sp.attributes)) {
+      playerData.attributes = sp.attributes.map(a => ({
+        points: a.points || 0,
+        sub_attributes: a.sub_attributes || []
+      }));
+    }
+
+    // restore visibility flags
+    if (typeof sp.crewVisible === 'boolean') {
+      crewVisible = sp.crewVisible;
+    }
+    if (typeof sp.bgVisible === 'boolean') {
+      bgVisible = sp.bgVisible;
+    }
   }
 
-  // fill simples
-  ['info1','info2','info3','info4'].forEach(k => setInputValue(k, sp[k] || ''));
-  if (Array.isArray(sp.freetexts)) {
-    const freetextInputs = document.querySelectorAll('textarea[data-freetextIndex]');
-    freetextInputs.forEach((ta) => {
-      const idx = Number(ta.dataset.freetextIndex);
-      ta.value = sp.freetexts[idx] || '';
-    });
-  }
-  for (let i=1;i<=4;i++) setInputValue('other_player'+i, sp['other_player'+i] || '');
-  for (let i=1;i<=3;i++) setInputValue('scale'+i, sp['scale'+i] || '');
-
-  // attributes array - store in playerData and re-render
-  if (Array.isArray(sp.attributes)) {
-    playerData.attributes = sp.attributes.map(a => ({
-      points: a.points || 0,
-      sub_attributes: a.sub_attributes || []
-    }));
-    renderAttributes();
-    updatePointsDisplay();
-  }
-
-  // restore visibility flags
-  if (typeof sp.crewVisible === 'boolean') {
-    crewVisible = sp.crewVisible;
-  }
-  if (typeof sp.bgVisible === 'boolean') {
-    bgVisible = sp.bgVisible;
-  }
   updateVisibility();
+  renderAttributes();
+  updatePointsDisplay();
 
   if (editMode) {
     toggleEditMode();
