@@ -5,6 +5,7 @@ let compactMode = false;
 let ecMode = false; // Erfolgsklassen toggle
 let crewVisible = false;
 let bgVisible = false;
+let hasEnteredEditMode = false; // Track if user ever entered edit mode
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -37,6 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
     //}
   });
 
+  // Warn user before leaving if they've entered edit mode
+  window.addEventListener('beforeunload', (e) => {
+    if (hasEnteredEditMode) {
+      e.preventDefault();
+      e.returnValue = ''; // Chrome requires returnValue to be set
+    }
+  });
+
   // load default.json
   fetch('default.json')
     .then(r => r.json())
@@ -67,7 +76,7 @@ function toggleEditMode() {
 
   if (prev) {
     // leaving edit mode
-    const row = document.getElementById('attr-points-row');
+    const row = document.getElementById('points-expander');
     row.classList.add('collapsing');
     row.addEventListener('animationend', () => {
       row.classList.remove('collapsing');
@@ -79,7 +88,7 @@ function toggleEditMode() {
     container.classList.remove('padding-in');
     container.classList.add('padding-out');
     container.addEventListener('animationend', () => {
-      container.classList.remove('padding-out');
+      //container.classList.remove('padding-out');
     }, { once: true });
 
     renderAttributes();
@@ -103,9 +112,10 @@ function toggleEditMode() {
     }
   } else {
     // Entering edit mode: render first then animate labels expand
+    hasEnteredEditMode = true; // Set flag for beforeunload warning
     renderAttributes();
     updatePointsDisplay();
-    const row = document.getElementById('attr-points-row');
+    const row = document.getElementById('points-expander');
     row.classList.add('expanding');
     row.addEventListener('animationend', () => {
       row.classList.remove('expanding');
@@ -221,12 +231,12 @@ function applyLocalization() {
 }
 
 function updateVisibility() {
-  const other = document.getElementById('other-players');
+  const other = document.getElementById('other-players-expander');
   const crewBtn = document.getElementById('crew-btn');
   if (other) other.style.display = crewVisible ? '' : 'none';
   if (crewBtn) crewBtn.dataset.active = crewVisible ? 'true' : 'false';
 
-  const freetexts = document.getElementById('freetexts');
+  const freetexts = document.getElementById('freetext-expander');
   const bgBtn = document.getElementById('bg-btn');
   if (freetexts) freetexts.style.display = bgVisible ? '' : 'none';
   if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
@@ -235,7 +245,7 @@ function updateVisibility() {
 // Toggle crew section with animation
 function toggleCrewVisibility() {
   crewVisible = !crewVisible;
-  const other = document.getElementById('other-players');
+  const other = document.getElementById('other-players-expander');
   const crewBtn = document.getElementById('crew-btn');
   if (!other) { updateVisibility(); return; }
 
@@ -255,7 +265,7 @@ function toggleCrewVisibility() {
 // Toggle freetexts/background section with animation
 function toggleBgVisibility() {
   bgVisible = !bgVisible;
-  const freetexts = document.getElementById('freetexts');
+  const freetexts = document.getElementById('freetext-expander');
   const bgBtn = document.getElementById('bg-btn');
   if (!freetexts) { updateVisibility(); return; }
 
@@ -848,10 +858,13 @@ function validateSubAttributeInput(inputEl) {
 }
 
 function updatePointsDisplay() {
-  const row = document.getElementById('attr-points-row');
+  const row = document.getElementById('points-expander');
 
-  // show/hide attr-points-row based on editMode
-  row.style.display = editMode ? 'flex' : 'none';
+  // show/hide based on editMode
+  row.style.display = editMode ? null : 'none';
+
+  const container = document.querySelector('.container');
+  //container.dataset.extended = editMode ? 'true' : 'false';
 
   if (!row || !editMode) return;
   

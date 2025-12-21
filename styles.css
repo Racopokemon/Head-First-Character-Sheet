@@ -11,6 +11,7 @@
   --attr-box-gap:8px;
   --add-btn-size:28px;
   --button-size:43px;
+  --mobile-edit-additional-height:80px;
 }
 *{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif;font-size:var(--text-size-normal);border:0px}
 /*#fafafa*/
@@ -18,15 +19,16 @@ body{background:#fbfbfb;margin:0;padding:20px;display:flex;justify-content:cente
 .container{width:100%;max-width:var(--max-width)}
 h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
-.row-4{margin-bottom:var(--anim-margin-bottom);}
 .row-4 > div{flex:1}
 .row-3 .col-left{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-right{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .attributes-row{display:flex;gap:var(--gap);margin-bottom: 30px;}
 .attr-col{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
-.freetext-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(150px,1fr);gap:var(--gap);margin-bottom:var(--anim-margin-bottom);}
+.freetext-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(150px,1fr);gap:var(--gap);}
 .freetext-textarea{}
+.slide-expander{display:grid; margin-bottom:var(--anim-margin-bottom);min-height:0;grid-template-rows:1fr;}
+.slide-expander > div:first-child{overflow: hidden;}
 
 .box{border-radius:8px;background-color: #f1f1f1;}
 .label{color:#585858; font-style: italic; margin-bottom:1px;font-size: var(--text-size-descr);margin-left:-4px;margin-right:-1px;}
@@ -45,6 +47,7 @@ textarea.other-player{min-height:80px;color:#6c6c6c; font-style: italic;}
 .attr-box > div:first-child{flex:1}
 .attr-name{flex:1}
 .sub-attr-name{flex:1;}
+.no-gap-row{margin-bottom: 0;}
 
 .sub-attr-box{margin-top:-12px;position:relative}
 /*.sub-attr-box > div:first-child{flex:1}*/
@@ -109,10 +112,7 @@ textarea.other-player{min-height:80px;color:#6c6c6c; font-style: italic;}
 .toggle-btn.disabled{opacity:0.9;cursor:default;color:#999;}
 .toggle-btn.disabled:hover{border-bottom: 4px solid #e2e2e2;}
 .toggle-btn.disabled:active{border-bottom: 4px solid #e2e2e2;}
-/*.toggle-btn[data-active="false"]{}*/
 
-/* attr points row */
-.attr-points-row{margin-bottom:var(--anim-margin-bottom);}
 .attr-points-label{flex:1;background:var(--box-bg);padding:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;text-align:center}
 .attr-points-label.warning{color:#d32f2f}
 
@@ -161,30 +161,30 @@ input{height:38px;}
 }
 @keyframes slideDownRow {
   from {
-    opacity: 0.3;
-    max-height: 0;
+    opacity: 0.1;
     overflow: hidden;
     margin-bottom:0px;
+    grid-template-rows: 0fr;
   }
   to {
     opacity: 1;
-    max-height: 100px;
     overflow: visible;
     margin-bottom:var(--anim-margin-bottom);
+    grid-template-rows: 1fr;
   }
 }
 @keyframes slideUpRow {
   from {
     opacity: 1;
-    max-height: 100px;
     overflow: hidden;
     margin-bottom:var(--anim-margin-bottom);
+    grid-template-rows: 1fr;
   }
   to {
-    opacity: 0.3;
-    max-height: 0;
+    opacity: 0.1;
     overflow: hidden;
     margin-bottom:0px;
+    grid-template-rows: 0fr;
   }
 }
 @keyframes fadeIn {from { background: transparent;} to {background: var(--box-bg);}}
@@ -214,13 +214,13 @@ input{height:38px;}
   from {
     padding-bottom:0;
   } to {
-    padding-bottom:120px;
+    padding-bottom:var(--mobile-edit-additional-height);
   }
 }
 
 @keyframes paddingBottomOut {
   from {
-    padding-bottom:120px;
+    padding-bottom:var(--mobile-edit-additional-height);
   } to {
     padding-bottom:0;
   }
@@ -250,21 +250,21 @@ input{height:38px;}
 
 /* Generic expanding/collapsing helpers (re-usable for other sections) */
 .expanding {
-  animation: slideDownRow 0.4s ease-out forwards;
+  animation: slideDownRow 0.3s ease-out forwards;
   /*overflow: hidden;*/
 }
 .collapsing {
-  animation: slideUpRow 0.3s ease-out forwards;
+  animation: slideUpRow 0.25s ease-out forwards;
   /*overflow: hidden;*/
 }
 
 .sub-add-btn.intro, .sub-del-btn.intro {
-  animation: addButtonIntro 0.20s ease-out forwards;
+  animation: addButtonIntro 0.25s ease-out forwards;
   /*color:transparent;*/
 }
 
 .sub-add-btn.outro, .sub-del-btn.outro {
-  animation: addButtonOutro 0.20s ease-out forwards;
+  animation: addButtonOutro 0.25s ease-out forwards;
   color:transparent;
 }
 
@@ -297,8 +297,8 @@ input{height:38px;}
   .toggle-btn:hover{border-bottom: 4px solid #e2e2e2;}
   .toggle-btn:hover[data-active="true"]{border-bottom-width:2px;}
     
-    /*border-bottom: 4px solid #e2e2e2;}*/
-  .attr-points-row{
+  /*border-bottom: 4px solid #e2e2e2;}*/
+  .attr-points-mobile{
     position:fixed;
     bottom:calc(12px - var(--anim-margin-bottom));
     left:12px;
@@ -311,11 +311,10 @@ input{height:38px;}
     z-index:100;
   }
   textarea.other-player{min-height:80px;}
-  /* Add padding at bottom when in edit mode so content is not hidden behind fixed attr-points-row */
   .container.padding-in{
-    animation: paddingBottomIn 0.4s ease-out forwards;
+    animation: paddingBottomIn 0.3s ease-out forwards;
   }
   .container.padding-out{
-    animation: paddingBottomOut 0.3s ease-out forwards;
+    animation: paddingBottomOut 0.25s ease-out forwards;
   }
 }
