@@ -307,7 +307,7 @@ input{height:38px;}
     background:#fbfbfb;
     padding:12px;
     border-radius:8px;
-    box-shadow:0 -2px 12px rgba(0,0,0,0.1);
+    box-shadow:0 -2px 12px rgba(0,0,0,0.12);
     z-index:100;
   }
   textarea.other-player{min-height:80px;}
