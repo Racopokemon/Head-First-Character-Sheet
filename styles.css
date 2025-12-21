@@ -19,7 +19,6 @@ body{background:#fbfbfb;margin:0;padding:20px;display:flex;justify-content:cente
 .container{width:100%;max-width:var(--max-width)}
 h1{text-align:center;margin:50px 0 50px 0;font-size:28px}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
-.row-4{}
 .row-4 > div{flex:1}
 .row-3 .col-left{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
@@ -48,7 +47,7 @@ textarea.other-player{min-height:80px;color:#6c6c6c; font-style: italic;}
 .attr-box > div:first-child{flex:1}
 .attr-name{flex:1}
 .sub-attr-name{flex:1;}
-.attr-points-row{margin-bottom: 0;}
+.no-gap-row{margin-bottom: 0;}
 
 .sub-attr-box{margin-top:-12px;position:relative}
 /*.sub-attr-box > div:first-child{flex:1}*/
