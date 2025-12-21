@@ -1046,7 +1046,8 @@ function showDragOverlay() {
     overlay = document.createElement('div');
     overlay.id = 'drag-over-overlay';
     overlay.className = 'drag-over-overlay';
-    overlay.textContent = 'Datei importieren';
+    const loc = gmTemplate && gmTemplate.localization ? gmTemplate.localization : {};
+    overlay.textContent = loc.drop_file || 'Drop file here';
     document.body.appendChild(overlay);
   }
 }

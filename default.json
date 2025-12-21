@@ -10,7 +10,8 @@
             "btn_compact": "Kompakt",
             "btn_ec": "Erfolgsklassen",
             "label_grundwerte": "Grundwerte",
-            "label_spezialisierung": "Spezialisierung"
+            "label_spezialisierung": "Spezialisierung",
+            "drop_file": "Datei importieren"
         },
 
         "info1": "Name",
