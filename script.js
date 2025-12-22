@@ -405,8 +405,24 @@ function renderScales() {
     });
     // keyboard navigation: up/down/enter moves to next/prev scale input
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container, 1); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container, 1); }
+      if (e.key === 'ArrowDown') {
+        if (e.shiftKey) {
+          // Shift+Down: decrement value (default behavior, don't prevent)
+        } else {
+          e.preventDefault();
+          focusNextInContainer(input, container, 1);
+        }
+      } else if (e.key === 'ArrowUp') {
+        if (e.shiftKey) {
+          // Shift+Up: increment value (default behavior, don't prevent)
+        } else {
+          e.preventDefault();
+          focusPrevInContainer(input, container, 1);
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        focusNextInContainer(input, container, 1);
+      }
     });
   }
 }
@@ -469,8 +485,24 @@ function renderAttributes() {
       });
       // keyboard navigation: up/down/enter moves between all number inputs in the column
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, allColumnsContainer, 2); }
-        else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, allColumnsContainer, 2); }
+        if (e.key === 'ArrowDown') {
+          if (e.shiftKey) {
+            // Shift+Down: decrement value (default behavior, don't prevent)
+          } else {
+            e.preventDefault();
+            focusNextInContainer(input, allColumnsContainer, 2);
+          }
+        } else if (e.key === 'ArrowUp') {
+          if (e.shiftKey) {
+            // Shift+Up: increment value (default behavior, don't prevent)
+          } else {
+            e.preventDefault();
+            focusPrevInContainer(input, allColumnsContainer, 2);
+          }
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          focusNextInContainer(input, allColumnsContainer, 2);
+        }
       });
       validateAttributeInput(input, idx); // initial validation
             // add subattribute button
@@ -775,8 +807,24 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     });
     // keyboard navigation: up/down/enter moves between all number inputs in the column
     valueInput.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(valueInput, allColumnsContainer, 2); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(valueInput, allColumnsContainer, 2); }
+      if (e.key === 'ArrowDown') {
+        if (e.shiftKey) {
+          // Shift+Down: decrement value (default behavior, don't prevent)
+        } else {
+          e.preventDefault();
+          focusNextInContainer(valueInput, allColumnsContainer, 2);
+        }
+      } else if (e.key === 'ArrowUp') {
+        if (e.shiftKey) {
+          // Shift+Up: increment value (default behavior, don't prevent)
+        } else {
+          e.preventDefault();
+          focusPrevInContainer(valueInput, allColumnsContainer, 2);
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        focusNextInContainer(valueInput, allColumnsContainer, 2);
+      }
     });
     validateSubAttributeInput(valueInput); // initial validation
     
