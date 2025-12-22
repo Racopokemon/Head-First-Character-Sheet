@@ -293,6 +293,15 @@ function renderOtherPlayers() {
     ta.className = 'other-player';
     box.appendChild(ta);
     container.appendChild(box);
+    box.addEventListener('click', (e) => {
+      // Only focus if not already focused or if clicked on label/box
+      if (e.target !== ta) {
+        ta.focus();
+        const len = ta.value.length;
+        ta.setSelectionRange(len, len);
+      }
+    });
+
   }
 }
 
@@ -312,6 +321,14 @@ function renderInfos() {
     left.appendChild(box);
 
     if (i == 1) input.className += ' info-char-name';
+    // Focus input when clicking box
+    box.addEventListener('click', (e) => {
+      if (e.target !== input) {
+        input.focus();
+        const len = input.value.length;
+        input.setSelectionRange(len, len);
+      }
+    });
     // keyboard navigation: up/down/enter moves to next/prev input in infos-left
     input.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container, 1); }
@@ -328,6 +345,14 @@ function renderInfos() {
   ta4.placeholder = gmTemplate[key4] || '';
   ta4.dataset.key = key4;
 
+  // Focus textarea when clicking box
+  box4.addEventListener('click', (e) => {
+    if (e.target !== ta4) {
+      ta4.focus();
+      const len = ta4.value.length;
+      ta4.setSelectionRange(len, len);
+    }
+  });
   // Keyboard navigation for textarea
   ta4.addEventListener('keydown', (e) => {
     const cursorPos = e.target.selectionStart;
@@ -369,6 +394,15 @@ function renderScales() {
     row.appendChild(lbl);
     row.appendChild(input);
     r.appendChild(row);
+    // Focus input when clicking box
+    row.addEventListener('click', (e) => {
+      if (e.target !== input) {
+        input.focus();
+        const len = input.value.length;
+        input.setSelectionRange(len, len);
+
+      }
+    });
     // keyboard navigation: up/down/enter moves to next/prev scale input
     input.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container, 1); }
@@ -453,6 +487,15 @@ function renderAttributes() {
 
       box.appendChild(span);
       box.appendChild(input);
+
+      // Focus input when clicking box (in edit mode)
+      box.addEventListener('click', (e) => {
+        if (e.target !== input && !e.target.classList.contains('sub-add-btn')) {
+          input.focus();
+          const len = input.value.length;
+          input.setSelectionRange(len, len);
+        }
+      });
     } else {
       // Show label with stored value
       const label = document.createElement('div');
@@ -758,6 +801,14 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     box.appendChild(nameInput);
     box.appendChild(valueInput);
     box.appendChild(totalLabel);
+
+    //// Focus value input when clicking box (in edit mode)
+    //box.addEventListener('click', (e) => {
+    //  if (e.target !== nameInput && e.target !== valueInput && !e.target.classList.contains('sub-del-btn') && !e.target.classList.contains('sub-suggestion')) {
+    //    valueInput.focus();
+    //    valueInput.select();
+    //  }
+    //});
   } else {
     // View mode: name + total label
     const nameLabel = document.createElement('div');
