@@ -24,17 +24,15 @@
   --text-color:#000;
   --btn-text-color:#000;
   --header-text-color:#000;
-  --label-color: #585858;
-  --text-gray: #6c6c6c;
-  --text-muted: #666;
-  --text-dark: rgb(26, 26, 26);
+  --attr-value-color:#000;
+  --text-suggestion-color: #706c6c;
+  --footer-color: #666;
 
-  /* Warning/validation color */
+  /* points label (edit mode) */
   --points-label-bg: #fff;
   --warning-text-color: #d32f2f;
 
   /* Border & input colors */
-  --border-light: #ccc;
   --input-border: #ccc;
 
   /* Button colors */
@@ -42,90 +40,93 @@
   --btn-active-bg: #f3f3f3;
   --btn-border-default: #e2e2e2;
   --btn-border-hover: #d2d2d2;
-  --btn-disabled-color: #999;
+  --btn-disabled-text-color: #999;
+
+  /* + / - Buttons in edit mode */
   --sub-btn-bg: rgba(255, 255, 255, 0.25);
   --sub-btn-bg-hover: rgba(255, 255, 255, 0.45);
   --sub-del-btn-color: #908c8c;
 
   /* Suggestion dropdown */
-  --suggestion-bg: white;
-  --suggestion-border: #ccc;
-  --suggestion-hover-bg: #f0f0f0;
-  --suggestion-highlight-bg: #0366d6;
-  --suggestion-highlight-color: white;
-
-  /* Drag overlay */
-  --drag-overlay-bg: rgba(208, 208, 208, 0.82);
+  --dropdown-bg: #fff;
+  --dropdown-border: #ccc;
+  --dropdown-hover: #f0f0f0;
+  --dropdown-selected-bg: #0366d6;
+  --dropdown-selected-color: white;
 
   /* Scale row colors */
-  --scale-border: #e8bde7;
+  --scale-accent: #e8bde7;
   --scale-bg: #eee6ec;
+
+    /* Drag overlay, clearly most important styling option here */
+  --drag-overlay-bg: rgba(208, 208, 208, 0.82);
+  --drag-overlay-text: rgb(26, 26, 26);
 
   /* Attribute color palette - 13 colors */
   /* Red */
-  --color-1: #ff8a80;
-  --color-1-l: #ffcccc;
-  --color-1-ll: #ffe6e6;
+  --color-1-accent: #ff8a80;
+  --color-1: #ffcccc;
+  --color-1-light: #ffe6e6;
 
   /* Orange */
-  --color-2: #ffd180;
-  --color-2-l: #ffe6b3;
-  --color-2-ll: #fff4e6;
+  --color-2-accent: #ffd180;
+  --color-2: #ffe6b3;
+  --color-2-light: #fff4e6;
 
   /* Yellow */
-  --color-3: #ffff8d;
-  --color-3-l: #ffffc0;
-  --color-3-ll: #fffff0;
+  --color-3-accent: #ffff8d;
+  --color-3: #ffffc0;
+  --color-3-light: #fffff0;
 
   /* Light Green */
-  --color-4: #c5e1a5;
-  --color-4-l: #e8f5e9;
-  --color-4-ll: #f1f8e9;
+  --color-4-accent: #c5e1a5;
+  --color-4: #e8f5e9;
+  --color-4-light: #f1f8e9;
 
   /* Yellow-Green */
-  --color-5: #c0d860;
-  --color-5-l: #e0edb0;
-  --color-5-ll: #f0f6d8;
+  --color-5-accent: #c0d860;
+  --color-5: #e0edb0;
+  --color-5-light: #f0f6d8;
 
   /* Green */
-  --color-6: #70be73;
-  --color-6-l: #a5d6a7;
-  --color-6-ll: #c8e6c9;
+  --color-6-accent: #70be73;
+  --color-6: #a5d6a7;
+  --color-6-light: #c8e6c9;
 
   /* Cyan */
-  --color-7: #80d8ff;
-  --color-7-l: #b3ebff;
-  --color-7-ll: #e1f5fe;
+  --color-7-accent: #80d8ff;
+  --color-7: #b3ebff;
+  --color-7-light: #e1f5fe;
 
   /* Blue */
-  --color-8: #5c9cff;
-  --color-8-l: #9ec4ff;
-  --color-8-ll: #d1e3ff;
+  --color-8-accent: #5c9cff;
+  --color-8: #9ec4ff;
+  --color-8-light: #d1e3ff;
 
   /* Purple */
-  --color-9: #b39ddb;
-  --color-9-l: #d9c9e8;
-  --color-9-ll: #f3e5f5;
+  --color-9-accent: #b39ddb;
+  --color-9: #d9c9e8;
+  --color-9-light: #f3e5f5;
 
   /* Pink */
-  --color-10: #ff80ab;
-  --color-10-l: #ffb3d0;
-  --color-10-ll: #ffe0eb;
+  --color-10-accent: #ff80ab;
+  --color-10: #ffb3d0;
+  --color-10-light: #ffe0eb;
 
   /* Light Gray */
-  --color-11: #cfd8dc;
-  --color-11-l: #e5eaed;
-  --color-11-ll: #f5f6f7;
+  --color-11-accent: #cfd8dc;
+  --color-11: #e5eaed;
+  --color-11-light: #f5f6f7;
 
   /* Medium Gray */
-  --color-12: #b0bec5;
-  --color-12-l: #d4dce1;
-  --color-12-ll: #eceff1;
+  --color-12-accent: #b0bec5;
+  --color-12: #d4dce1;
+  --color-12-light: #eceff1;
 
   /* Dark Gray */
-  --color-13: #90a4ae;
-  --color-13-l: #b0bec5;
-  --color-13-ll: #cfd8dc;
+  --color-13-accent: #90a4ae;
+  --color-13: #b0bec5;
+  --color-13-light: #cfd8dc;
 }
 *{box-sizing:border-box;font-family:var(--font-family);font-size:var(--text-size-normal);font-weight:var(--font-weight);border:0px;color:var(--text-color)}
 /*#fafafa*/
@@ -146,17 +147,17 @@ h1{text-align:center;margin:50px 0 50px 0;font-size:28px;color:var(--header-text
 /*.buttons-row{justify-content:center}*/
 
 .box{border-radius:8px;background-color:var(--box-bg);}
-.label{color:var(--label-color); font-style: italic; margin-bottom:1px;font-size: var(--text-size-descr);margin-left:-4px;margin-right:-1px;}
+.label{color:var(--text-suggestion-color); font-style: italic; margin-bottom:1px;font-size: var(--text-size-descr);margin-left:-4px;margin-right:-1px;}
 .textareabox textarea{width:100%;flex:1;min-height:0;border:0;background:transparent;resize:none;}
 .box input[type="number"]{padding:6px;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600;font-size:var(--text-size-numbers);border:1px solid var(--input-border);}
 /*.box .scale{flex-direction: column;}*/
-textarea.other-player{min-height:80px;color:var(--text-gray); font-style: italic;}
+textarea.other-player{min-height:80px;color:var(--text-suggestion-color); font-style: italic;}
 .info-single{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height)}
 .info-single input{width:100%;padding:6px;border:0;background:transparent;height:auto;}
 .info-char-name{font-weight: 600}
 .info-big{flex:1}
 .info-big textarea{font-size: var(--text-size-descr);}
-.scale-row{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height);border-left: 6px solid var(--scale-border);background-color:var(--scale-bg);}
+.scale-row{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height);border-left: 6px solid var(--scale-accent);background-color:var(--scale-bg);}
 .scale-row > div:first-child{} /*<- Scale label*/
 .attr-box{display:flex;align-items:center;gap:var(--attr-box-gap);padding:0px 8px;height:var(--height)}
 .attr-box > div:first-child{flex:1}
@@ -170,11 +171,11 @@ textarea.other-player{min-height:80px;color:var(--text-gray); font-style: italic
 .sub-attr-box input[type="number"]{border-radius:4px;margin-left:calc(0px - var(--attr-box-gap));margin-right:calc(0px - var(--attr-box-gap));}
 
 /* suggestion dropdown for subattribute names */
-.sub-suggestions{position:absolute;left:8px;right:120px;top:100%;margin-top:6px;background:var(--suggestion-bg);border:1px solid var(--suggestion-border);border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.08);max-height:200px;overflow:auto;z-index:30}
+.sub-suggestions{position:absolute;left:8px;right:120px;top:100%;margin-top:6px;background:var(--dropdown-bg);border:1px solid var(--dropdown-border);border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.08);max-height:200px;overflow:auto;z-index:30}
 .sub-suggestion{padding:8px 10px;cursor:pointer}
-.sub-suggestion:hover{background:var(--suggestion-hover-bg)}
+.sub-suggestion:hover{background:var(--dropdown-hover)}
 /* highlighted suggestion for keyboard navigation */
-.sub-suggestion.highlight{background:var(--suggestion-highlight-bg);color:var(--suggestion-highlight-color)}
+.sub-suggestion.highlight{background:var(--dropdown-selected-bg);color:var(--dropdown-selected-color)}
 /*.sub-attr-box-edit{padding:4px}*/
 
 /* subattribute controls */
@@ -202,39 +203,39 @@ textarea.other-player{min-height:80px;color:var(--text-gray); font-style: italic
 .textareabox{padding:7px 17px; display:flex;flex-direction:column;}
 
 /* color classes for attributes (1-13) and light variants for sub-attributes */
-.color-1{border-left:6px solid var(--color-1);background-color:var(--color-1-l)}
-.color-1-light{border-left:6px solid var(--color-1-l);background-color:var(--color-1-ll)}
-.color-2{border-left:6px solid var(--color-2);background-color:var(--color-2-l)}
-.color-2-light{border-left:6px solid var(--color-2-l);background-color:var(--color-2-ll)}
-.color-3{border-left:6px solid var(--color-3);background-color:var(--color-3-l)}
-.color-3-light{border-left:6px solid var(--color-3-l);background-color:var(--color-3-ll)}
-.color-4{border-left:6px solid var(--color-4);background-color:var(--color-4-l)}
-.color-4-light{border-left:6px solid var(--color-4-l);background-color:var(--color-4-ll)}
-.color-5{border-left:6px solid var(--color-5);background-color:var(--color-5-l)}
-.color-5-light{border-left:6px solid var(--color-5-l);background-color:var(--color-5-ll)}
-.color-6{border-left:6px solid var(--color-6);background-color:var(--color-6-l)}
-.color-6-light{border-left:6px solid var(--color-6-l);background-color:var(--color-6-ll)}
-.color-7{border-left:6px solid var(--color-7);background-color:var(--color-7-l)}
-.color-7-light{border-left:6px solid var(--color-7-l);background-color:var(--color-7-ll)}
-.color-8{border-left:6px solid var(--color-8);background-color:var(--color-8-l)}
-.color-8-light{border-left:6px solid var(--color-8-l);background-color:var(--color-8-ll)}
-.color-9{border-left:6px solid var(--color-9);background-color:var(--color-9-l)}
-.color-9-light{border-left:6px solid var(--color-9-l);background-color:var(--color-9-ll)}
-.color-10{border-left:6px solid var(--color-10);background-color:var(--color-10-l)}
-.color-10-light{border-left:6px solid var(--color-10-l);background-color:var(--color-10-ll)}
-.color-11{border-left:6px solid var(--color-11);background-color:var(--color-11-l)}
-.color-11-light{border-left:6px solid var(--color-11-l);background-color:var(--color-11-ll)}
-.color-12{border-left:6px solid var(--color-12);background-color:var(--color-12-l)}
-.color-12-light{border-left:6px solid var(--color-12-l);background-color:var(--color-12-ll)}
-.color-13{border-left:6px solid var(--color-13);background-color:var(--color-13-l)}
-.color-13-light{border-left:6px solid var(--color-13-l);background-color:var(--color-13-ll)}
+.color-1{border-left:6px solid var(--color-1-accent);background-color:var(--color-1)}
+.color-1-light{border-left:6px solid var(--color-1);background-color:var(--color-1-light)}
+.color-2{border-left:6px solid var(--color-2-accent);background-color:var(--color-2)}
+.color-2-light{border-left:6px solid var(--color-2);background-color:var(--color-2-light)}
+.color-3{border-left:6px solid var(--color-3-accent);background-color:var(--color-3)}
+.color-3-light{border-left:6px solid var(--color-3);background-color:var(--color-3-light)}
+.color-4{border-left:6px solid var(--color-4-accent);background-color:var(--color-4)}
+.color-4-light{border-left:6px solid var(--color-4);background-color:var(--color-4-light)}
+.color-5{border-left:6px solid var(--color-5-accent);background-color:var(--color-5)}
+.color-5-light{border-left:6px solid var(--color-5);background-color:var(--color-5-light)}
+.color-6{border-left:6px solid var(--color-6-accent);background-color:var(--color-6)}
+.color-6-light{border-left:6px solid var(--color-6);background-color:var(--color-6-light)}
+.color-7{border-left:6px solid var(--color-7-accent);background-color:var(--color-7)}
+.color-7-light{border-left:6px solid var(--color-7);background-color:var(--color-7-light)}
+.color-8{border-left:6px solid var(--color-8-accent);background-color:var(--color-8)}
+.color-8-light{border-left:6px solid var(--color-8);background-color:var(--color-8-light)}
+.color-9{border-left:6px solid var(--color-9-accent);background-color:var(--color-9)}
+.color-9-light{border-left:6px solid var(--color-9);background-color:var(--color-9-light)}
+.color-10{border-left:6px solid var(--color-10-accent);background-color:var(--color-10)}
+.color-10-light{border-left:6px solid var(--color-10);background-color:var(--color-10-light)}
+.color-11{border-left:6px solid var(--color-11-accent);background-color:var(--color-11)}
+.color-11-light{border-left:6px solid var(--color-11);background-color:var(--color-11-light)}
+.color-12{border-left:6px solid var(--color-12-accent);background-color:var(--color-12)}
+.color-12-light{border-left:6px solid var(--color-12);background-color:var(--color-12-light)}
+.color-13{border-left:6px solid var(--color-13-accent);background-color:var(--color-13)}
+.color-13-light{border-left:6px solid var(--color-13);background-color:var(--color-13-light)}
 
 /* toggle button styling */
 .toggle-btn{cursor:pointer;font-size: var(--text-size-descr);height:var(--button-size);border-bottom: 4px solid var(--btn-border-default);/*max-width: 325.33px*/;padding:8px 12px;border-radius:6px;flex:1;background:var(--btn-bg);color:var(--btn-text-color);}
 .toggle-btn[data-active="true"]{background:var(--btn-active-bg);border-bottom-width: 2px;}
 .toggle-btn:hover{border-bottom: 2px solid var(--btn-border-hover);}
 .toggle-btn:active{border-bottom: 0px;}
-.toggle-btn.disabled{opacity:0.9;cursor:default;color:var(--btn-disabled-color);}
+.toggle-btn.disabled{opacity:0.9;cursor:default;color:var(--btn-disabled-text-color);}
 .toggle-btn.disabled:hover{border-bottom: 4px solid var(--btn-border-default);}
 .toggle-btn.disabled:active{border-bottom: 4px solid var(--btn-border-default);}
 
@@ -246,7 +247,7 @@ textarea.other-player{min-height:80px;color:var(--text-gray); font-style: italic
 .sub-attr-value-input.warning{color:var(--warning-text-color)}
 
 /* attr value label (when not in edit mode) */
-.attr-value-label{font-weight:600;min-width:var(--number-width);text-align:center;word-spacing:-3px;font-size:var(--text-size-numbers)}
+.attr-value-label{font-weight:600;min-width:var(--number-width);text-align:center;word-spacing:-3px;font-size:var(--text-size-numbers);color:var(--attr-value-color);}
 .attr-value-label.warning{color:var(--warning-text-color)}
 /* success level light styling for the two left numbers */
 .ec-light{opacity:0.66;font-weight:600;color:inherit;font-size:medium;}
@@ -257,8 +258,10 @@ input[type=number]::-webkit-inner-spin-button{
   -webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
 input{height:38px;}
-.footer{color:var(--text-muted);text-align:right;font-size:var(--text-size-descr);}
-.footer a{color:var(--text-muted);font-size:var(--text-size-descr);}
+input::placeholder{color:var(--text-suggestion-color);}
+textarea::placeholder{color:var(--text-suggestion-color);}
+.footer{color:var(--footer-color);text-align:right;font-size:var(--text-size-descr);}
+.footer a{color:var(--footer-color);font-size:var(--text-size-descr);}
 
 @keyframes slideDown {
   from {
@@ -406,7 +409,7 @@ input{height:38px;}
   justify-content: center;
   z-index: 1000;
   font-size: 32px;
-  color:var(--text-dark);
+  color:var(--drag-overlay-text);
   font-weight: 600;
   pointer-events: none;
   border-radius: 20px;
