@@ -96,12 +96,24 @@ textarea.other-player{min-height:80px;color:#6c6c6c; font-style: italic;}
 .color-3-light{border-left:6px solid #ffffc0;background-color:#fffff0}
 .color-4{border-left:6px solid #c5e1a5;background-color:#e8f5e9}
 .color-4-light{border-left:6px solid #e8f5e9;background-color:#f1f8e9}
-.color-5{border-left:6px solid #80d8ff;background-color:#b3ebff}
-.color-5-light{border-left:6px solid #b3ebff;background-color:#e1f5fe}
-.color-6{border-left:6px solid #b39ddb;background-color:#d9c9e8}
-.color-6-light{border-left:6px solid #d9c9e8;background-color:#f3e5f5}
-.color-7{border-left:6px solid #b0bec5;background-color:#d4dce1}
-.color-7-light{border-left:6px solid #d4dce1;background-color:#eceff1}
+.color-5{border-left:6px solid #c0d860;background-color:#e0edb0}
+.color-5-light{border-left:6px solid #e0edb0;background-color:#f0f6d8}
+.color-6{border-left:6px solid #70be73;background-color:#a5d6a7}
+.color-6-light{border-left:6px solid #a5d6a7;background-color:#c8e6c9}
+.color-7{border-left:6px solid #80d8ff;background-color:#b3ebff}
+.color-7-light{border-left:6px solid #b3ebff;background-color:#e1f5fe}
+.color-8{border-left:6px solid #5c9cff;background-color:#9ec4ff}
+.color-8-light{border-left:6px solid #9ec4ff;background-color:#d1e3ff}
+.color-9{border-left:6px solid #b39ddb;background-color:#d9c9e8}
+.color-9-light{border-left:6px solid #d9c9e8;background-color:#f3e5f5}
+.color-10{border-left:6px solid #ff80ab;background-color:#ffb3d0}
+.color-10-light{border-left:6px solid #ffb3d0;background-color:#ffe0eb}
+.color-11{border-left:6px solid #cfd8dc;background-color:#e5eaed}
+.color-11-light{border-left:6px solid #e5eaed;background-color:#f5f6f7}
+.color-12{border-left:6px solid #b0bec5;background-color:#d4dce1}
+.color-12-light{border-left:6px solid #d4dce1;background-color:#eceff1}
+.color-13{border-left:6px solid #90a4ae;background-color:#b0bec5}
+.color-13-light{border-left:6px solid #b0bec5;background-color:#cfd8dc}
 
 /* toggle button styling */
 .toggle-btn{cursor:pointer;font-size: var(--text-size-descr);height:var(--button-size);border-bottom: 4px solid #e2e2e2;/*max-width: 325.33px*/;padding:8px 12px;border-radius:6px;flex:1;background: #fff;}
