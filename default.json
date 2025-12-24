@@ -13,6 +13,12 @@
             "label_spezialisierung": "Spezialisierung",
             "drop_file": "Datei importieren"
         },
+        "style": {
+            "font-family":"Segoe UI, Roboto, Arial, sans-serif",
+            "text":"#000",
+            "bg":"red",
+            "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
+        },
 
         "info1": "Name",
         "info2": "Alter",
@@ -142,7 +148,6 @@
                     "Social Media"
                 ]
             }
-
         ]
     }
 }
