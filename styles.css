@@ -71,6 +71,7 @@ body{background:var(--bg);margin:0;padding:20px;display:flex;justify-content:cen
 .container{width:100%;max-width:var(--max-width)}
 h1{text-align:center;margin:50px 0 50px 0;font-size:28px;color:var(--header-text);}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
+/*.top-buttons-row{gap:0}*/
 .row-4 > div{flex:1}
 .row-3 .col-left{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
@@ -148,10 +149,10 @@ textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: 
 
 /* icon button styling (square buttons with SVG icons) */
 .icon-btn{width:var(--button-size);padding:8px;display:flex;align-items:center;justify-content:center;flex:none;}
+.icon-btn svg{fill:var(--btn-text);}
 /*.icon-btn[data-active="true"]{background:var(--btn-active-bg);border-bottom-width: 2px;}
 .icon-btn:hover{border-bottom: 2px solid var(--btn-side-hover);}
 .icon-btn:active{border-bottom: 0px;}
-.icon-btn svg{width:100%;height:100%;fill:var(--btn-text);}
 .icon-btn.disabled{opacity:0.9;cursor:default;}
 .icon-btn.disabled svg{fill:var(--btn-disabled-text);}
 .icon-btn.disabled:hover{border-bottom: 4px solid var(--btn-side-default);}
