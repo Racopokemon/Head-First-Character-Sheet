@@ -7,6 +7,7 @@ let crewVisible = false;
 let bgVisible = false;
 let hasEnteredEditMode = false; // Track if user ever entered edit mode
 let originalCssVariables = null; // Store original CSS variable values
+let infoMode = false; // Track if info page is visible
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -29,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (crewBtn) crewBtn.addEventListener('click', toggleCrewVisibility);
   const bgBtn = document.getElementById('bg-btn');
   if (bgBtn) bgBtn.addEventListener('click', toggleBgVisibility);
+
+  // wire info button
+  const infoBtn = document.getElementById('info-btn');
+  if (infoBtn) infoBtn.addEventListener('click', toggleInfoMode);
 
   // wire drag and drop import
   document.addEventListener('dragover', handleDragOver);
@@ -340,6 +345,106 @@ function toggleBgVisibility() {
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('collapsing'); updateVisibility(); }, { once: true });
   }
   if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
+}
+
+// Toggle info mode (show info page instead of character sheet)
+function toggleInfoMode() {
+  infoMode = !infoMode;
+  const infoBtn = document.getElementById('info-btn');
+  const infoPage = document.getElementById('info-page-container');
+  const charSheet = document.getElementById('char-sheet-container');
+
+  if (infoBtn) infoBtn.dataset.active = infoMode ? 'true' : 'false';
+
+  if (infoMode) {
+    // Show info page, hide character sheet
+    if (charSheet) charSheet.style.display = 'none';
+    if (infoPage) {
+      infoPage.classList.add('active');
+      renderInfoPage();
+    }
+  } else {
+    // Hide info page, show character sheet
+    if (infoPage) infoPage.classList.remove('active');
+    if (charSheet) charSheet.style.display = '';
+  }
+}
+
+// Render the info page with explanations
+function renderInfoPage() {
+  const container = document.getElementById('info-page-container');
+  if (!container || !gmTemplate) return;
+
+  container.innerHTML = '';
+
+  const infopage = gmTemplate.infopage || {};
+  const textL = infopage.text_l || '';
+  const textR = infopage.text_r || '';
+
+  // Create intro text row
+  const textRow = document.createElement('div');
+  textRow.className = 'info-text-row';
+
+  const textBoxL = document.createElement('div');
+  textBoxL.className = 'info-text-box';
+  textBoxL.textContent = textL;
+
+  const textBoxR = document.createElement('div');
+  textBoxR.className = 'info-text-box';
+  textBoxR.textContent = textR;
+
+  textRow.appendChild(textBoxL);
+  textRow.appendChild(textBoxR);
+  container.appendChild(textRow);
+
+  // Create attribute columns
+  const attrs = gmTemplate.attributes || [];
+  let maxColumn = 1;
+  attrs.forEach((attr) => {
+    const col = attr.column || 1;
+    if (col > maxColumn) maxColumn = col;
+  });
+
+  const attributesRow = document.createElement('div');
+  attributesRow.className = 'attributes-row';
+  for (let c = 1; c <= maxColumn; c++) {
+    const colDiv = document.createElement('div');
+    colDiv.className = 'attr-col';
+    colDiv.id = 'info-attr-col-' + c;
+    attributesRow.appendChild(colDiv);
+  }
+  container.appendChild(attributesRow);
+
+  // Render attribute info boxes
+  attrs.forEach((attr) => {
+    const col = attr.column || 1;
+    const colContainer = document.getElementById('info-attr-col-' + col);
+    if (!colContainer) return;
+
+    const box = document.createElement('div');
+    box.className = 'info-attr-box color-' + (attr.color || 1);
+
+    const name = document.createElement('div');
+    name.className = 'info-attr-name';
+    name.textContent = attr.name || '';
+
+    const description = document.createElement('div');
+    description.className = 'info-attr-description';
+    description.textContent = attr.description || '';
+
+    const suggestions = document.createElement('ul');
+    suggestions.className = 'info-attr-suggestions';
+    (attr.sub_attribute_suggestions || []).forEach((suggestion) => {
+      const li = document.createElement('li');
+      li.textContent = suggestion;
+      suggestions.appendChild(li);
+    });
+
+    box.appendChild(name);
+    box.appendChild(description);
+    box.appendChild(suggestions);
+    colContainer.appendChild(box);
+  });
 }
 
 function renderOtherPlayers() {

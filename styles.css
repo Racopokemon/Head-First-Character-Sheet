@@ -138,6 +138,17 @@ textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: 
 
 .textareabox{padding:7px 17px; display:flex;flex-direction:column;}
 
+/* Info page styling */
+.info-page-container{display:none;}
+.info-page-container.active{display:block;}
+.info-text-row{display:flex;gap:var(--gap);margin-bottom:var(--gap);}
+.info-text-box{flex:1;padding:20px;border-radius:8px;background-color:var(--box-bg);line-height:1.6;}
+.info-attr-box{padding:15px;margin-bottom:var(--gap);border-radius:8px;}
+.info-attr-name{font-weight:600;font-size:var(--text-size-normal);margin-bottom:8px;}
+.info-attr-description{margin-bottom:12px;line-height:1.5;font-size:var(--text-size-descr);}
+.info-attr-suggestions{margin-top:8px;padding-left:20px;}
+.info-attr-suggestions li{margin-bottom:4px;font-size:var(--text-size-descr);}
+
 /* toggle button styling */
 .toggle-btn{cursor:pointer;font-size: var(--text-size-descr);height:var(--button-size);border-bottom: 4px solid var(--btn-side-default);/*max-width: 325.33px*/;padding:8px 12px;border-radius:6px;flex:1;background:var(--btn-bg);color:var(--btn-text);}
 .toggle-btn[data-active="true"]{background:var(--btn-active-bg);border-bottom-width: 2px;}

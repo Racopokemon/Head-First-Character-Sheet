@@ -21,6 +21,11 @@
             "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
         },
 
+        "infopage": {
+            "text_l": "Verteilt 150 Punkte auf eure Grundwerte. Es ist ratsam, sich auf einige Bereiche zu spezialisieren, statt alle Attribute gleichmäßig zu verteilen. Jeder Punkt macht euren Charakter in diesem Bereich besser.",
+            "text_r": "Zusätzlich habt ihr 250 Punkte für Spezialisierungen. Diese repräsentieren spezifische Fähigkeiten und Kenntnisse. Spezialisierungen werden zu ihrem Hauptattribut addiert und sollten die Stärken eures Charakters unterstreichen."
+        },
+
         "info1": "Name",
         "info2": "Alter",
         "info3": "Beruf/Hobby/Identität",
@@ -58,8 +63,9 @@
         "attributes": [
             {
                 "name": "Miteinander",
-                "color": 1, 
+                "color": 1,
                 "column": 1,
+                "description": "Soziale Interaktion, Empathie und die Fähigkeit, andere zu verstehen und zu beeinflussen.",
                 "sub_attribute_suggestions": [
                     "Menschenkenntnis",
                     "Beruhigen",
@@ -72,8 +78,9 @@
             },
             {
                 "name": "Gegeneinander",
-                "color": 1, 
+                "color": 1,
                 "column": 1,
+                "description": "Manipulation, Täuschung und die Kunst, sich in Konflikten durchzusetzen.",
                 "sub_attribute_suggestions": [
                     "Lügen",
                     "Einschüchtern",
@@ -86,8 +93,9 @@
             },
             {
                 "name": "Geschick",
-                "color": 2, 
+                "color": 2,
                 "column": 2,
+                "description": "Feinmotorik, Reaktionsgeschwindigkeit und handwerkliche Fertigkeiten.",
                 "sub_attribute_suggestions": [
                     "Ausweichen",
                     "Schusswaffen",
@@ -105,8 +113,9 @@
             },
             {
                 "name": "Körper(bau)",
-                "color": 2, 
+                "color": 2,
                 "column": 2,
+                "description": "Körperliche Stärke, Ausdauer und die physische Präsenz des Charakters.",
                 "sub_attribute_suggestions": [
                     "Schwimmen",
                     "Handgemenge",
@@ -119,8 +128,9 @@
             },
             {
                 "name": "Scharfsinn",
-                "color": 3, 
+                "color": 3,
                 "column": 3,
+                "description": "Wahrnehmung, logisches Denken und die Fähigkeit, Zusammenhänge zu erkennen.",
                 "sub_attribute_suggestions": [
                     "Auffassungsgabe",
                     "Orientierung",
@@ -133,8 +143,9 @@
             },
             {
                 "name": "Gelerntes",
-                "color": 3, 
+                "color": 3,
                 "column": 3,
+                "description": "Erlerntes Wissen, Bildung und spezialisierte Kenntnisse in verschiedenen Bereichen.",
                 "sub_attribute_suggestions": [
                     "Chemie",
                     "Latein",
