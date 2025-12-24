@@ -6,6 +6,7 @@ let ecMode = false; // Success level toggle
 let crewVisible = false;
 let bgVisible = false;
 let hasEnteredEditMode = false; // Track if user ever entered edit mode
+let originalCssVariables = null; // Store original CSS variable values
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -191,6 +192,7 @@ function toggleEcMode() {
 function renderAll() {
   if (!gmTemplate) return;
   applyLocalization();
+  applyCustomStyles();
   renderOtherPlayers();
   renderInfos();
   renderScales();
@@ -228,6 +230,55 @@ function applyLocalization() {
 
   const ecBtn = document.getElementById('ec-btn');
   if (ecBtn) ecBtn.textContent = loc.btn_ec || 'Erfolgsklassen';
+}
+
+function applyCustomStyles() {
+  const root = document.documentElement;
+
+  // Store original CSS variables on first call
+  if (originalCssVariables === null) {
+    originalCssVariables = {};
+    const computedStyle = getComputedStyle(root);
+
+    // Get all CSS variables from both stylesheets
+    for (let i = 0; i < document.styleSheets.length; i++) {
+      try {
+        const styleSheet = document.styleSheets[i];
+        const rules = styleSheet.cssRules || styleSheet.rules;
+
+        for (let j = 0; j < rules.length; j++) {
+          const rule = rules[j];
+          if (rule.selectorText === ':root' && rule.style) {
+            for (let k = 0; k < rule.style.length; k++) {
+              const propName = rule.style[k];
+              if (propName.startsWith('--')) {
+                originalCssVariables[propName] = computedStyle.getPropertyValue(propName);
+              }
+            }
+          }
+        }
+      } catch (e) {
+        // Skip stylesheets that can't be accessed (e.g., cross-origin)
+      }
+    }
+  }
+
+  // Reset all CSS variables to original values first
+  Object.keys(originalCssVariables).forEach(varName => {
+    root.style.setProperty(varName, originalCssVariables[varName]);
+  });
+
+  // Apply custom styles from gmTemplate
+  const style = gmTemplate.style || {};
+  Object.keys(style).forEach(key => {
+    // Skip non-style properties ("info")
+    if (key === 'info') return;
+
+    const value = style[key];
+    // Convert property name to CSS variable format (add -- prefix if not present)
+    const cssVarName = key.startsWith('--') ? key : `--${key}`;
+    root.style.setProperty(cssVarName, value);
+  });
 }
 
 function updateVisibility() {

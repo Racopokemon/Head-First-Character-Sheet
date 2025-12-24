@@ -11,12 +11,11 @@
             "btn_ec": "Erfolgsklassen",
             "label_grundwerte": "Grundwerte",
             "label_spezialisierung": "Spezialisierung",
-            "drop_file": "Datei importieren"
+            "drop_file": "Datei importieren",
+            "footer": "Just another little TTRPG ruleset, by Ramin. "
         },
         "style": {
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",
-            "text":"#000",
-            "bg":"red",
             "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
         },
 
@@ -24,20 +23,6 @@
         "info2": "Alter",
         "info3": "Beruf/Hobby/Identität",
         "info4": "Beschreibung",
-
-        "freetexts": [
-            "Wichtige Personen",
-            "Ziele",
-            "Stolz auf / Anekdote",
-            "Schlecht in / Angst vor",
-            "Dunkles Geheimnis?",
-            "Sagt immer ..."
-        ],
-
-        "other_player1": "Char #1",
-        "other_player2": "Char #2",
-        "other_player3": "Char #3",
-        "other_player4": "Char #4",
 
         "scale1": "Leben",
         "scale2": "Stabilität",
@@ -54,6 +39,19 @@
         "attribute_points_min": 10, 
         "attribute_points_max": 40, 
         "sub_attribute_points_max": 80,
+
+        "freetexts": [
+            "Wichtige Personen",
+            "Ziele",
+            "Stolz auf / Anekdote",
+            "Schlecht in / Angst vor",
+            "Dunkles Geheimnis?",
+            "Sagt immer ..."
+        ],
+        "other_player1": "Char #1",
+        "other_player2": "Char #2",
+        "other_player3": "Char #3",
+        "other_player4": "Char #4",
 
         "attributes": [
             {
