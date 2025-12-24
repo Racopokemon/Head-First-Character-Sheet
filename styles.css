@@ -344,8 +344,12 @@ textarea::placeholder{color:var(--text-suggestion);}
   /*.top-buttons-row{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);}*/
   .toggle-btn:hover{border-bottom: 4px solid var(--btn-side-default);}
   .toggle-btn:hover[data-active="true"]{border-bottom-width:2px;}
+  .toggle-btn:active{border-bottom: 0px;}
   /*.icon-btn:hover{border-bottom: 4px solid var(--btn-side-default);}*/
   /*.icon-btn:hover[data-active="true"]{border-bottom-width:2px;}*/
+
+  /* Hide print button on mobile */
+  #print-btn{display:none;}
     
   /*border-bottom: 4px solid #e2e2e2;}*/
   .attr-points-mobile{
