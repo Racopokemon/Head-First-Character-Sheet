@@ -443,7 +443,7 @@ function renderScales() {
     lbl.textContent = gmTemplate[key] || key;
     const input = document.createElement('input');
     input.type = 'number';
-    input.min = 0; input.max = 100;
+    //input.min = 0; input.max = 100;
     input.value = 0;
     input.dataset.key = key;
     row.appendChild(lbl);
@@ -522,8 +522,8 @@ function renderAttributes() {
       // Show input field
       const input = document.createElement('input');
       input.type = 'number';
-      input.min = 0;
-      input.max = 999;
+      //input.min = 0;
+      //input.max = 999;
       input.dataset.attrIndex = idx;
       input.dataset.key = 'attribute_' + idx;
       input.className = 'attr-value-input';
@@ -848,8 +848,8 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     
     const valueInput = document.createElement('input');
     valueInput.type = 'number';
-    valueInput.min = 0;
-    valueInput.max = 999;
+    //valueInput.min = 0;
+    //valueInput.max = 999;
     valueInput.value = subAttr.points || 0;
     valueInput.className = 'sub-attr-value-input';
     //valueInput.style.width = '60px';
