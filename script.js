@@ -219,6 +219,25 @@ function applyLocalization() {
   const ecBtn = document.getElementById('ec-btn');
   if (ecBtn) ecBtn.textContent = loc.btn_ec || 'Erfolgsklassen';
 
+  // Set icon button tooltips
+  const importBtn = document.getElementById('import-btn');
+  if (importBtn) importBtn.title = loc.btn_import || 'Charakterbogen importieren';
+
+  const exportBtn = document.getElementById('export-btn');
+  if (exportBtn) exportBtn.title = loc.btn_export || 'Charakterbogen herunterladen';
+
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) printBtn.title = loc.btn_print || 'Zur Druckansicht';
+
+  const infoBtn = document.getElementById('info-btn');
+  if (infoBtn) infoBtn.title = loc.btn_info || 'Erklärungen anzeigen';
+
+  const crewBtn = document.getElementById('crew-btn');
+  if (crewBtn) crewBtn.title = loc.btn_crew || 'Meine Crew anzeigen';
+
+  const bgBtn = document.getElementById('bg-btn');
+  if (bgBtn) bgBtn.title = loc.btn_bg || 'Mein Background anzeigen';
+
   // Set footer text
   const footerText = document.getElementById('footer-text');
   if (footerText) footerText.textContent = loc.footer || 'Just another little TTRPG ruleset, by Ramin.';
