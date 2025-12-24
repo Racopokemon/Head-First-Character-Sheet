@@ -209,19 +209,7 @@ function applyLocalization() {
   const titleEl = document.getElementById('main-title');
   if (titleEl) titleEl.textContent = loc.title || 'Head First! Character Sheet';
 
-  // Set button labels
-  const crewBtn = document.getElementById('crew-btn');
-  if (crewBtn) crewBtn.textContent = loc.btn_crew || 'Meine Crew';
-
-  const bgBtn = document.getElementById('bg-btn');
-  if (bgBtn) bgBtn.textContent = loc.btn_background || 'Mein Background';
-
-  const importBtn = document.getElementById('import-btn');
-  if (importBtn) importBtn.textContent = loc.btn_import || 'Import';
-
-  const exportBtn = document.getElementById('export-btn');
-  if (exportBtn) exportBtn.textContent = loc.btn_export || 'Download';
-
+  // Set button labels (only for text buttons)
   const editBtn = document.getElementById('edit-btn');
   if (editBtn) editBtn.textContent = loc.btn_edit || 'Bearbeiten';
 

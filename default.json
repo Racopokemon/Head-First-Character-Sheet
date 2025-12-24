@@ -2,10 +2,6 @@
     "set_by_gm": {
         "localization": {
             "title": "Head First! Character Sheet",
-            "btn_crew": "Meine Crew",
-            "btn_background": "Mein Background",
-            "btn_import": "Import",
-            "btn_export": "Download",
             "btn_edit": "Bearbeiten",
             "btn_compact": "Kompakt",
             "btn_ec": "Erfolgsklassen",
