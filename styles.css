@@ -167,8 +167,9 @@ input[type=number]{-moz-appearance:textfield}
 input{height:38px;}
 input::placeholder{color:var(--text-suggestion);}
 textarea::placeholder{color:var(--text-suggestion);}
-.footer{color:var(--footer-color);text-align:right;font-size:var(--text-size-descr);}
+.footer{text-align:right;}
 .footer a{color:var(--footer-color);font-size:var(--text-size-descr);}
+.footer span{color:var(--footer-color);font-size:var(--text-size-descr);}
 
 @keyframes slideDown {
   from {

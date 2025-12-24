@@ -230,6 +230,10 @@ function applyLocalization() {
 
   const ecBtn = document.getElementById('ec-btn');
   if (ecBtn) ecBtn.textContent = loc.btn_ec || 'Erfolgsklassen';
+
+  // Set footer text
+  const footerText = document.getElementById('footer-text');
+  if (footerText) footerText.textContent = loc.footer || 'Just another little TTRPG ruleset, by Ramin.';
 }
 
 function applyCustomStyles() {
@@ -1304,4 +1308,3 @@ function setInputValue(key, value) {
   if (!el) return;
   el.value = value;
 }
-
