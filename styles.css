@@ -70,6 +70,7 @@
 body{background:var(--bg);margin:0;padding:20px;display:flex;justify-content:center}
 .container{width:100%;max-width:var(--max-width)}
 h1{text-align:center;margin:50px 0 50px 0;font-size:28px;color:var(--header-text);}
+h2{text-align:center;margin:0 0 30px 0;font-size:20px;color:var(--header-text);}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
 /*.top-buttons-row{gap:0}*/
 .row-4 > div{flex:1}
@@ -148,6 +149,19 @@ textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: 
 .info-attr-description{margin-bottom:12px;line-height:1.5;font-size:var(--text-size-descr);}
 .info-attr-suggestions{margin-top:8px;padding-left:20px;}
 .info-attr-suggestions li{margin-bottom:4px;font-size:var(--text-size-descr);}
+
+/* Slide-in animation for mode transitions */
+.slide-in{animation:slideInFromBottom 0.25s ease-out forwards;}
+@keyframes slideInFromBottom {
+  from {
+    opacity:0.3;
+    transform:translateY(20px);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
 
 /* toggle button styling */
 .toggle-btn{cursor:pointer;font-size: var(--text-size-descr);height:var(--button-size);border-bottom: 4px solid var(--btn-side-default);/*max-width: 325.33px*/;padding:8px 12px;border-radius:6px;flex:1;background:var(--btn-bg);color:var(--btn-text);}
@@ -361,6 +375,9 @@ textarea::placeholder{color:var(--text-suggestion);}
 
   /* Hide print button on mobile */
   #print-btn{display:none;}
+
+  /* Info page mobile adjustments */
+  .info-text-row{flex-direction:column;}
     
   /*border-bottom: 4px solid #e2e2e2;}*/
   .attr-points-mobile{

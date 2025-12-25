@@ -246,6 +246,10 @@ function applyLocalization() {
   // Set footer text
   const footerText = document.getElementById('footer-text');
   if (footerText) footerText.textContent = loc.footer || 'Just another little TTRPG ruleset, by Ramin.';
+
+  // Set subtitle text
+  const subtitleEl = document.getElementById('subtitle');
+  if (subtitleEl) subtitleEl.textContent = loc.subtitle_info || 'Erklärungen und Tipps';
 }
 
 function applyCustomStyles() {
@@ -353,20 +357,62 @@ function toggleInfoMode() {
   const infoBtn = document.getElementById('info-btn');
   const infoPage = document.getElementById('info-page-container');
   const charSheet = document.getElementById('char-sheet-container');
+  const crewBtn = document.getElementById('crew-btn');
+  const bgBtn = document.getElementById('bg-btn');
+  const subtitle = document.getElementById('subtitle');
+  const footer = document.querySelector('.footer');
 
   if (infoBtn) infoBtn.dataset.active = infoMode ? 'true' : 'false';
 
   if (infoMode) {
     // Show info page, hide character sheet
     if (charSheet) charSheet.style.display = 'none';
+    if (subtitle) {
+      subtitle.style.display = 'block';
+      subtitle.classList.add('slide-in');
+      subtitle.addEventListener('animationend', () => {
+        subtitle.classList.remove('slide-in');
+      }, { once: true });
+    }
     if (infoPage) {
       infoPage.classList.add('active');
+      infoPage.classList.add('slide-in');
       renderInfoPage();
+      // Remove animation class after animation completes
+      infoPage.addEventListener('animationend', () => {
+        infoPage.classList.remove('slide-in');
+      }, { once: true });
     }
+    if (footer) {
+      footer.classList.add('slide-in');
+      footer.addEventListener('animationend', () => {
+        footer.classList.remove('slide-in');
+      }, { once: true });
+    }
+    // Hide crew and bg buttons in info mode
+    if (crewBtn) crewBtn.style.display = 'none';
+    if (bgBtn) bgBtn.style.display = 'none';
   } else {
     // Hide info page, show character sheet
+    if (subtitle) subtitle.style.display = 'none';
     if (infoPage) infoPage.classList.remove('active');
-    if (charSheet) charSheet.style.display = '';
+    if (charSheet) {
+      charSheet.style.display = '';
+      charSheet.classList.add('slide-in');
+      // Remove animation class after animation completes
+      charSheet.addEventListener('animationend', () => {
+        charSheet.classList.remove('slide-in');
+      }, { once: true });
+    }
+    if (footer) {
+      footer.classList.add('slide-in');
+      footer.addEventListener('animationend', () => {
+        footer.classList.remove('slide-in');
+      }, { once: true });
+    }
+    // Show crew and bg buttons again
+    if (crewBtn) crewBtn.style.display = '';
+    if (bgBtn) bgBtn.style.display = '';
   }
 }
 
@@ -381,21 +427,27 @@ function renderInfoPage() {
   const textL = infopage.text_l || '';
   const textR = infopage.text_r || '';
 
-  // Create intro text row
-  const textRow = document.createElement('div');
-  textRow.className = 'info-text-row';
+  // Create intro text row only if at least one text is present
+  if (textL || textR) {
+    const textRow = document.createElement('div');
+    textRow.className = 'info-text-row';
 
-  const textBoxL = document.createElement('div');
-  textBoxL.className = 'info-text-box';
-  textBoxL.textContent = textL;
+    if (textL) {
+      const textBoxL = document.createElement('div');
+      textBoxL.className = 'info-text-box';
+      textBoxL.textContent = textL;
+      textRow.appendChild(textBoxL);
+    }
 
-  const textBoxR = document.createElement('div');
-  textBoxR.className = 'info-text-box';
-  textBoxR.textContent = textR;
+    if (textR) {
+      const textBoxR = document.createElement('div');
+      textBoxR.className = 'info-text-box';
+      textBoxR.textContent = textR;
+      textRow.appendChild(textBoxR);
+    }
 
-  textRow.appendChild(textBoxL);
-  textRow.appendChild(textBoxR);
-  container.appendChild(textRow);
+    container.appendChild(textRow);
+  }
 
   // Create attribute columns
   const attrs = gmTemplate.attributes || [];

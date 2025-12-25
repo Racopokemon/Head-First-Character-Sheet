@@ -2,6 +2,7 @@
     "set_by_gm": {
         "localization": {
             "title": "Head First! Character Sheet",
+            "subtitle_info": "Attributübersicht",
             "btn_edit": "Bearbeiten",
             "btn_compact": "Kompakt",
             "btn_ec": "Erfolgsklassen",
