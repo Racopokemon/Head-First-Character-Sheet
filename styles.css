@@ -145,10 +145,10 @@ textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: 
 .info-page-container.active{display:block;}
 .info-text-row{display:flex;gap:var(--gap);margin-bottom:var(--anim-margin-bottom);}
 .info-text-box{flex:1;padding:13px 24px 15px 24px;border-radius:8px;background-color:var(--box-bg);line-height:1.5;font-size:var(--text-size-infobox);}
-.info-attr-box{padding:15px;border-radius:8px;}
-.info-attr-name{font-weight:600;font-size:var(--text-size-normal);margin-bottom:8px;}
-.info-attr-description{margin-bottom:12px;line-height:1.5;font-size:var(--text-size-descr);font-style:italic;}
-.info-attr-suggestions{margin-top:8px;padding-left:20px;margin-bottom:2px;}
+.info-attr-box{padding:15px;border-radius:8px;gap:8px;display:flex;flex-direction:column;}
+.info-attr-name{font-weight:600;font-size:var(--text-size-normal);}
+.info-attr-description{line-height:1.5;font-size:var(--text-size-descr);font-style:italic;}
+.info-attr-suggestions{margin-top:3px;padding-left:20px;margin-bottom:0;}
 .info-attr-suggestions li{margin-bottom:4px;font-size:var(--text-size-descr);}
 
 /* Slide-in animation for mode transitions */

@@ -311,6 +311,11 @@ function updateVisibility() {
   const bgBtn = document.getElementById('bg-btn');
   if (freetexts) freetexts.style.display = bgVisible ? '' : 'none';
   if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
+
+  // Show/hide info button based on show_infopage setting
+  const infoBtn = document.getElementById('info-btn');
+  const showInfopage = gmTemplate && gmTemplate.show_infopage !== false;
+  if (infoBtn) infoBtn.style.display = showInfopage ? '' : 'none';
 }
 
 // Toggle crew section with animation
@@ -486,15 +491,16 @@ function renderInfoPage() {
 
     const suggestions = document.createElement('ul');
     suggestions.className = 'info-attr-suggestions';
-    (attr.sub_attribute_suggestions || []).forEach((suggestion) => {
+    const suggestionsArray = attr.sub_attribute_suggestions || [];
+    suggestionsArray.forEach((suggestion) => {
       const li = document.createElement('li');
       li.textContent = suggestion;
       suggestions.appendChild(li);
     });
 
     box.appendChild(name);
-    box.appendChild(description);
-    box.appendChild(suggestions);
+    if (description.textContent.length > 0) box.appendChild(description);
+    if (suggestionsArray.length > 0) box.appendChild(suggestions);
     colContainer.appendChild(box);
   });
 }
@@ -1385,6 +1391,8 @@ function applyImported(json) {
   if (json.set_by_gm) {
     gmTemplate = json.set_by_gm;
     renderAll();
+  } else {
+    // actually this would be a problem, were always expecting the set_by_gm to exist
   }
   const sp = json.set_by_player;
 
@@ -1402,6 +1410,9 @@ function applyImported(json) {
       toggleBtn.style.display = '';
     }
   }
+  // Show/hide sub-attribute points label based on show_subattributes setting
+  const subAttrPointsLabel = document.getElementById('sub-attr-points-label');
+  if (subAttrPointsLabel) subAttrPointsLabel.style.display = showSubattributes ? '' : 'none';
 
   // Update EC button visibility and state
   const ecBtn = document.getElementById('ec-btn');
