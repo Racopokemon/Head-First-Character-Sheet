@@ -205,6 +205,7 @@ function renderAll() {
   renderFreetexts();
   updateVisibility();
   updatePointsDisplay();
+  renderInfoPage();
 }
 
 function applyLocalization() {
@@ -391,7 +392,6 @@ function toggleInfoMode() {
     if (infoPage) {
       infoPage.classList.add('active');
       infoPage.classList.add('slide-in');
-      renderInfoPage();
       // Remove animation class after animation completes
       infoPage.addEventListener('animationend', () => {
         infoPage.classList.remove('slide-in');
@@ -1385,12 +1385,17 @@ function hideDragOverlay() {
 
 function applyImported(json) {
   // if set_by_gm present, replace template and re-render labels
-  if (json.set_by_gm) {
-    gmTemplate = json.set_by_gm;
-    renderAll();
-  } else {
+  if (!json.set_by_gm) {
     // actually this would be a problem, were always expecting the set_by_gm to exist
+    throw new Error("Provided json file does not provide a 'set_by_gm' entry :(");
   }
+  gmTemplate = json.set_by_gm;
+  renderAll();
+
+  //unhiding some things that are only hidden initially (rather have an empty page flash before loading finished than a half-built one)
+  document.getElementById('char-sheet-container').style.display = '';
+  document.getElementById('footer').style.display = '';
+
   const sp = json.set_by_player;
 
   // Handle show_subattributes and show_success_levels
@@ -1468,6 +1473,9 @@ function applyImported(json) {
   updateVisibility();
   renderAttributes();
   updatePointsDisplay();
+
+  infoMode = true;
+  toggleInfoMode(); //makes sure were never in boring info mode when loading a new sheet, and also plays the nice face-in animation
 
   if (editMode) {
     toggleEditMode();
