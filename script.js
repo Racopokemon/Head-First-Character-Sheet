@@ -363,7 +363,7 @@ function toggleBgVisibility() {
         setTimeout(() => {
           defaultIcon.style.display = '';
           arrowIcon.style.display = 'none';
-        }, 500);
+        }, 350);
       }
     }
   } else {
