@@ -369,6 +369,15 @@ function toggleInfoMode() {
 
   if (infoBtn) infoBtn.dataset.active = infoMode ? 'true' : 'false';
 
+  if (footer) {
+    footer.classList.remove('slide-in');
+    footer.offsetWidth;
+    footer.classList.add('slide-in');
+    footer.addEventListener('animationend', () => {
+      footer.classList.remove('slide-in');
+    }, { once: true });
+  }
+
   if (infoMode) {
     // Show info page, hide character sheet
     if (charSheet) charSheet.style.display = 'none';
@@ -388,12 +397,6 @@ function toggleInfoMode() {
         infoPage.classList.remove('slide-in');
       }, { once: true });
     }
-    if (footer) {
-      footer.classList.add('slide-in');
-      footer.addEventListener('animationend', () => {
-        footer.classList.remove('slide-in');
-      }, { once: true });
-    }
     // Hide crew and bg buttons in info mode
     if (crewBtn) crewBtn.style.display = 'none';
     if (bgBtn) bgBtn.style.display = 'none';
@@ -407,12 +410,6 @@ function toggleInfoMode() {
       // Remove animation class after animation completes
       charSheet.addEventListener('animationend', () => {
         charSheet.classList.remove('slide-in');
-      }, { once: true });
-    }
-    if (footer) {
-      footer.classList.add('slide-in');
-      footer.addEventListener('animationend', () => {
-        footer.classList.remove('slide-in');
       }, { once: true });
     }
     // Show crew and bg buttons again
