@@ -39,7 +39,7 @@
         "scale_initial2": 100, 
         "scale_initial3": 75,
 
-        "show_subattributes": true,
+        "show_subattributes": false,
         "show_success_levels": true,
         "show_infopage": true,
 

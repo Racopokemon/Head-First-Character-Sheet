@@ -744,10 +744,10 @@ function renderAttributes() {
 
       // Focus input when clicking box (in edit mode)
       box.addEventListener('click', (e) => {
-        if (e.target !== input && !e.target.classList.contains('sub-add-btn')) {
+        if (e.target !== input && !e.target.classList.contains('sub-add-btn') && editMode) {
           input.focus();
           const len = input.value.length;
-          input.setSelectionRange(len, len);
+          input.setSelectionRange(len, len); //this threw errors when clicking in non-edit mode, but the && editMode doesnt entirely fix it - if you spam during the very first edit animation, it still fires. Whatever. Last line here anyways :D
         }
       });
     } else {
