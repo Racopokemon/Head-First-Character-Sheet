@@ -350,6 +350,22 @@ function toggleBgVisibility() {
     freetexts.style.display = '';
     freetexts.classList.add('expanding');
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('expanding'); updateVisibility(); }, { once: true });
+
+    // Show arrow icon on mobile when expanding
+    if (window.innerWidth <= 800 && bgBtn) {
+      const defaultIcon = bgBtn.querySelector('.bg-icon-default');
+      const arrowIcon = bgBtn.querySelector('.bg-icon-arrow');
+
+      if (defaultIcon && arrowIcon) {
+        defaultIcon.style.display = 'none';
+        arrowIcon.style.display = '';
+
+        setTimeout(() => {
+          defaultIcon.style.display = '';
+          arrowIcon.style.display = 'none';
+        }, 500);
+      }
+    }
   } else {
     freetexts.classList.add('collapsing');
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('collapsing'); updateVisibility(); }, { once: true });
