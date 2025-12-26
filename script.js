@@ -217,32 +217,32 @@ function applyLocalization() {
 
   // Set button labels (only for text buttons)
   const editBtn = document.getElementById('edit-btn');
-  if (editBtn) editBtn.textContent = loc.btn_edit || 'Bearbeiten';
+  if (editBtn) editBtn.textContent = loc.btn_edit || 'Edit';
 
   const toggleBtn = document.getElementById('toggle-btn');
-  if (toggleBtn) toggleBtn.textContent = loc.btn_compact || 'Kompakt';
+  if (toggleBtn) toggleBtn.textContent = loc.btn_compact || 'Compact';
 
   const ecBtn = document.getElementById('ec-btn');
-  if (ecBtn) ecBtn.textContent = loc.btn_ec || 'Erfolgsklassen';
+  if (ecBtn) ecBtn.textContent = loc.btn_ec || 'Success Levels';
 
   // Set icon button tooltips
   const importBtn = document.getElementById('import-btn');
-  if (importBtn) importBtn.title = loc.btn_import || 'Charakterbogen importieren';
+  if (importBtn) importBtn.title = loc.btn_import || 'Import character sheet';
 
   const exportBtn = document.getElementById('export-btn');
-  if (exportBtn) exportBtn.title = loc.btn_export || 'Charakterbogen herunterladen';
+  if (exportBtn) exportBtn.title = loc.btn_export || 'Download character sheet';
 
   const printBtn = document.getElementById('print-btn');
-  if (printBtn) printBtn.title = loc.btn_print || 'Zur Druckansicht';
+  if (printBtn) printBtn.title = loc.btn_print || 'Printing mode';
 
   const infoBtn = document.getElementById('info-btn');
-  if (infoBtn) infoBtn.title = loc.btn_info || 'Erklärungen anzeigen';
+  if (infoBtn) infoBtn.title = loc.btn_info || 'Show attribute info';
 
   const crewBtn = document.getElementById('crew-btn');
-  if (crewBtn) crewBtn.title = loc.btn_crew || 'Meine Crew anzeigen';
+  if (crewBtn) crewBtn.title = loc.btn_crew || 'Show my group';
 
   const bgBtn = document.getElementById('bg-btn');
-  if (bgBtn) bgBtn.title = loc.btn_bg || 'Mein Background anzeigen';
+  if (bgBtn) bgBtn.title = loc.btn_bg || 'Show character details';
 
   // Set footer text
   const footerText = document.getElementById('footer-text');
@@ -250,7 +250,7 @@ function applyLocalization() {
 
   // Set subtitle text
   const subtitleEl = document.getElementById('subtitle');
-  if (subtitleEl) subtitleEl.textContent = loc.subtitle_info || 'Erklärungen und Tipps';
+  if (subtitleEl) subtitleEl.textContent = loc.subtitle_info || 'Attribute details';
 }
 
 function applyCustomStyles() {
