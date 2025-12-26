@@ -24,7 +24,7 @@
 
         "infopage": {
             "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80-70-60-40-30-20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. \nFalls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40-30-30-20-20-10 (im Bereich 10-40 bleiben). Zusätzlich können 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",
-            "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören, und muss individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne zusammen mit Intelligenz gruppiert (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
+            "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören, und muss individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne Teil von Intelligenz (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
         },
 
         "info1": "Name",
@@ -67,7 +67,7 @@
                 "name": "Miteinander",
                 "color": 1,
                 "column": 1,
-                "description": "Soziale Interaktion, Empathie und die Fähigkeit, andere zu verstehen und zu beeinflussen.",
+                "description": "'Positive' soziale Fähigkeiten; Empathie. Macht sympatisch, aber nicht wirklich 'stark'.",
                 "sub_attribute_suggestions": [
                     "Menschenkenntnis",
                     "Beruhigen",
@@ -82,7 +82,7 @@
                 "name": "Gegeneinander",
                 "color": 1,
                 "column": 1,
-                "description": "Manipulation, Täuschung und die Kunst, sich in Konflikten durchzusetzen.",
+                "description": "'Negative' soziale Fähigkeiten; andere Menschen (be)nutzen. Resilienz, mentale Stärke.",
                 "sub_attribute_suggestions": [
                     "Lügen",
                     "Einschüchtern",
@@ -94,10 +94,25 @@
                 ]
             },
             {
+                "name": "Körper(bau)",
+                "color": 2,
+                "column": 2,
+                "description": "Stärke; genereller physischer Zustand & Belastbarkeit. Und Erscheinung.",
+                "sub_attribute_suggestions": [
+                    "Schwimmen",
+                    "Handgemenge",
+                    "Zechen",
+                    "Boxen",
+                    "Stichwaffen",
+                    "Laufen",
+                    "Aussehen"
+                ]
+            },
+            {
                 "name": "Geschick",
                 "color": 2,
                 "column": 2,
-                "description": "Feinmotorik, Reaktionsgeschwindigkeit und handwerkliche Fertigkeiten.",
+                "description": "Verbleibende körperliche Fähigkeiten, die nicht primär Stärke erfordern.",
                 "sub_attribute_suggestions": [
                     "Ausweichen",
                     "Schusswaffen",
@@ -114,25 +129,10 @@
                 ]
             },
             {
-                "name": "Körper(bau)",
-                "color": 2,
-                "column": 2,
-                "description": "Körperliche Stärke, Ausdauer und die physische Präsenz des Charakters.",
-                "sub_attribute_suggestions": [
-                    "Schwimmen",
-                    "Handgemenge",
-                    "Zechen",
-                    "Boxen",
-                    "Stichwaffen",
-                    "Laufen",
-                    "Aussehen"
-                ]
-            },
-            {
                 "name": "Scharfsinn",
                 "color": 3,
                 "column": 3,
-                "description": "Wahrnehmung, logisches Denken und die Fähigkeit, Zusammenhänge zu erkennen.",
+                "description": "Geistiges #1: Intelligenz (und Sinne). Alles, was nur 'begrenzt' lernbar ist.",
                 "sub_attribute_suggestions": [
                     "Auffassungsgabe",
                     "Orientierung",
@@ -147,7 +147,7 @@
                 "name": "Gelerntes",
                 "color": 3,
                 "column": 3,
-                "description": "Erlerntes Wissen, Bildung und spezialisierte Kenntnisse in verschiedenen Bereichen.",
+                "description": "Geistiges #2: Wissen; Bildung & Ausbildung. Beinhaltet auch Erziehung, Kultur ...",
                 "sub_attribute_suggestions": [
                     "Chemie",
                     "Latein",
