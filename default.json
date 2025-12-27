@@ -23,7 +23,7 @@
         },
 
         "infopage": {
-            "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80-70-60-40-30-20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. \nFalls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40-30-30-20-20-10 (im Bereich 10-40 bleiben). Zusätzlich können 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",
+            "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80-70-60-40-30-20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40-30-30-20-20-10 (im Bereich 10-40 bleiben). Zusätzlich können dann 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",
             "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören, und muss individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne Teil von Intelligenz (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
         },
 
@@ -82,7 +82,7 @@
                 "name": "Gegeneinander",
                 "color": 1,
                 "column": 1,
-                "description": "'Negative' soziale Fähigkeiten; andere Menschen (be)nutzen. Resilienz, mentale Stärke.",
+                "description": "'Negative' soziale Fähigkeiten; bekommen, was man will. Resilienz, mentale Stärke.",
                 "sub_attribute_suggestions": [
                     "Lügen",
                     "Einschüchtern",
@@ -132,7 +132,7 @@
                 "name": "Scharfsinn",
                 "color": 3,
                 "column": 3,
-                "description": "Geistiges #1: Intelligenz (und Sinne). Alles, was nur 'begrenzt' lernbar ist.",
+                "description": "Geistiges #1: Intelligenz & alles, was nur 'begrenzt' lernbar ist. Und Sinne.",
                 "sub_attribute_suggestions": [
                     "Auffassungsgabe",
                     "Orientierung",
@@ -147,7 +147,7 @@
                 "name": "Gelerntes",
                 "color": 3,
                 "column": 3,
-                "description": "Geistiges #2: Wissen; Bildung & Ausbildung. Beinhaltet auch Erziehung, Kultur ...",
+                "description": "Geistiges #2: Wissen; Bildung & Ausbildung. Auch Erziehung, Kultur ...",
                 "sub_attribute_suggestions": [
                     "Chemie",
                     "Latein",
