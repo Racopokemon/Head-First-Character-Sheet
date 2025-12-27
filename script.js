@@ -8,6 +8,7 @@ let bgVisible = false;
 let hasEnteredEditMode = false; // Track if user ever entered edit mode
 let originalCssVariables = null; // Store original CSS variable values
 let infoMode = false; // Track if info page is visible
+let printPreviewMode = false; // Track if print preview mode is active
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -34,6 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // wire info button
   const infoBtn = document.getElementById('info-btn');
   if (infoBtn) infoBtn.addEventListener('click', toggleInfoMode);
+
+  // wire print button
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) printBtn.addEventListener('click', togglePrintPreview);
+
+  // Exit edit mode before actual printing
+  window.addEventListener('beforeprint', () => {
+    if (!infoMode && editMode) {
+      toggleEditMode();
+    }
+  });
 
   // wire drag and drop import
   document.addEventListener('dragover', handleDragOver);
@@ -371,6 +383,19 @@ function toggleBgVisibility() {
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('collapsing'); updateVisibility(); }, { once: true });
   }
   if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
+}
+
+// Toggle print preview mode
+function togglePrintPreview() {
+  printPreviewMode = !printPreviewMode;
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) printBtn.dataset.active = printPreviewMode ? 'true' : 'false';
+
+  if (printPreviewMode) {
+    document.body.classList.add('prt-preview');
+  } else {
+    document.body.classList.remove('prt-preview');
+  }
 }
 
 // Toggle info mode (show info page instead of character sheet)
@@ -771,6 +796,7 @@ function renderAttributes() {
       const label = document.createElement('div');
       label.className = 'attr-value-label';
       label.dataset.attrLabel = idx;
+      label.dataset.value = storedValue || '0';
       if (ecMode) {
         const right = Number(storedValue || 0);
         const left = Math.round(right / 5);
@@ -1065,13 +1091,15 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       }
     });
     validateSubAttributeInput(valueInput); // initial validation
-    
+
     const totalLabel = document.createElement('div');
     totalLabel.className = 'attr-value-label';
     totalLabel.dataset.subLabel = `${attrIdx}-${subAttrIdx}`;
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
-    totalLabel.textContent = mainPoints + subPoints;
+    const sum = mainPoints + subPoints;
+    totalLabel.dataset.value = String(sum);
+    totalLabel.textContent = sum;
     
     // delete button for this subattribute
     const delBtn = document.createElement('button');
@@ -1108,6 +1136,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
     const sum = mainPoints + subPoints;
+    totalLabel.dataset.value = String(sum);
     if (ecMode) {
       const right = Number(sum || 0);
       const left = Math.round(right / 5);
