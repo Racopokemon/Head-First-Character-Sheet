@@ -365,6 +365,9 @@ function toggleCrewVisibility() {
   const crewBtn = document.getElementById('crew-btn');
   if (!other) { updateVisibility(); return; }
 
+  other.classList.remove('expanding');
+  other.classList.remove('collapsing');
+
   if (crewVisible) {
     // show then animate expand
     other.style.display = '';
@@ -384,6 +387,9 @@ function toggleBgVisibility() {
   const freetexts = document.getElementById('freetext-expander');
   const bgBtn = document.getElementById('bg-btn');
   if (!freetexts) { updateVisibility(); return; }
+
+  freetexts.classList.remove('expanding');
+  freetexts.classList.remove('collapsing');
 
   if (bgVisible) {
     freetexts.style.display = '';
