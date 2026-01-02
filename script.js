@@ -43,7 +43,34 @@ document.addEventListener('DOMContentLoaded', () => {
   // Exit edit mode before actual printing
   window.addEventListener('beforeprint', () => {
     if (!infoMode && editMode) {
-      toggleEditMode();
+      //manually leaving editMode without animations (such that we dont print a half-animated stated)
+      editMode = false;
+      const btn = document.getElementById('edit-btn');
+      btn.dataset.active = 'false';
+
+      // Re-enable EC button
+      const ecBtn = document.getElementById('ec-btn');
+      if (ecBtn) {
+        ecBtn.classList.remove('disabled');
+      }
+
+      // Remove all animation classes and update immediately
+      const row = document.getElementById('points-expander');
+      row.classList.remove('collapsing', 'expanding');
+      updatePointsDisplay();
+
+      // Remove container padding animation classes
+      const container = document.querySelector('.container');
+      container.classList.remove('padding-in', 'padding-out');
+
+      // Re-render attributes without animation
+      renderAttributes();
+
+      // Remove any sub-attribute buttons that might still be visible
+      if (!compactMode) {
+        document.querySelectorAll('.sub-add-btn, .sub-del-btn').forEach(btn => btn.remove());
+      }
+
     }
   });
 
