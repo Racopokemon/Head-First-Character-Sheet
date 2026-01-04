@@ -919,7 +919,7 @@ function updateAttributePointLabels() {
           const mainPoints = playerData.attributes[idx].points || 0;
           const subPoints = subAttr.points || 0;
           const sum = mainPoints + subPoints;
-          if (ecMode) {
+          if (ecMode && !editMode) {
             const right = Number(sum || 0);
             const left = Math.round(right / 5);
             const mid = Math.round(right / 2);
