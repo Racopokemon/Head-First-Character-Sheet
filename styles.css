@@ -425,7 +425,7 @@ textarea::placeholder{color:var(--text-suggestion);}
   }
 }
 
-@media(max-width:800px){
+@media(max-width:850px){
   .row-3{flex-direction:column}
   .attributes-row{flex-direction:column}
   .freetext-grid{grid-template-columns:1fr}

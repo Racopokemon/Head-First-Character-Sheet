@@ -397,7 +397,7 @@ function toggleBgVisibility() {
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('expanding'); updateVisibility(); }, { once: true });
 
     // Show arrow icon on mobile when expanding
-    if (window.innerWidth <= 800 && bgBtn) {
+    if (window.innerWidth <= 850 && bgBtn) {
       const defaultIcon = bgBtn.querySelector('.bg-icon-default');
       const arrowIcon = bgBtn.querySelector('.bg-icon-arrow');
 
