@@ -37,7 +37,7 @@
 
   /* Blue */
   --color-8-accent: #5c9cff;
-  --color-8: #9ec4ff;
+  --color-8: #b4cff9; /*#9ec4ff;*/
   --color-8-light: #d1e3ff;
 
   /* Purple */
@@ -46,8 +46,8 @@
   --color-9-light: #f3e5f5;
 
   /* Pink */
-  --color-10-accent: #ff80ab;
-  --color-10: #ffb3d0;
+  --color-10-accent: #fd8ab1;/*#ff80ab;*/
+  --color-10: #f9c0d6; /*#ffb3d0;*/
   --color-10-light: #ffe0eb;
 
   /* Light Gray */
