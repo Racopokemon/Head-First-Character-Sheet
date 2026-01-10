@@ -871,13 +871,8 @@ function updateAttributePointLabels() {
             subLabel.textContent = sum;
           }
 
-          // Update warning class based on max value
-          const maxVal = gmTemplate.sub_attribute_points_max || 80;
-          if (sum > maxVal) {
-            subLabel.classList.add('warning');
-          } else {
-            subLabel.classList.remove('warning');
-          }
+          // Validate using the centralized function
+          validateSubAttributeInput(`${idx}-${subIdx}`);
         }
       });
     }
@@ -1174,7 +1169,7 @@ function focusPrevInContainer(currentEl, container, type) {
 
 function validateAttributeInput(inputEl, attrIdx) {
   const val = Number(inputEl.value || 0);
-  const minVal = 0 ? gmTemplate.attribute_points_min === 0 : gmTemplate.attribute_points_min || 10;
+  const minVal = gmTemplate.attribute_points_min === 0 ? 0 : gmTemplate.attribute_points_min || 10;
   const maxVal = gmTemplate.attribute_points_max || 80;
   
   if (val != 0 && (val < minVal || val > maxVal)) {
@@ -1186,13 +1181,26 @@ function validateAttributeInput(inputEl, attrIdx) {
 
 function validateSubAttributeInput(inputEl) {
   // Mark the corresponding total label red if (attribute points + this sub) > max
-  const ds = inputEl.dataset.subInputVal || '';
-  const parts = ds.split('-');
-  if (parts.length < 2) return;
-  const attrIdx = Number(parts[0]);
-  const subIdx = Number(parts[1]);
-  const subVal = Number(inputEl.value || 0);
+  // Can accept either an input element or a data string in format "attrIdx-subIdx"
+  let attrIdx, subIdx;
+
+  if (typeof inputEl === 'string') {
+    // Called with "attrIdx-subIdx" string
+    const parts = inputEl.split('-');
+    if (parts.length < 2) return;
+    attrIdx = Number(parts[0]);
+    subIdx = Number(parts[1]);
+  } else {
+    // Called with input element
+    const ds = inputEl.dataset.subInputVal || '';
+    const parts = ds.split('-');
+    if (parts.length < 2) return;
+    attrIdx = Number(parts[0]);
+    subIdx = Number(parts[1]);
+  }
+
   const mainVal = (playerData.attributes && playerData.attributes[attrIdx]) ? Number(playerData.attributes[attrIdx].points || 0) : 0;
+  const subVal = (playerData.attributes && playerData.attributes[attrIdx] && playerData.attributes[attrIdx].sub_attributes[subIdx]) ? Number(playerData.attributes[attrIdx].sub_attributes[subIdx].points || 0) : 0;
   const sum = mainVal + subVal;
   const maxVal = gmTemplate.sub_attribute_points_max || 80;
   const label = document.querySelector(`[data-sub-label="${attrIdx}-${subIdx}"]`);
