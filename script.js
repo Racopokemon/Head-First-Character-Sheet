@@ -8,6 +8,8 @@ let bgVisible = false;
 let hasEnteredEditMode = false; // Track if user ever entered edit mode
 let originalCssVariables = null; // Store original CSS variable values
 let infoMode = false; // Track if info page is visible
+let shouldShowCrewBtn = true; // Track if crew button should be shown for current JSON
+let shouldShowBgBtn = true; // Track if bg button should be shown for current JSON
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -428,9 +430,9 @@ function toggleInfoMode() {
         charSheet.classList.remove('slide-in');
       }, { once: true });
     }
-    // Show crew and bg buttons again
-    if (crewBtn) crewBtn.style.display = '';
-    if (bgBtn) bgBtn.style.display = '';
+    // Show crew and bg buttons again (if not hidden in json)
+    if (crewBtn) crewBtn.style.display = shouldShowCrewBtn ? '' : 'none';
+    if (bgBtn) bgBtn.style.display = shouldShowBgBtn ? '' : 'none';
   }
 }
 
@@ -1417,6 +1419,8 @@ function applyImported(json) {
   // Handle show_subattributes and show_success_levels
   const showSubattributes = gmTemplate.show_subattributes !== false; // default true
   const showSuccessLevels = gmTemplate.show_success_levels !== false; // default true
+  const showFreetextButton = gmTemplate.show_freetext_button !== false; // default true
+  const showOthersButton = gmTemplate.show_others_button !== false; // default true
 
   // Update compact button visibility and state
   const toggleBtn = document.getElementById('toggle-btn');
@@ -1441,6 +1445,22 @@ function applyImported(json) {
     } else {
       ecBtn.style.display = '';
     }
+  }
+
+  // Update crew button visibility
+  const hasFreetexts = gmTemplate.freetexts && gmTemplate.freetexts.length > 0;
+  shouldShowCrewBtn = showOthersButton;
+  shouldShowBgBtn = showFreetextButton && hasFreetexts;
+
+  const crewBtn = document.getElementById('crew-btn');
+  if (crewBtn) {
+    crewBtn.style.display = shouldShowCrewBtn ? '' : 'none';
+  }
+
+  // Update bg button visibility (hide if disabled or if freetexts are missing/empty)
+  const bgBtn = document.getElementById('bg-btn');
+  if (bgBtn) {
+    bgBtn.style.display = shouldShowBgBtn ? '' : 'none';
   }
 
   if (!sp) {
@@ -1477,12 +1497,12 @@ function applyImported(json) {
       }));
     }
 
-    // restore visibility flags
+    // restore visibility flags (only if the corresponding button is shown)
     if (typeof sp.crewVisible === 'boolean') {
-      crewVisible = sp.crewVisible;
+      crewVisible = sp.crewVisible && shouldShowCrewBtn;
     }
     if (typeof sp.bgVisible === 'boolean') {
-      bgVisible = sp.bgVisible;
+      bgVisible = sp.bgVisible && shouldShowBgBtn;
     }
   }
 

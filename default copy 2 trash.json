@@ -37,8 +37,8 @@
         "show_subattributes": true,
         "show_success_levels": false,
         "show_infopage": true,
-        "show_freetext_button": true,
-        "show_others_button": true,
+        "show_freetext_button": false,
+        "show_others_button": false,
 
         "attribute_points": 25,
         "sub_attribute_points": 30,
