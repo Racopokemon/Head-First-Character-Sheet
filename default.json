@@ -29,10 +29,10 @@
 
         "scale1": "Leben",
         "scale2": "Glück",
-        "scale3": "Lieblingszahl",
+        "scale3": "Gold",
         "scale_initial1": 20,
         "scale_initial2": 8, 
-        "scale_initial3": 67,
+        "scale_initial3": 15,
 
         "show_subattributes": true,
         "show_success_levels": false,
@@ -40,11 +40,11 @@
         "show_freetext_button": false,
         "show_others_button": false,
 
-        "attribute_points": 25,
-        "sub_attribute_points": 30,
+        "attribute_points": 24,
+        "sub_attribute_points": 32,
         "attribute_points_min": 0, 
         "attribute_points_max": 8, 
-        "sub_attribute_points_max": 14,
+        "sub_attribute_points_max": 13,
 
         "other_player1": "Char #1",
         "other_player2": "Char #2",
@@ -53,14 +53,14 @@
 
         "attributes": [
             {
-                "name": "Körper(kraft)",
+                "name": "Körper",
                 "color": 1,
                 "column": 1,
                 "sub_attribute_suggestions": [
-                    "Handgemenge*",
-                    "Nahkampfwaffen*",
+                    "Nahkampf*",
                     "Muskelkraft",
-                    "Zechen"
+                    "Zechen",
+                    "Erscheinung"
                 ]
             },
             {
@@ -68,7 +68,7 @@
                 "color": 2,
                 "column": 1,
                 "sub_attribute_suggestions": [
-                    "Ausweichen**",
+                    "Ausweichen*",
                     "Schusswaffen*",
                     "Schleichen*",
                     "Klettern",
@@ -76,18 +76,18 @@
                 ]
             },
             {
-                "name": "Soziale Talente",
+                "name": "Soziales",
                 "color": 10,
                 "column": 2,
                 "sub_attribute_suggestions": [
                     "Menschenkenntnis*",
-                    "Beruhigen",
                     "Manipulieren",
-                    "Einschüchtern"
+                    "Einschüchtern",
+                    "Beruhigen"
                 ]
             },
             {
-                "name": "Geistige Talente",
+                "name": "Geistiges",
                 "color": 9,
                 "column": 2,
                 "sub_attribute_suggestions": [
