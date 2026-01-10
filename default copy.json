@@ -15,37 +15,42 @@
             "label_grundwerte": "Grundwerte",
             "label_spezialisierung": "Spezialisierung",
             "drop_file": "Datei importieren",
-            "footer": "Just another little TTRPG ruleset. "
+            "footer": "Just another little TTRPG ruleset, by Ramin. "
         },
         "style": {
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",
             "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
         },
 
+        "infopage": {
+            "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80-70-60-40-30-20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40-30-30-20-20-10 (im Bereich 10-40 bleiben). Zusätzlich können dann 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",
+            "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören, und muss individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne Teil von Intelligenz (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
+        },
+
         "info1": "Name",
-        "info2": "Volk",
-        "info3": "Klasse",
-        "info4": "Inventar",
+        "info2": "Alter",
+        "info3": "Beruf/Hobby/Identität",
+        "info4": "Beschreibung",
 
         "scale1": "Leben",
-        "scale2": "Glück",
-        "scale3": "Lieblingszahl",
-        "scale_initial1": 20,
-        "scale_initial2": 8, 
-        "scale_initial3": 67,
+        "scale2": "Stabilität",
+        "scale3": "Glück",
+        "scale_initial1": 100,
+        "scale_initial2": 100, 
+        "scale_initial3": 75,
 
         "show_subattributes": true,
-        "show_success_levels": false,
+        "show_success_levels": true,
         "show_infopage": true,
 
-        "attribute_points": 25,
-        "sub_attribute_points": 30,
-        "attribute_points_min": 0, 
-        "attribute_points_max": 8, 
-        "sub_attribute_points_max": 14,
+        "attribute_points": 150,
+        "sub_attribute_points": 250,
+        "attribute_points_min": 10, 
+        "attribute_points_max": 40, 
+        "sub_attribute_points_max": 80,
 
         "freetexts": [
-            "Warum er heute übernachtet",
+            "Wichtige Personen",
             "Ziele",
             "Stolz auf / Anekdote",
             "Schlecht in / Angst vor",
