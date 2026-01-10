@@ -1166,7 +1166,7 @@ function focusPrevInContainer(currentEl, container, type) {
 
 function validateAttributeInput(inputEl, attrIdx) {
   const val = Number(inputEl.value || 0);
-  const minVal = gmTemplate.attribute_points_min || 10;
+  const minVal = 0 ? gmTemplate.attribute_points_min === 0 : gmTemplate.attribute_points_min || 10;
   const maxVal = gmTemplate.attribute_points_max || 80;
   
   if (val != 0 && (val < minVal || val > maxVal)) {
