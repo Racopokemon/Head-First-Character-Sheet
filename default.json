@@ -87,11 +87,11 @@
                 ]
             },
             {
-                "name": "Kopfsache",
+                "name": "Geistige Talente",
                 "color": 9,
                 "column": 2,
                 "sub_attribute_suggestions": [
-                    "Auffassungsgabe*",
+                    "Verborgenes erkennen*",
                     "Scharfe Sinne*",
                     "Schlösser knacken",
                     "Bildung",

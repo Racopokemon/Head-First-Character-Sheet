@@ -852,8 +852,8 @@ function updateAttributePointLabels() {
         mainLabel.textContent = storedValue || '0';
       }
     }
-    
-    // Update sub-attribute labels
+
+    // Update sub-attribute labels and validate them
     if (!compactMode) {
       const subAttrs = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].sub_attributes : [];
       subAttrs.forEach((subAttr, subIdx) => {
@@ -869,6 +869,14 @@ function updateAttributePointLabels() {
             subLabel.innerHTML = `<span class="ec-light">${left}/${mid}</span>/<span>${right}</span>`;
           } else {
             subLabel.textContent = sum;
+          }
+
+          // Update warning class based on max value
+          const maxVal = gmTemplate.sub_attribute_points_max || 80;
+          if (sum > maxVal) {
+            subLabel.classList.add('warning');
+          } else {
+            subLabel.classList.remove('warning');
           }
         }
       });
