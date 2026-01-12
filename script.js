@@ -911,7 +911,16 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       highlightedIndex = -1;
       const list = (gmTemplate && gmTemplate.attributes && gmTemplate.attributes[attrIdx] && gmTemplate.attributes[attrIdx].sub_attribute_suggestions) || [];
       const q = (query || '').toLowerCase();
-      const filtered = list.filter(s => s && s.toLowerCase().includes(q) && s.toLowerCase() !== (nameInput.value||'').toLowerCase());
+
+      // Get all existing sub-attribute names for this attribute (excluding current one)
+      const existingNames = (playerData.attributes[attrIdx] && playerData.attributes[attrIdx].sub_attributes || [])
+        .map((sa, idx) => idx !== subAttrIdx ? (sa.name || '').toLowerCase() : null)
+        .filter(n => n);
+
+      const filtered = list.filter(s => {
+        const lower = s.toLowerCase();
+        return s && lower.includes(q) && !existingNames.includes(lower);
+      });
       filtered.forEach((s, i) => {
         const it = document.createElement('div');
         it.className = 'sub-suggestion';
