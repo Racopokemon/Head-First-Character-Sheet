@@ -15,37 +15,50 @@
             "label_grundwerte": "Grundwerte",
             "label_spezialisierung": "Spezialisierung",
             "drop_file": "Datei importieren",
-            "footer": "Just another little TTRPG ruleset. "
+            "footer": "Just another little TTRPG ruleset, by Ramin. "
         },
         "style": {
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",
             "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
         },
 
+        "infopage": {
+            "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80-70-60-40-30-20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40-30-30-20-20-10 (im Bereich 10-40 bleiben). Zusätzlich können dann 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",
+            "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören, und muss individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne Teil von Intelligenz (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
+        },
+
         "info1": "Name",
-        "info2": "Volk",
-        "info3": "Klasse",
-        "info4": "Inventar",
+        "info2": "Alter",
+        "info3": "Beruf/Hobby/Identität",
+        "info4": "Beschreibung",
 
         "scale1": "Leben",
-        "scale2": "Glück",
-        "scale3": "Gold",
-        "scale_initial1": 20,
-        "scale_initial2": 8, 
-        "scale_initial3": 15,
+        "scale2": "Stabilität",
+        "scale3": "Glück",
+        "scale_initial1": 100,
+        "scale_initial2": 100, 
+        "scale_initial3": 75,
 
         "show_subattributes": true,
-        "show_success_levels": false,
+        "show_success_levels": true,
         "show_infopage": true,
-        "show_freetext_button": false,
-        "show_others_button": false,
+        "show_freetext_button": true,
+        "show_others_button": true,
 
-        "attribute_points": 24,
-        "sub_attribute_points": 32,
-        "attribute_points_min": 0, 
-        "attribute_points_max": 8, 
-        "sub_attribute_points_max": 13,
+        "attribute_points": 150,
+        "sub_attribute_points": 250,
+        "attribute_points_min": 10, 
+        "attribute_points_max": 40, 
+        "sub_attribute_points_max": 80,
 
+        "freetexts": [
+            "Wichtige Personen",
+            "Ziele",
+            "Stolz auf / Anekdote",
+            "Schlecht in / Angst vor",
+            "Dunkles Geheimnis?",
+            "Sagt immer ..."
+        ],
         "other_player1": "Char #1",
         "other_player2": "Char #2",
         "other_player3": "Char #3",
@@ -53,60 +66,101 @@
 
         "attributes": [
             {
-                "name": "Körper",
+                "name": "Miteinander",
                 "color": 1,
                 "column": 1,
+                "description": "'Positive' soziale Fähigkeiten; Empathie. Macht sympatisch, aber nicht wirklich 'stark'.",
                 "sub_attribute_suggestions": [
-                    "Nahkampf*",
-                    "Muskelkraft",
+                    "Menschenkenntnis",
+                    "Beruhigen",
+                    "Überreden",
+                    "(An)führen",
+                    "Ausstrahlung",
+                    "Schauspielen",
+                    "Diplomatie"
+                ]
+            },
+            {
+                "name": "Gegeneinander",
+                "color": 1,
+                "column": 1,
+                "description": "'Negative' soziale Fähigkeiten; bekommen, was man will. Resilienz, mentale Stärke.",
+                "sub_attribute_suggestions": [
+                    "Lügen",
+                    "Einschüchtern",
+                    "Manipulieren",
+                    "Feilschen",
+                    "Echauffieren",
+                    "Autorität",
+                    "Stabilität"
+                ]
+            },
+            {
+                "name": "Körper(bau)",
+                "color": 2,
+                "column": 2,
+                "description": "Stärke; genereller physischer Zustand & Belastbarkeit. Und Erscheinung.",
+                "sub_attribute_suggestions": [
+                    "Schwimmen",
+                    "Handgemenge",
                     "Zechen",
-                    "Erscheinung"
+                    "Boxen",
+                    "Stichwaffen",
+                    "Laufen",
+                    "Aussehen"
                 ]
             },
             {
                 "name": "Geschick",
                 "color": 2,
-                "column": 1,
+                "column": 2,
+                "description": "Verbleibende körperliche Fähigkeiten, die nicht primär Stärke erfordern.",
                 "sub_attribute_suggestions": [
-                    "Ausweichen*",
-                    "Schusswaffen*",
-                    "Schleichen*",
+                    "Ausweichen",
+                    "Schusswaffen",
+                    "Tanzen",
+                    "Singen",
+                    "Klavier",
                     "Klettern",
-                    "Taschendiebstahl"
+                    "Schleichen",
+                    "Verstecken",
+                    "Autofahren",
+                    "Mechanische Reparaturen",
+                    "Holzverarbeitung",
+                    "Elektrische Reparaturen"
                 ]
             },
             {
-                "name": "Soziales",
-                "color": 10,
-                "column": 2,
-                "sub_attribute_suggestions": [
-                    "Menschenkenntnis*",
-                    "Manipulieren",
-                    "Einschüchtern",
-                    "Beruhigen"
-                ]
-            },
-            {
-                "name": "Geistiges",
-                "color": 9,
-                "column": 2,
-                "sub_attribute_suggestions": [
-                    "Verborgenes erkennen*",
-                    "Scharfe Sinne*",
-                    "Schlösser knacken",
-                    "Bildung",
-                    "Spurensuche"
-                ]
-            },
-            {
-                "name": "Magie",
-                "color": 7,
+                "name": "Scharfsinn",
+                "color": 3,
                 "column": 3,
+                "description": "Geistiges #1: Intelligenz & alles, was nur 'begrenzt' lernbar ist. Und Sinne.",
                 "sub_attribute_suggestions": [
-                    "Weiße Magie*",
-                    "Schwarze Magie*",
-                    "Magie erkennen*",
-                    "Tränke"
+                    "Auffassungsgabe",
+                    "Orientierung",
+                    "Mathematik",
+                    "Logik",
+                    "Erinnerungsvermögen",
+                    "Horchen",
+                    "Adleraugen"
+                ]
+            },
+            {
+                "name": "Gelerntes",
+                "color": 3,
+                "column": 3,
+                "description": "Geistiges #2: Wissen; Bildung & Ausbildung. Auch Erziehung, Kultur ...",
+                "sub_attribute_suggestions": [
+                    "Chemie",
+                    "Latein",
+                    "High Society",
+                    "Okkultes",
+                    "Verkleiden",
+                    "Hacken",
+                    "Bibliotheksnutzung",
+                    "PC-Nutzung",
+                    "Schlösser knacken",
+                    "Social Media"
                 ]
             }
         ]
