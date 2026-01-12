@@ -27,17 +27,27 @@
             "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören, und muss individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne Teil von Intelligenz (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
         },
 
-        "info1": "Name",
-        "info2": "Alter",
-        "info3": "Beruf/Hobby/Identität",
-        "info4": "Beschreibung",
+        "infos": [
+            "Name",
+            "Alter",
+            "Beruf/Hobby/Identität"
+        ],
+        "info_big": "Beschreibung",
 
-        "scale1": "Leben",
-        "scale2": "Stabilität",
-        "scale3": "Glück",
-        "scale_initial1": 100,
-        "scale_initial2": 100, 
-        "scale_initial3": 75,
+        "scales": [
+            {
+                "label": "Leben",
+                "initial": 100
+            },
+            {
+                "label": "Stabilität",
+                "initial": 100
+            },
+            {
+                "label": "Glück",
+                "initial": 75
+            }
+        ],
 
         "show_subattributes": true,
         "show_success_levels": true,
@@ -53,16 +63,18 @@
 
         "freetexts": [
             "Wichtige Personen",
-            "Ziele",
             "Stolz auf / Anekdote",
-            "Schlecht in / Angst vor",
             "Dunkles Geheimnis?",
+            "Ziele",
+            "Schlecht in / Angst vor",
             "Sagt immer ..."
         ],
-        "other_player1": "Char #1",
-        "other_player2": "Char #2",
-        "other_player3": "Char #3",
-        "other_player4": "Char #4",
+        "other_players": [
+            "Char #1",
+            "Char #2",
+            "Char #3",
+            "Char #4"
+        ],
 
         "attributes": [
             {

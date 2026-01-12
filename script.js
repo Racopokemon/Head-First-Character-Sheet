@@ -523,13 +523,13 @@ function renderInfoPage() {
 function renderOtherPlayers() {
   const container = document.getElementById('other-players');
   container.innerHTML = '';
-  for (let i = 1; i <= 4; i++) {
-    const key = 'other_player' + i;
+  const otherPlayers = gmTemplate.other_players || [];
+  otherPlayers.forEach((placeholder, i) => {
     const box = document.createElement('div');
     box.className = 'box textareabox';
     const ta = document.createElement('textarea');
-    ta.placeholder = gmTemplate[key] || '';
-    ta.dataset.key = key;
+    ta.placeholder = placeholder || '';
+    ta.dataset.otherPlayerIndex = i;
     ta.className = 'other-player';
     box.appendChild(ta);
     container.appendChild(box);
@@ -541,26 +541,26 @@ function renderOtherPlayers() {
         ta.setSelectionRange(len, len);
       }
     });
-
-  }
+  });
 }
 
 function renderInfos() {
   const left = document.getElementById('infos-left');
   left.innerHTML = '';
   const container = document.getElementById('infos-container');
-  for (let i = 1; i <= 3; i++) {
-    const key = 'info' + i;
+  const infos = gmTemplate.infos || [];
+
+  infos.forEach((placeholder, i) => {
     const box = document.createElement('div');
     box.className = 'box info-single';
     const input = document.createElement('input');
     input.type = 'text';
-    input.placeholder = gmTemplate[key] || '';
-    input.dataset.key = key;
+    input.placeholder = placeholder || '';
+    input.dataset.infoIndex = i;
     box.appendChild(input);
     left.appendChild(box);
 
-    if (i == 1) input.className += ' info-char-name';
+    if (i === 0) input.className += ' info-char-name';
     // Focus input when clicking box
     box.addEventListener('click', (e) => {
       if (e.target !== input) {
@@ -574,16 +574,16 @@ function renderInfos() {
       if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container, 1); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container, 1); }
     });
-  }
+  });
 
   const mid = document.getElementById('info4');
   mid.innerHTML = '';
-  const key4 = 'info4';
+  const infoBig = gmTemplate.info_big || '';
   const box4 = document.createElement('div');
   box4.className = 'box info-big textareabox';
   const ta4 = document.createElement('textarea');
-  ta4.placeholder = gmTemplate[key4] || '';
-  ta4.dataset.key = key4;
+  ta4.placeholder = infoBig;
+  ta4.dataset.key = 'info_big';
 
   // Focus textarea when clicking box
   box4.addEventListener('click', (e) => {
@@ -620,17 +620,17 @@ function renderScales() {
   const r = document.getElementById('scales');
   r.innerHTML = '';
   const container = document.getElementById('infos-container');
-  for (let i = 1; i <= 3; i++) {
-    const key = 'scale' + i;
+  const scales = gmTemplate.scales || [];
+
+  scales.forEach((scaleData, i) => {
     const row = document.createElement('div');
     row.className = 'box scale-row';
     const lbl = document.createElement('div');
-    lbl.textContent = gmTemplate[key] || key;
+    lbl.textContent = scaleData.label || `Scale ${i + 1}`;
     const input = document.createElement('input');
     input.type = 'number';
-    //input.min = 0; input.max = 100;
     input.value = 0;
-    input.dataset.key = key;
+    input.dataset.scaleIndex = i;
     row.appendChild(lbl);
     row.appendChild(input);
     r.appendChild(row);
@@ -640,7 +640,6 @@ function renderScales() {
         input.focus();
         const len = input.value.length;
         input.setSelectionRange(len, len);
-
       }
     });
     // keyboard navigation: up/down/enter moves to next/prev scale input
@@ -664,7 +663,7 @@ function renderScales() {
         focusNextInContainer(input, container, 1);
       }
     });
-  }
+  });
 }
 
 function renderAttributes() {
@@ -1305,17 +1304,44 @@ function handleExport() {
   if (!gmTemplate) return alert('No sheet loaded to export');
   const out = { set_by_gm: gmTemplate, set_by_player: {} };
 
-  // infos and freetexts and other players and scales
-  ['info1','info2','info3','info4'].forEach(k => out.set_by_player[k] = getValueByKey(k));
+  // infos array
+  const infoValues = [];
+  const infoInputs = document.querySelectorAll('input[data-info-index]');
+  infoInputs.forEach((input) => {
+    const idx = Number(input.dataset.infoIndex);
+    infoValues[idx] = input.value || '';
+  });
+  out.set_by_player.infos = infoValues;
+
+  // info_big
+  out.set_by_player.info_big = getValueByKey('info_big');
+
+  // freetexts array
   const freetextValues = [];
-  const freetextInputs = document.querySelectorAll('textarea[data-freetextIndex]');
+  const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
   freetextInputs.forEach((ta) => {
     const idx = Number(ta.dataset.freetextIndex);
     freetextValues[idx] = ta.value || '';
   });
   out.set_by_player.freetexts = freetextValues;
-  for (let i=1;i<=4;i++) out.set_by_player['other_player'+i] = getValueByKey('other_player'+i);
-  for (let i=1;i<=3;i++) out.set_by_player['scale'+i] = getValueByKey('scale'+i);
+
+  // other_players array
+  const otherPlayerValues = [];
+  const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
+  otherPlayerInputs.forEach((ta) => {
+    const idx = Number(ta.dataset.otherPlayerIndex);
+    otherPlayerValues[idx] = ta.value || '';
+  });
+  out.set_by_player.other_players = otherPlayerValues;
+
+  // scales array
+  const scaleValues = [];
+  const scaleInputs = document.querySelectorAll('input[data-scale-index]');
+  scaleInputs.forEach((input) => {
+    const idx = Number(input.dataset.scaleIndex);
+    scaleValues[idx] = input.value || '';
+  });
+  out.set_by_player.scales = scaleValues;
 
   // attributes from playerData
   out.set_by_player.attributes = (playerData.attributes || []).map(a => ({
@@ -1338,8 +1364,7 @@ function handleExport() {
   const d = pad(now.getDate());
   const hh = pad(now.getHours());
   const mm = pad(now.getMinutes());
-  let name = getValueByKey('info1') || getValueByKey('info1') || '';
-  name = (name || 'character').toString().trim();
+  let name = (infoValues[0] || 'character').toString().trim();
   // sanitize name to safe filename
   name = name.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_\-]/g,'');
   a.href = url; a.download = `${y}_${mo}_${d}-${hh}_${mm}_${name}.char`;
@@ -1472,9 +1497,10 @@ function applyImported(json) {
     }
   }
 
-  // Update crew button visibility
+  // Update crew button visibility based on other_players array
+  const hasOtherPlayers = gmTemplate.other_players && gmTemplate.other_players.length > 0;
   const hasFreetexts = gmTemplate.freetexts && gmTemplate.freetexts.length > 0;
-  shouldShowCrewBtn = showOthersButton;
+  shouldShowCrewBtn = showOthersButton && hasOtherPlayers;
   shouldShowBgBtn = showFreetextButton && hasFreetexts;
 
   const crewBtn = document.getElementById('crew-btn');
@@ -1492,27 +1518,55 @@ function applyImported(json) {
     // initialize playerData with empty attributes
     playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
     // fill scales with initial values from gmTemplate
-    for (let i=1;i<=3;i++) {
-      const initialKey = 'scale_initial' + i;
-      if (gmTemplate[initialKey]) {
-        setInputValue('scale' + i, gmTemplate[initialKey]);
+    const scales = gmTemplate.scales || [];
+    scales.forEach((scaleData, i) => {
+      const scaleInput = document.querySelector(`input[data-scale-index="${i}"]`);
+      if (scaleInput && scaleData.initial !== undefined) {
+        scaleInput.value = scaleData.initial;
       }
-    }
+    });
     if (editMode) {
         toggleEditMode();
     }
   } else {
-    // fill simples
-    ['info1','info2','info3','info4'].forEach(k => setInputValue(k, sp[k] || ''));
+    // fill infos array
+    if (Array.isArray(sp.infos)) {
+      const infoInputs = document.querySelectorAll('input[data-info-index]');
+      infoInputs.forEach((input) => {
+        const idx = Number(input.dataset.infoIndex);
+        input.value = sp.infos[idx] || '';
+      });
+    }
+
+    // fill info_big
+    setInputValue('info_big', sp.info_big || '');
+
+    // fill freetexts array
     if (Array.isArray(sp.freetexts)) {
-      const freetextInputs = document.querySelectorAll('textarea[data-freetextIndex]');
+      const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
       freetextInputs.forEach((ta) => {
         const idx = Number(ta.dataset.freetextIndex);
         ta.value = sp.freetexts[idx] || '';
       });
     }
-    for (let i=1;i<=4;i++) setInputValue('other_player'+i, sp['other_player'+i] || '');
-    for (let i=1;i<=3;i++) setInputValue('scale'+i, sp['scale'+i] || '');
+
+    // fill other_players array
+    if (Array.isArray(sp.other_players)) {
+      const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
+      otherPlayerInputs.forEach((ta) => {
+        const idx = Number(ta.dataset.otherPlayerIndex);
+        ta.value = sp.other_players[idx] || '';
+      });
+    }
+
+    // fill scales array
+    if (Array.isArray(sp.scales)) {
+      const scaleInputs = document.querySelectorAll('input[data-scale-index]');
+      scaleInputs.forEach((input) => {
+        const idx = Number(input.dataset.scaleIndex);
+        input.value = sp.scales[idx] || '';
+      });
+    }
 
     // attributes array - store in playerData and re-render
     if (Array.isArray(sp.attributes)) {
