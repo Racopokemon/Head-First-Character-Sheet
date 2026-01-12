@@ -175,7 +175,7 @@ textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: 
 
 /* icon button styling (square buttons with SVG icons) */
 .icon-btn{width:var(--button-size);padding:8px;display:flex;align-items:center;justify-content:center;flex:none;}
-.icon-btn svg{fill:var(--btn-text);}
+.icon-btn svg{fill:var(--btn-text);width:var(--button-size);width:var(--button-size;}
 /*.icon-btn[data-active="true"]{background:var(--btn-active-bg);border-bottom-width: 2px;}
 .icon-btn:hover{border-bottom: 2px solid var(--btn-side-hover);}
 .icon-btn:active{border-bottom: 0px;}
