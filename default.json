@@ -72,8 +72,7 @@
         "other_players": [
             "Char #1",
             "Char #2",
-            "Char #3",
-            "Char #4"
+            "Char #3"
         ],
 
         "attributes": [
@@ -119,7 +118,8 @@
                     "Boxen",
                     "Stichwaffen",
                     "Laufen",
-                    "Aussehen"
+                    "Aussehen",
+                    "Muskelkraft"
                 ]
             },
             {
