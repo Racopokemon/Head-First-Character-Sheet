@@ -9,6 +9,8 @@ let hasEnteredEditMode = false; // Track if user ever entered edit mode
 let originalCssVariables = null; // Store original CSS variable values
 let infoMode = false; // Track if info page is visible
 let printPreviewMode = false; // Track if print preview mode is active
+let shouldShowCrewBtn = true; // Track if crew button should be shown for current JSON
+let shouldShowBgBtn = true; // Track if bg button should be shown for current JSON
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
@@ -486,9 +488,9 @@ function toggleInfoMode() {
         charSheet.classList.remove('slide-in');
       }, { once: true });
     }
-    // Show crew and bg buttons again
-    if (crewBtn) crewBtn.style.display = '';
-    if (bgBtn) bgBtn.style.display = '';
+    // Show crew and bg buttons again (if not hidden in json)
+    if (crewBtn) crewBtn.style.display = shouldShowCrewBtn ? '' : 'none';
+    if (bgBtn) bgBtn.style.display = shouldShowBgBtn ? '' : 'none';
   }
 }
 
@@ -579,13 +581,13 @@ function renderInfoPage() {
 function renderOtherPlayers() {
   const container = document.getElementById('other-players');
   container.innerHTML = '';
-  for (let i = 1; i <= 4; i++) {
-    const key = 'other_player' + i;
+  const otherPlayers = gmTemplate.other_players || [];
+  otherPlayers.forEach((placeholder, i) => {
     const box = document.createElement('div');
     box.className = 'box textareabox';
     const ta = document.createElement('textarea');
-    ta.placeholder = gmTemplate[key] || '';
-    ta.dataset.key = key;
+    ta.placeholder = placeholder || '';
+    ta.dataset.otherPlayerIndex = i;
     ta.className = 'other-player';
     box.appendChild(ta);
     container.appendChild(box);
@@ -597,26 +599,26 @@ function renderOtherPlayers() {
         ta.setSelectionRange(len, len);
       }
     });
-
-  }
+  });
 }
 
 function renderInfos() {
   const left = document.getElementById('infos-left');
   left.innerHTML = '';
   const container = document.getElementById('infos-container');
-  for (let i = 1; i <= 3; i++) {
-    const key = 'info' + i;
+  const infos = gmTemplate.infos || [];
+
+  infos.forEach((placeholder, i) => {
     const box = document.createElement('div');
     box.className = 'box info-single';
     const input = document.createElement('input');
     input.type = 'text';
-    input.placeholder = gmTemplate[key] || '';
-    input.dataset.key = key;
+    input.placeholder = placeholder || '';
+    input.dataset.infoIndex = i;
     box.appendChild(input);
     left.appendChild(box);
 
-    if (i == 1) input.className += ' info-char-name';
+    if (i === 0) input.className += ' info-char-name';
     // Focus input when clicking box
     box.addEventListener('click', (e) => {
       if (e.target !== input) {
@@ -630,16 +632,16 @@ function renderInfos() {
       if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); focusNextInContainer(input, container, 1); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevInContainer(input, container, 1); }
     });
-  }
+  });
 
   const mid = document.getElementById('info4');
   mid.innerHTML = '';
-  const key4 = 'info4';
+  const infoBig = gmTemplate.info_big || '';
   const box4 = document.createElement('div');
   box4.className = 'box info-big textareabox';
   const ta4 = document.createElement('textarea');
-  ta4.placeholder = gmTemplate[key4] || '';
-  ta4.dataset.key = key4;
+  ta4.placeholder = infoBig;
+  ta4.dataset.key = 'info_big';
 
   // Focus textarea when clicking box
   box4.addEventListener('click', (e) => {
@@ -676,17 +678,17 @@ function renderScales() {
   const r = document.getElementById('scales');
   r.innerHTML = '';
   const container = document.getElementById('infos-container');
-  for (let i = 1; i <= 3; i++) {
-    const key = 'scale' + i;
+  const scales = gmTemplate.scales || [];
+
+  scales.forEach((scaleData, i) => {
     const row = document.createElement('div');
     row.className = 'box scale-row';
     const lbl = document.createElement('div');
-    lbl.textContent = gmTemplate[key] || key;
+    lbl.textContent = scaleData.label || `Scale ${i + 1}`;
     const input = document.createElement('input');
     input.type = 'number';
-    //input.min = 0; input.max = 100;
     input.value = 0;
-    input.dataset.key = key;
+    input.dataset.scaleIndex = i;
     row.appendChild(lbl);
     row.appendChild(input);
     r.appendChild(row);
@@ -696,7 +698,6 @@ function renderScales() {
         input.focus();
         const len = input.value.length;
         input.setSelectionRange(len, len);
-
       }
     });
     // keyboard navigation: up/down/enter moves to next/prev scale input
@@ -720,7 +721,7 @@ function renderScales() {
         focusNextInContainer(input, container, 1);
       }
     });
-  }
+  });
 }
 
 function renderAttributes() {
@@ -909,8 +910,8 @@ function updateAttributePointLabels() {
         mainLabel.textContent = storedValue || '0';
       }
     }
-    
-    // Update sub-attribute labels
+
+    // Update sub-attribute labels and validate them
     if (!compactMode) {
       const subAttrs = playerData.attributes && playerData.attributes[idx] ? playerData.attributes[idx].sub_attributes : [];
       subAttrs.forEach((subAttr, subIdx) => {
@@ -927,6 +928,9 @@ function updateAttributePointLabels() {
           } else {
             subLabel.textContent = sum;
           }
+
+          // Validate using the centralized function
+          validateSubAttributeInput(`${idx}-${subIdx}`);
         }
       });
     }
@@ -965,7 +969,16 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       highlightedIndex = -1;
       const list = (gmTemplate && gmTemplate.attributes && gmTemplate.attributes[attrIdx] && gmTemplate.attributes[attrIdx].sub_attribute_suggestions) || [];
       const q = (query || '').toLowerCase();
-      const filtered = list.filter(s => s && s.toLowerCase().includes(q) && s.toLowerCase() !== (nameInput.value||'').toLowerCase());
+
+      // Get all existing sub-attribute names for this attribute (excluding current one)
+      const existingNames = (playerData.attributes[attrIdx] && playerData.attributes[attrIdx].sub_attributes || [])
+        .map((sa, idx) => idx !== subAttrIdx ? (sa.name || '').toLowerCase() : null)
+        .filter(n => n);
+
+      const filtered = list.filter(s => {
+        const lower = s.toLowerCase();
+        return s && lower.includes(q) && !existingNames.includes(lower);
+      });
       filtered.forEach((s, i) => {
         const it = document.createElement('div');
         it.className = 'sub-suggestion';
@@ -1226,7 +1239,7 @@ function focusPrevInContainer(currentEl, container, type) {
 
 function validateAttributeInput(inputEl, attrIdx) {
   const val = Number(inputEl.value || 0);
-  const minVal = gmTemplate.attribute_points_min || 10;
+  const minVal = gmTemplate.attribute_points_min === 0 ? 0 : gmTemplate.attribute_points_min || 10;
   const maxVal = gmTemplate.attribute_points_max || 80;
   
   if (val != 0 && (val < minVal || val > maxVal)) {
@@ -1238,13 +1251,26 @@ function validateAttributeInput(inputEl, attrIdx) {
 
 function validateSubAttributeInput(inputEl) {
   // Mark the corresponding total label red if (attribute points + this sub) > max
-  const ds = inputEl.dataset.subInputVal || '';
-  const parts = ds.split('-');
-  if (parts.length < 2) return;
-  const attrIdx = Number(parts[0]);
-  const subIdx = Number(parts[1]);
-  const subVal = Number(inputEl.value || 0);
+  // Can accept either an input element or a data string in format "attrIdx-subIdx"
+  let attrIdx, subIdx;
+
+  if (typeof inputEl === 'string') {
+    // Called with "attrIdx-subIdx" string
+    const parts = inputEl.split('-');
+    if (parts.length < 2) return;
+    attrIdx = Number(parts[0]);
+    subIdx = Number(parts[1]);
+  } else {
+    // Called with input element
+    const ds = inputEl.dataset.subInputVal || '';
+    const parts = ds.split('-');
+    if (parts.length < 2) return;
+    attrIdx = Number(parts[0]);
+    subIdx = Number(parts[1]);
+  }
+
   const mainVal = (playerData.attributes && playerData.attributes[attrIdx]) ? Number(playerData.attributes[attrIdx].points || 0) : 0;
+  const subVal = (playerData.attributes && playerData.attributes[attrIdx] && playerData.attributes[attrIdx].sub_attributes[subIdx]) ? Number(playerData.attributes[attrIdx].sub_attributes[subIdx].points || 0) : 0;
   const sum = mainVal + subVal;
   const maxVal = gmTemplate.sub_attribute_points_max || 80;
   const label = document.querySelector(`[data-sub-label="${attrIdx}-${subIdx}"]`);
@@ -1340,17 +1366,44 @@ function handleExport() {
   if (!gmTemplate) return alert('No sheet loaded to export');
   const out = { set_by_gm: gmTemplate, set_by_player: {} };
 
-  // infos and freetexts and other players and scales
-  ['info1','info2','info3','info4'].forEach(k => out.set_by_player[k] = getValueByKey(k));
+  // infos array
+  const infoValues = [];
+  const infoInputs = document.querySelectorAll('input[data-info-index]');
+  infoInputs.forEach((input) => {
+    const idx = Number(input.dataset.infoIndex);
+    infoValues[idx] = input.value || '';
+  });
+  out.set_by_player.infos = infoValues;
+
+  // info_big
+  out.set_by_player.info_big = getValueByKey('info_big');
+
+  // freetexts array
   const freetextValues = [];
-  const freetextInputs = document.querySelectorAll('textarea[data-freetextIndex]');
+  const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
   freetextInputs.forEach((ta) => {
     const idx = Number(ta.dataset.freetextIndex);
     freetextValues[idx] = ta.value || '';
   });
   out.set_by_player.freetexts = freetextValues;
-  for (let i=1;i<=4;i++) out.set_by_player['other_player'+i] = getValueByKey('other_player'+i);
-  for (let i=1;i<=3;i++) out.set_by_player['scale'+i] = getValueByKey('scale'+i);
+
+  // other_players array
+  const otherPlayerValues = [];
+  const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
+  otherPlayerInputs.forEach((ta) => {
+    const idx = Number(ta.dataset.otherPlayerIndex);
+    otherPlayerValues[idx] = ta.value || '';
+  });
+  out.set_by_player.other_players = otherPlayerValues;
+
+  // scales array
+  const scaleValues = [];
+  const scaleInputs = document.querySelectorAll('input[data-scale-index]');
+  scaleInputs.forEach((input) => {
+    const idx = Number(input.dataset.scaleIndex);
+    scaleValues[idx] = input.value || '';
+  });
+  out.set_by_player.scales = scaleValues;
 
   // attributes from playerData
   out.set_by_player.attributes = (playerData.attributes || []).map(a => ({
@@ -1373,8 +1426,7 @@ function handleExport() {
   const d = pad(now.getDate());
   const hh = pad(now.getHours());
   const mm = pad(now.getMinutes());
-  let name = getValueByKey('info1') || getValueByKey('info1') || '';
-  name = (name || 'character').toString().trim();
+  let name = (infoValues[0] || 'character').toString().trim();
   // sanitize name to safe filename
   name = name.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_\-]/g,'');
   a.href = url; a.download = `${y}_${mo}_${d}-${hh}_${mm}_${name}.char`;
@@ -1479,6 +1531,8 @@ function applyImported(json) {
   // Handle show_subattributes and show_success_levels
   const showSubattributes = gmTemplate.show_subattributes !== false; // default true
   const showSuccessLevels = gmTemplate.show_success_levels !== false; // default true
+  const showFreetextButton = gmTemplate.show_freetext_button !== false; // default true
+  const showOthersButton = gmTemplate.show_others_button !== false; // default true
 
   // Update compact button visibility and state
   const toggleBtn = document.getElementById('toggle-btn');
@@ -1505,31 +1559,76 @@ function applyImported(json) {
     }
   }
 
+  // Update crew button visibility based on other_players array
+  const hasOtherPlayers = gmTemplate.other_players && gmTemplate.other_players.length > 0;
+  const hasFreetexts = gmTemplate.freetexts && gmTemplate.freetexts.length > 0;
+  shouldShowCrewBtn = showOthersButton && hasOtherPlayers;
+  shouldShowBgBtn = showFreetextButton && hasFreetexts;
+
+  const crewBtn = document.getElementById('crew-btn');
+  if (crewBtn) {
+    crewBtn.style.display = shouldShowCrewBtn ? '' : 'none';
+  }
+
+  // Update bg button visibility (hide if disabled or if freetexts are missing/empty)
+  const bgBtn = document.getElementById('bg-btn');
+  if (bgBtn) {
+    bgBtn.style.display = shouldShowBgBtn ? '' : 'none';
+  }
+
   if (!sp) {
     // initialize playerData with empty attributes
     playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
     // fill scales with initial values from gmTemplate
-    for (let i=1;i<=3;i++) {
-      const initialKey = 'scale_initial' + i;
-      if (gmTemplate[initialKey]) {
-        setInputValue('scale' + i, gmTemplate[initialKey]);
+    const scales = gmTemplate.scales || [];
+    scales.forEach((scaleData, i) => {
+      const scaleInput = document.querySelector(`input[data-scale-index="${i}"]`);
+      if (scaleInput && scaleData.initial !== undefined) {
+        scaleInput.value = scaleData.initial;
       }
-    }
+    });
     if (editMode) {
         toggleEditMode();
     }
   } else {
-    // fill simples
-    ['info1','info2','info3','info4'].forEach(k => setInputValue(k, sp[k] || ''));
+    // fill infos array
+    if (Array.isArray(sp.infos)) {
+      const infoInputs = document.querySelectorAll('input[data-info-index]');
+      infoInputs.forEach((input) => {
+        const idx = Number(input.dataset.infoIndex);
+        input.value = sp.infos[idx] || '';
+      });
+    }
+
+    // fill info_big
+    setInputValue('info_big', sp.info_big || '');
+
+    // fill freetexts array
     if (Array.isArray(sp.freetexts)) {
-      const freetextInputs = document.querySelectorAll('textarea[data-freetextIndex]');
+      const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
       freetextInputs.forEach((ta) => {
         const idx = Number(ta.dataset.freetextIndex);
         ta.value = sp.freetexts[idx] || '';
       });
     }
-    for (let i=1;i<=4;i++) setInputValue('other_player'+i, sp['other_player'+i] || '');
-    for (let i=1;i<=3;i++) setInputValue('scale'+i, sp['scale'+i] || '');
+
+    // fill other_players array
+    if (Array.isArray(sp.other_players)) {
+      const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
+      otherPlayerInputs.forEach((ta) => {
+        const idx = Number(ta.dataset.otherPlayerIndex);
+        ta.value = sp.other_players[idx] || '';
+      });
+    }
+
+    // fill scales array
+    if (Array.isArray(sp.scales)) {
+      const scaleInputs = document.querySelectorAll('input[data-scale-index]');
+      scaleInputs.forEach((input) => {
+        const idx = Number(input.dataset.scaleIndex);
+        input.value = sp.scales[idx] || '';
+      });
+    }
 
     // attributes array - store in playerData and re-render
     if (Array.isArray(sp.attributes)) {
@@ -1539,12 +1638,12 @@ function applyImported(json) {
       }));
     }
 
-    // restore visibility flags
+    // restore visibility flags (only if the corresponding button is shown)
     if (typeof sp.crewVisible === 'boolean') {
-      crewVisible = sp.crewVisible;
+      crewVisible = sp.crewVisible && shouldShowCrewBtn;
     }
     if (typeof sp.bgVisible === 'boolean') {
-      bgVisible = sp.bgVisible;
+      bgVisible = sp.bgVisible && shouldShowBgBtn;
     }
   }
 
