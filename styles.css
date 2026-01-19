@@ -307,9 +307,6 @@ textarea::placeholder{color:var(--text-suggestion);}
   border: 0;
   animation: fadeIn 0.25s ease-out forwards;
 }
-.sub-attr-box.expanding button{
-  /*color:transparent;*/
-}
 
 .sub-attr-box.collapsing {
   animation: slideUp 0.25s ease-out forwards;

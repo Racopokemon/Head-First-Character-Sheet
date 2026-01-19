@@ -1,7 +1,7 @@
 {
     "set_by_gm": {
         "localization": {
-            "title": "Head First! Character Sheet",
+            "title": "Neon Shadows - Charakterbogen",
             "subtitle_info": "Attributübersicht",
             "btn_edit": "Bearbeiten",
             "btn_compact": "Kompakt",
@@ -12,7 +12,7 @@
             "btn_info": "Erklärungen anzeigen",
             "btn_crew": "Meine Crew anzeigen",
             "btn_bg": "Mein Background anzeigen",
-            "label_grundwerte": "Grundwerte",
+            "label_grundwerte": "Verfügbare Punkte",
             "label_spezialisierung": "Spezialisierung",
             "drop_file": "Datei importieren",
             "footer": "Just another little TTRPG ruleset, by Ramin. "
@@ -23,157 +23,76 @@
         },
 
         "infopage": {
-            "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80-70-60-40-30-20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40-30-30-20-20-10 (im Bereich 10-40 bleiben). Zusätzlich können dann 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",
-            "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören, und muss individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne Teil von Intelligenz (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
+            "text_l": "Info 1",
+            "text_r": "Info 2"
         },
 
         "infos": [
             "Name",
-            "Alter",
-            "Beruf/Hobby/Identität"
+            "Archetyp"
         ],
         "info_big": "Beschreibung",
 
         "scales": [
             {
-                "label": "Leben",
-                "initial": 100
-            },
-            {
-                "label": "Stabilität",
-                "initial": 100
-            },
-            {
-                "label": "Glück",
-                "initial": 75
+                "label": "(Lieblingszahl)",
+                "initial": 67
             }
         ],
 
-        "show_subattributes": true,
-        "show_success_levels": true,
-        "show_infopage": true,
-        "show_freetext_button": true,
+        "show_subattributes": false,
+        "show_success_levels": false,
+        "show_infopage": false,
+        "show_freetext_button": false,
         "show_others_button": true,
 
-        "attribute_points": 150,
+        "attribute_points": 18,
         "sub_attribute_points": 250,
-        "attribute_points_min": 10, 
-        "attribute_points_max": 40, 
+        "attribute_points_min": 0, 
+        "attribute_points_max": 6, 
         "sub_attribute_points_max": 80,
 
-        "freetexts": [
-            "Wichtige Personen",
-            "Stolz auf / Anekdote",
-            "Dunkles Geheimnis?",
-            "Ziele",
-            "Schlecht in / Angst vor",
-            "Sagt immer ..."
-        ],
         "other_players": [
-            "Char #1",
-            "Char #2",
-            "Char #3"
+            "Party member #1",
+            "Party member #2"
         ],
 
         "attributes": [
             {
-                "name": "Miteinander",
+                "name": "Kraft",
                 "color": 1,
                 "column": 1,
-                "description": "'Positive' soziale Fähigkeiten; Empathie. Macht sympatisch, aber nicht wirklich 'stark'.",
-                "sub_attribute_suggestions": [
-                    "Menschenkenntnis",
-                    "Beruhigen",
-                    "Überreden",
-                    "(An)führen",
-                    "Ausstrahlung",
-                    "Schauspielen",
-                    "Diplomatie"
-                ]
+                "description": ""
             },
             {
-                "name": "Gegeneinander",
-                "color": 1,
+                "name": "Kampf",
+                "color": 2,
                 "column": 1,
-                "description": "'Negative' soziale Fähigkeiten; bekommen, was man will. Resilienz, mentale Stärke.",
-                "sub_attribute_suggestions": [
-                    "Lügen",
-                    "Einschüchtern",
-                    "Manipulieren",
-                    "Feilschen",
-                    "Echauffieren",
-                    "Autorität",
-                    "Stabilität"
-                ]
+                "description": ""
             },
             {
-                "name": "Körper(bau)",
-                "color": 2,
+                "name": "Hacken",
+                "color": 5,
+                "column": 1,
+                "description": ""
+            },
+            {
+                "name": "Willenskraft",
+                "color": 7,
                 "column": 2,
-                "description": "Stärke; genereller physischer Zustand & Belastbarkeit. Und Erscheinung.",
-                "sub_attribute_suggestions": [
-                    "Schwimmen",
-                    "Handgemenge",
-                    "Zechen",
-                    "Boxen",
-                    "Stichwaffen",
-                    "Laufen",
-                    "Aussehen",
-                    "Muskelkraft"
-                ]
+                "description": ""
             },
             {
-                "name": "Geschick",
-                "color": 2,
+                "name": "Wissen",
+                "color": 8,
                 "column": 2,
-                "description": "Verbleibende körperliche Fähigkeiten, die nicht primär Stärke erfordern.",
-                "sub_attribute_suggestions": [
-                    "Ausweichen",
-                    "Schusswaffen",
-                    "Tanzen",
-                    "Singen",
-                    "Klavier",
-                    "Klettern",
-                    "Schleichen",
-                    "Verstecken",
-                    "Autofahren",
-                    "Mechanische Reparaturen",
-                    "Holzverarbeitung",
-                    "Elektrische Reparaturen"
-                ]
+                "description": ""
             },
             {
-                "name": "Scharfsinn",
-                "color": 3,
-                "column": 3,
-                "description": "Geistiges #1: Intelligenz & alles, was nur 'begrenzt' lernbar ist. Und Sinne.",
-                "sub_attribute_suggestions": [
-                    "Auffassungsgabe",
-                    "Orientierung",
-                    "Mathematik",
-                    "Logik",
-                    "Erinnerungsvermögen",
-                    "Horchen",
-                    "Adleraugen"
-                ]
-            },
-            {
-                "name": "Gelerntes",
-                "color": 3,
-                "column": 3,
-                "description": "Geistiges #2: Wissen; Bildung & Ausbildung. Auch Erziehung, Kultur ...",
-                "sub_attribute_suggestions": [
-                    "Chemie",
-                    "Latein",
-                    "High Society",
-                    "Okkultes",
-                    "Verkleiden",
-                    "Hacken",
-                    "Bibliotheksnutzung",
-                    "PC-Nutzung",
-                    "Schlösser knacken",
-                    "Social Media"
-                ]
+                "name": "Soziales",
+                "color": 9,
+                "column": 2,
+                "description": ""
             }
         ]
     }
