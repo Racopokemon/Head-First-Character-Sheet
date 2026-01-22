@@ -512,14 +512,14 @@ function renderInfoPage() {
 
     if (textL) {
       const textBoxL = document.createElement('div');
-      textBoxL.className = 'info-text-box';
+      textBoxL.className = 'box info-text-box';
       textBoxL.textContent = textL;
       textRow.appendChild(textBoxL);
     }
 
     if (textR) {
       const textBoxR = document.createElement('div');
-      textBoxR.className = 'info-text-box';
+      textBoxR.className = 'box info-text-box';
       textBoxR.textContent = textR;
       textRow.appendChild(textBoxR);
     }
@@ -552,7 +552,7 @@ function renderInfoPage() {
     if (!colContainer) return;
 
     const box = document.createElement('div');
-    box.className = 'info-attr-box color-' + (attr.color || 1);
+    box.className = 'box info-attr-box color-' + (attr.color || 1);
 
     const name = document.createElement('div');
     name.className = 'info-attr-name';
