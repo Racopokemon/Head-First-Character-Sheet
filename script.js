@@ -576,7 +576,7 @@ function renderInfos() {
     });
   });
 
-  const mid = document.getElementById('info4');
+  const mid = document.getElementById('info-big');
   mid.innerHTML = '';
   const infoBig = gmTemplate.info_big || '';
   const box4 = document.createElement('div');
@@ -621,6 +621,16 @@ function renderScales() {
   r.innerHTML = '';
   const container = document.getElementById('infos-container');
   const scales = gmTemplate.scales || [];
+
+  // Hide scales row if no scales defined, and balance flex on remaining rows
+  const hasScales = scales.length > 0;
+  r.style.display = hasScales ? '' : 'none';
+
+  const infosLeft = document.getElementById('infos-left');
+  const infoBig = document.getElementById('info-big');
+  if (infosLeft) infosLeft.style.flex = hasScales ? '' : '1';
+  if (infoBig) infoBig.style.flex = hasScales ? '' : '1';
+
 
   scales.forEach((scaleData, i) => {
     const row = document.createElement('div');
