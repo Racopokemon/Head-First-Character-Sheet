@@ -1,0 +1,99 @@
+{
+    "set_by_gm": {
+        "localization": {
+            "title": "Neon Shadows - Charakterbogen",
+            "subtitle_info": "Attributübersicht",
+            "btn_edit": "Bearbeiten",
+            "btn_compact": "Kompakt",
+            "btn_ec": "Erfolgsklassen",
+            "btn_import": "Charakterbogen importieren",
+            "btn_export": "Charakterbogen herunterladen",
+            "btn_print": "Zur Druckansicht",
+            "btn_info": "Erklärungen anzeigen",
+            "btn_crew": "Meine Crew anzeigen",
+            "btn_bg": "Mein Background anzeigen",
+            "label_grundwerte": "Verfügbare Punkte",
+            "label_spezialisierung": "Spezialisierung",
+            "drop_file": "Datei importieren",
+            "footer": "Just another little TTRPG ruleset, by Ramin. "
+        },
+        "style": {
+            "font-family":"Segoe UI, Roboto, Arial, sans-serif",
+            "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
+        },
+
+        "infopage": {
+            "text_l": "Info 1",
+            "text_r": "Info 2"
+        },
+
+        "infos": [
+            "Name",
+            "Archetyp"
+        ],
+        "info_big": "Beschreibung",
+
+        "scales": [
+            {
+                "label": "(Lieblingszahl)",
+                "initial": 67
+            }
+        ],
+
+        "show_subattributes": false,
+        "show_success_levels": false,
+        "show_infopage": false,
+        "show_freetext_button": false,
+        "show_others_button": true,
+
+        "attribute_points": 18,
+        "sub_attribute_points": 250,
+        "attribute_points_min": 0, 
+        "attribute_points_max": 6, 
+        "sub_attribute_points_max": 80,
+
+        "other_players": [
+            "Party member #1",
+            "Party member #2"
+        ],
+
+        "attributes": [
+            {
+                "name": "Kraft",
+                "color": 1,
+                "column": 1,
+                "description": ""
+            },
+            {
+                "name": "Kampf",
+                "color": 2,
+                "column": 1,
+                "description": ""
+            },
+            {
+                "name": "Hacken",
+                "color": 5,
+                "column": 1,
+                "description": ""
+            },
+            {
+                "name": "Willenskraft",
+                "color": 7,
+                "column": 2,
+                "description": ""
+            },
+            {
+                "name": "Wissen",
+                "color": 8,
+                "column": 2,
+                "description": ""
+            },
+            {
+                "name": "Soziales",
+                "color": 9,
+                "column": 2,
+                "description": ""
+            }
+        ]
+    }
+}
