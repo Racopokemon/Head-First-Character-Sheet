@@ -65,6 +65,9 @@
     /* Drag overlay, clearly most important styling option here */
   --drag-overlay-bg: rgba(208, 208, 208, 0.82);
   --drag-overlay-text: rgb(26, 26, 26);
+
+  /* Decorative background SVG */
+  --deco-color: #e6e6e6;
 }
 
 *{box-sizing:border-box;font-family:var(--font-family);font-size:var(--text-size-normal);/*font-weight:var(--font-weight);*/border:0px;color:var(--text)}
@@ -356,6 +359,24 @@ textarea::placeholder{color:var(--text-suggestion);}
   font-weight: 600;
   pointer-events: none;
   border-radius: 20px;
+}
+
+/* decorative background SVG */
+.deco-bg {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 1;
+}
+.deco-bg svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  fill: var(--deco-color);
 }
 
 @media(max-width:800px){

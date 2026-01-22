@@ -200,6 +200,7 @@ function renderAll() {
   if (!gmTemplate) return;
   applyLocalization();
   applyCustomStyles();
+  renderDecorativeBg();
   renderOtherPlayers();
   renderInfos();
   renderScales();
@@ -302,6 +303,33 @@ function applyCustomStyles() {
     const cssVarName = key.startsWith('--') ? key : `--${key}`;
     root.style.setProperty(cssVarName, value);
   });
+}
+
+function renderDecorativeBg() {
+  const container = document.getElementById('deco-bg');
+  if (!container) return;
+
+  const decoSvg = gmTemplate.deco_svg || '';
+  if (!decoSvg) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+
+  // Fetch the SVG file and inject it
+  fetch(decoSvg)
+    .then(r => {
+      if (!r.ok) throw new Error('Failed to load SVG');
+      return r.text();
+    })
+    .then(svgContent => {
+      container.innerHTML = svgContent;
+      container.style.display = '';
+    })
+    .catch(err => {
+      console.warn('Could not load decorative SVG:', err);
+      container.style.display = 'none';
+    });
 }
 
 function updateVisibility() {
