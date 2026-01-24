@@ -16,8 +16,8 @@
             "label_spezialisierung": "Spezialisierung",
             "drop_file": "Datei importieren",
             "footer": "Just another little TTRPG ruleset, by Ramin. ",
-            "reconnecting": "Verbindung wird wiederhergestellt...",
-            "user_count_tooltip": "Online auch noch dabei"
+            "reconnecting": "Verbindungsaufbau...",
+            "user_count_tooltip": "Online außerdem dabei"
         },
         "style": {
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",

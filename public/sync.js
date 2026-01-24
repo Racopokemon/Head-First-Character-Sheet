@@ -308,6 +308,7 @@ function showReconnectingOverlay() {
     document.body.appendChild(overlay);
   }
   overlay.style.display = 'flex';
+  document.activeElement?.blur();
 }
 
 /**
