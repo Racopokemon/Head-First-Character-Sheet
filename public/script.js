@@ -1551,22 +1551,19 @@ function applyRemoteSmallChange(json) {
   const sp = json.set_by_player;
   if (!sp) return false;
 
-  // Check if subattribute structure changed - if so, we need to re-render attributes
-  const subattrStructureChanged = hasSubattrStructureChanged(sp.attributes);
-
   // Update simple text fields in-place (skip if focused)
   if (Array.isArray(sp.infos)) {
     document.querySelectorAll('input[data-info-index]').forEach(input => {
       const idx = Number(input.dataset.infoIndex);
       const newVal = sp.infos[idx] || '';
-      if (document.activeElement !== input && input.value !== newVal) {
+      if (input.value !== newVal) {
         input.value = newVal;
       }
     });
   }
 
   const bigEl = document.querySelector('[data-key="info_big"]');
-  if (bigEl && document.activeElement !== bigEl) {
+  if (bigEl) {
     const newVal = sp.info_big || '';
     if (bigEl.value !== newVal) bigEl.value = newVal;
   }
@@ -1575,7 +1572,7 @@ function applyRemoteSmallChange(json) {
     document.querySelectorAll('input[data-scale-index]').forEach(input => {
       const idx = Number(input.dataset.scaleIndex);
       const newVal = sp.scales[idx] || '';
-      if (document.activeElement !== input && input.value !== newVal) {
+      if (input.value !== newVal) {
         input.value = newVal;
       }
     });
@@ -1585,7 +1582,7 @@ function applyRemoteSmallChange(json) {
     document.querySelectorAll('textarea[data-freetext-index]').forEach(ta => {
       const idx = Number(ta.dataset.freetextIndex);
       const newVal = sp.freetexts[idx] || '';
-      if (document.activeElement !== ta && ta.value !== newVal) {
+      if (ta.value !== newVal) {
         ta.value = newVal;
       }
     });
@@ -1595,7 +1592,7 @@ function applyRemoteSmallChange(json) {
     document.querySelectorAll('textarea[data-other-player-index]').forEach(ta => {
       const idx = Number(ta.dataset.otherPlayerIndex);
       const newVal = sp.other_players[idx] || '';
-      if (document.activeElement !== ta && ta.value !== newVal) {
+      if (ta.value !== newVal) {
         ta.value = newVal;
       }
     });
@@ -1608,6 +1605,9 @@ function applyRemoteSmallChange(json) {
       sub_attributes: a.sub_attributes || []
     }));
   }
+
+  // Check if subattribute structure changed - if so, we need to re-render attributes
+  const subattrStructureChanged = hasSubattrStructureChanged(sp.attributes);
 
   // Handle attributes
   if (subattrStructureChanged) {
@@ -1648,7 +1648,7 @@ function updateAttributeValuesInPlace(attrs) {
   attrs.forEach((attr, idx) => {
     // Attribute main value input (edit mode)
     const attrInput = document.querySelector(`input[data-attr-index="${idx}"]`);
-    if (attrInput && document.activeElement !== attrInput) {
+    if (attrInput) {
       const newVal = String(attr.points || 0);
       if (attrInput.value !== newVal) attrInput.value = newVal;
     }
@@ -1658,13 +1658,13 @@ function updateAttributeValuesInPlace(attrs) {
     subs.forEach((sub, subIdx) => {
       // Name input
       const nameInput = document.querySelector(`[data-sub-input="${idx}-${subIdx}"]`);
-      if (nameInput && document.activeElement !== nameInput) {
+      if (nameInput) {
         const newVal = sub.name || '';
         if (nameInput.value !== newVal) nameInput.value = newVal;
       }
       // Value input
       const valInput = document.querySelector(`[data-sub-input-val="${idx}-${subIdx}"]`);
-      if (valInput && document.activeElement !== valInput) {
+      if (valInput) {
         const newVal = String(sub.points || 0);
         if (valInput.value !== newVal) valInput.value = newVal;
       }
