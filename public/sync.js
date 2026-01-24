@@ -309,6 +309,10 @@ function showReconnectingOverlay() {
   }
   overlay.style.display = 'flex';
   document.activeElement?.blur();
+
+  // Disable all interactions on main content
+  const container = document.querySelector('.container');
+  if (container) container.inert = true;
 }
 
 /**
@@ -319,6 +323,10 @@ function hideReconnectingOverlay() {
   if (overlay) {
     overlay.style.display = 'none';
   }
+
+  // Re-enable interactions on main content
+  const container = document.querySelector('.container');
+  if (container) container.inert = false;
 }
 
 /**
