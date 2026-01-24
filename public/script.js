@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // wire edit button toggle
   document.getElementById('edit-btn').addEventListener('click', toggleEditMode);
-  
+
   // wire expand button toggle
   document.getElementById('toggle-btn').addEventListener('click', toggleCompactMode);
 
@@ -54,16 +54,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // load default.json
-  fetch('default.json')
-    .then(r => r.json())
-    .then(data => {
-      applyImported(data);
-    })
-    .catch(err => {
-      console.error('Could not load default.json', err);
-      alert('Could not load default.json. Make sure that the file exists and the website is hosted on a server :)');
-    });
+  // Setup global input listener for sync broadcasting
+  document.addEventListener('input', (e) => {
+    if (window.syncModule && window.syncModule.isSyncEnabled()) {
+      window.syncModule.debouncedBroadcast();
+    }
+  });
+
+  // Initialize sync module if available
+  let syncActive = false;
+  if (window.syncModule) {
+    syncActive = window.syncModule.initSync();
+  }
+
+  // Only load default.json if sync is not active (sync will load data from server)
+  if (!syncActive) {
+    fetch('default.json')
+      .then(r => r.json())
+      .then(data => {
+        applyImported(data);
+      })
+      .catch(err => {
+        console.error('Could not load default.json', err);
+        alert('Could not load default.json. Make sure that the file exists and the website is hosted on a server :)');
+      });
+  }
 });
 
 function toggleEditMode() {
@@ -246,6 +261,10 @@ function applyLocalization() {
 
   const bgBtn = document.getElementById('bg-btn');
   if (bgBtn) bgBtn.title = loc.btn_bg || 'Show character details';
+
+  // Set user count tooltip
+  const userCountLabel = document.getElementById('user-count-label');
+  if (userCountLabel) userCountLabel.title = loc.user_count_tooltip || 'Connected users';
 
   // Set footer text
   const footerText = document.getElementById('footer-text');
@@ -1425,6 +1444,10 @@ function handleFileImport(e) {
     try {
       const json = JSON.parse(ev.target.result);
       applyImported(json);
+      // Broadcast change to other clients if sync is enabled
+      if (window.syncModule && window.syncModule.isSyncEnabled()) {
+        window.syncModule.broadcastChange();
+      }
     } catch (err) {
       alert('Could not parse json data :(');
     }
@@ -1448,16 +1471,26 @@ function handleDrop(e) {
   e.preventDefault();
   e.stopPropagation();
   hideDragOverlay();
-  
+
+  // Block drag & drop when offline in sync mode
+  if (window.syncModule && window.syncModule.isSyncEnabled() && !window.syncModule.isSyncOnline()) {
+    alert('Cannot import while offline. Please wait for reconnection.');
+    return;
+  }
+
   const files = e.dataTransfer.files;
   if (!files || files.length === 0) return;
-  
+
   const file = files[0];
   const reader = new FileReader();
   reader.onload = ev => {
     try {
       const json = JSON.parse(ev.target.result);
       applyImported(json);
+      // Broadcast change to other clients if sync is enabled
+      if (window.syncModule && window.syncModule.isSyncEnabled()) {
+        window.syncModule.broadcastChange();
+      }
     } catch (err) {
       alert('Could not parse json data :(');
     }
@@ -1489,7 +1522,20 @@ function hideDragOverlay() {
   }, 30);
 }
 
-function applyImported(json) {
+function applyImported(json, options = {}) {
+  // options.preserveUIState - if true, keep editMode, compactMode, ecMode, crewVisible, bgVisible, infoMode
+  const preserveUIState = options.preserveUIState || false;
+
+  // Save current UI state if preserving
+  const savedState = preserveUIState ? {
+    editMode,
+    compactMode,
+    ecMode,
+    crewVisible,
+    bgVisible,
+    infoMode
+  } : null;
+
   // if set_by_gm present, replace template and re-render labels
   if (!json.set_by_gm) {
     // actually this would be a problem, were always expecting the set_by_gm to exist
@@ -1627,13 +1673,52 @@ function applyImported(json) {
   renderAttributes();
   updatePointsDisplay();
 
-  infoMode = true;
-  toggleInfoMode(); //makes sure were never in boring info mode when loading a new sheet, and also plays the nice face-in animation
+  if (preserveUIState && savedState) {
+    // Restore saved UI state without animations
+    editMode = savedState.editMode;
+    compactMode = savedState.compactMode;
+    ecMode = savedState.ecMode;
+    crewVisible = savedState.crewVisible;
+    bgVisible = savedState.bgVisible;
+    infoMode = savedState.infoMode;
 
-  if (editMode) {
-    toggleEditMode();
+    // Update button states
+    const editBtn = document.getElementById('edit-btn');
+    if (editBtn) editBtn.dataset.active = editMode ? 'true' : 'false';
+    const toggleBtn = document.getElementById('toggle-btn');
+    if (toggleBtn) toggleBtn.dataset.active = compactMode ? 'true' : 'false';
+    const ecBtn = document.getElementById('ec-btn');
+    if (ecBtn) ecBtn.dataset.active = ecMode ? 'true' : 'false';
+
+    updateVisibility();
+    renderAttributes();
+    updatePointsDisplay();
+
+    // Handle info mode display without animation
+    const infoPage = document.getElementById('info-page-container');
+    const charSheet = document.getElementById('char-sheet-container');
+    const subtitle = document.getElementById('subtitle');
+    if (infoMode) {
+      if (charSheet) charSheet.style.display = 'none';
+      if (subtitle) subtitle.style.display = 'block';
+      if (infoPage) infoPage.classList.add('active');
+    } else {
+      if (charSheet) charSheet.style.display = '';
+      if (subtitle) subtitle.style.display = 'none';
+      if (infoPage) infoPage.classList.remove('active');
+    }
+
+    // Handle edit mode points display
+    const row = document.getElementById('points-expander');
+    if (row) row.style.display = editMode ? null : 'none';
+  } else {
+    infoMode = true;
+    toggleInfoMode(); //makes sure were never in boring info mode when loading a new sheet, and also plays the nice face-in animation
+
+    if (editMode) {
+      toggleEditMode();
+    }
   }
-
 }
 
 function setInputValue(key, value) {
