@@ -46,8 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
     //}
   });
 
-  // Warn user before leaving if they've entered edit mode
+  // Warn user before leaving if they've entered edit mode (only in non-sync mode)
   window.addEventListener('beforeunload', (e) => {
+    // Skip warning if sync is enabled - data is saved online
+    if (window.syncModule && window.syncModule.isSyncEnabled()) {
+      return;
+    }
     if (hasEnteredEditMode) {
       e.preventDefault();
       e.returnValue = ''; // Chrome requires returnValue to be set
@@ -875,6 +879,10 @@ function addSubAttribute(attrIdx, atIndex) {
   }
   renderAttributes();
   updatePointsDisplay();
+  // Broadcast change to sync
+  if (window.syncModule && window.syncModule.isSyncEnabled()) {
+    window.syncModule.broadcastChange();
+  }
   // focus the new subattr name input
   const selector = `[data-sub-input="${attrIdx}-${newIndex}"]`;
   const el = document.querySelector(selector);
@@ -889,6 +897,10 @@ function removeSubAttribute(attrIdx, subIdx) {
   playerData.attributes[attrIdx].sub_attributes.splice(subIdx, 1);
   renderAttributes();
   updatePointsDisplay();
+  // Broadcast change to sync
+  if (window.syncModule && window.syncModule.isSyncEnabled()) {
+    window.syncModule.broadcastChange();
+  }
 }
 
 function updateAttributePointLabels() {
@@ -1028,6 +1040,10 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       validateSubAttributeInput(valueInput);
       updateAttributePointLabels();
       updatePointsDisplay();
+      // Broadcast change to sync
+      if (window.syncModule && window.syncModule.isSyncEnabled()) {
+        window.syncModule.broadcastChange();
+      }
     }
 
     nameInput.addEventListener('input', (e) => {
@@ -1461,8 +1477,12 @@ function handleDragOver(e) {
   e.preventDefault();
   e.stopPropagation();
   e.dataTransfer.dropEffect = 'copy';
-  // Only show overlay if dragging files
+  // Only show overlay if dragging files and not offline in sync mode
   if (e.dataTransfer.types.includes('Files')) {
+    // Don't show overlay if offline in sync mode
+    if (window.syncModule && window.syncModule.isSyncEnabled() && !window.syncModule.isSyncOnline()) {
+      return;
+    }
     showDragOverlay();
   }
 }
@@ -1472,9 +1492,8 @@ function handleDrop(e) {
   e.stopPropagation();
   hideDragOverlay();
 
-  // Block drag & drop when offline in sync mode
+  // Silently ignore drop when offline in sync mode
   if (window.syncModule && window.syncModule.isSyncEnabled() && !window.syncModule.isSyncOnline()) {
-    alert('Cannot import while offline. Please wait for reconnection.');
     return;
   }
 

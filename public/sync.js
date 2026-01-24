@@ -317,26 +317,29 @@ function hideReconnectingOverlay() {
 
 /**
  * Update user count display
+ * Shows "+X" where X is number of OTHER users (count - 1)
+ * Hidden when alone (count <= 1)
  * @param {number} count
  */
 function updateUserCountDisplay(count) {
   const label = document.getElementById('user-count-label');
   if (label) {
-    label.textContent = count.toString();
-    label.style.display = count > 0 ? '' : 'none';
+    const others = count - 1;
+    if (others >= 1) {
+      label.textContent = '+' + others;
+      label.style.display = '';
+    } else {
+      label.style.display = 'none';
+    }
   }
 }
 
 /**
- * Show user count element
+ * Show user count element (uses updateUserCountDisplay logic)
  * @param {number} initialCount
  */
 function showUserCount(initialCount) {
-  const label = document.getElementById('user-count-label');
-  if (label) {
-    label.style.display = '';
-    label.textContent = initialCount.toString();
-  }
+  updateUserCountDisplay(initialCount);
 }
 
 /**

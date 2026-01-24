@@ -22,23 +22,16 @@ async function cleanupOldSheets() {
 }
 
 /**
- * Schedule daily cleanup at midnight
+ * Schedule cleanup: run once at startup, then every 24 hours
  */
 function scheduleCleanup() {
-  // Calculate time until next midnight
-  const now = new Date();
-  const midnight = new Date(now);
-  midnight.setHours(24, 0, 0, 0);
-  const msUntilMidnight = midnight.getTime() - now.getTime();
+  // Run cleanup immediately at startup
+  cleanupOldSheets();
 
-  // Run first cleanup at midnight, then every 24 hours
-  setTimeout(() => {
-    cleanupOldSheets();
-    // Then run every 24 hours
-    setInterval(cleanupOldSheets, 24 * 60 * 60 * 1000);
-  }, msUntilMidnight);
+  // Then run every 24 hours
+  setInterval(cleanupOldSheets, 24 * 60 * 60 * 1000);
 
-  console.log(`Cleanup scheduled: first run at ${midnight.toISOString()}, then daily`);
+  console.log(`Cleanup scheduled: ran at startup, then every 24 hours`);
   console.log(`Cleanup threshold: ${config.cleanupDays} days`);
 }
 
