@@ -76,7 +76,7 @@ body{background:var(--bg);margin:0;padding:20px;display:flex;justify-content:cen
 h1{text-align:center;margin:50px 0 50px 0;font-size:28px;color:var(--header-text);}
 h2{text-align:center;margin:-25px 0 50px 0;font-size:20px;color:var(--header-text);}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
-/*.top-buttons-row{gap:0}*/
+.top-buttons-row{align-items: center;}
 .row-4 > div{flex:1}
 .row-3 .col-left{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
@@ -425,16 +425,23 @@ textarea::placeholder{color:var(--text-suggestion);}
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   min-width: 28px;
   height: 28px;
   padding: 0 8px;
   margin-right: 8px;
   background: var(--box-bg);
-  border-radius: 14px;
-  font-size: 14px;
+  border-radius: 17px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--text);
   cursor: default;
+}
+.user-count-label svg {
+  width: 14px;
+  height: 14px;
+  fill: var(--text);
+  opacity: 0.7;
 }
 
 /* Reconnecting overlay */

@@ -323,10 +323,11 @@ function hideReconnectingOverlay() {
  */
 function updateUserCountDisplay(count) {
   const label = document.getElementById('user-count-label');
+  const text = document.getElementById('user-count-text');
   if (label) {
     const others = count - 1;
     if (others >= 1) {
-      label.textContent = '+' + others;
+      if (text) text.textContent = '+' + others;
       label.style.display = '';
     } else {
       label.style.display = 'none';
