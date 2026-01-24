@@ -160,9 +160,14 @@ function handleRemoteUpdate(data) {
       applyImported(json);
     }
   } else {
-    // Small change - preserve UI state
-    if (typeof applyImported === 'function') {
-      applyImported(json, { preserveUIState: true });
+    // Small change - try in-place update to preserve focus
+    if (typeof applyRemoteSmallChange === 'function') {
+      applyRemoteSmallChange(json);
+    } else {
+      // Fallback if function not available
+      if (typeof applyImported === 'function') {
+        applyImported(json, { preserveUIState: true });
+      }
     }
   }
 }

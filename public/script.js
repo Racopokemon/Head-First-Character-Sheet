@@ -1541,6 +1541,137 @@ function hideDragOverlay() {
   }, 30);
 }
 
+/**
+ * Apply remote small changes in-place without recreating DOM elements.
+ * This preserves focus and mobile keyboard state.
+ * @param {Object} json - Full json with set_by_gm and set_by_player
+ * @returns {boolean} - true if applied in-place, false if full re-render needed
+ */
+function applyRemoteSmallChange(json) {
+  const sp = json.set_by_player;
+  if (!sp) return false;
+
+  // Check if subattribute structure changed - if so, we need to re-render attributes
+  const subattrStructureChanged = hasSubattrStructureChanged(sp.attributes);
+
+  // Update simple text fields in-place (skip if focused)
+  if (Array.isArray(sp.infos)) {
+    document.querySelectorAll('input[data-info-index]').forEach(input => {
+      const idx = Number(input.dataset.infoIndex);
+      const newVal = sp.infos[idx] || '';
+      if (document.activeElement !== input && input.value !== newVal) {
+        input.value = newVal;
+      }
+    });
+  }
+
+  const bigEl = document.querySelector('[data-key="info_big"]');
+  if (bigEl && document.activeElement !== bigEl) {
+    const newVal = sp.info_big || '';
+    if (bigEl.value !== newVal) bigEl.value = newVal;
+  }
+
+  if (Array.isArray(sp.scales)) {
+    document.querySelectorAll('input[data-scale-index]').forEach(input => {
+      const idx = Number(input.dataset.scaleIndex);
+      const newVal = sp.scales[idx] || '';
+      if (document.activeElement !== input && input.value !== newVal) {
+        input.value = newVal;
+      }
+    });
+  }
+
+  if (Array.isArray(sp.freetexts)) {
+    document.querySelectorAll('textarea[data-freetext-index]').forEach(ta => {
+      const idx = Number(ta.dataset.freetextIndex);
+      const newVal = sp.freetexts[idx] || '';
+      if (document.activeElement !== ta && ta.value !== newVal) {
+        ta.value = newVal;
+      }
+    });
+  }
+
+  if (Array.isArray(sp.other_players)) {
+    document.querySelectorAll('textarea[data-other-player-index]').forEach(ta => {
+      const idx = Number(ta.dataset.otherPlayerIndex);
+      const newVal = sp.other_players[idx] || '';
+      if (document.activeElement !== ta && ta.value !== newVal) {
+        ta.value = newVal;
+      }
+    });
+  }
+
+  // Update playerData with new attribute values
+  if (Array.isArray(sp.attributes)) {
+    playerData.attributes = sp.attributes.map(a => ({
+      points: a.points || 0,
+      sub_attributes: a.sub_attributes || []
+    }));
+  }
+
+  // Handle attributes
+  if (subattrStructureChanged) {
+    // Structure changed - must re-render attributes (focus loss is acceptable)
+    renderAttributes();
+  } else {
+    // Structure same - update attribute values in-place
+    updateAttributeValuesInPlace(sp.attributes);
+  }
+
+  updateAttributePointLabels();
+  updatePointsDisplay();
+
+  return true;
+}
+
+/**
+ * Check if subattribute structure (count per attribute) has changed
+ */
+function hasSubattrStructureChanged(newAttrs) {
+  if (!playerData.attributes || !newAttrs) return true;
+  if (playerData.attributes.length !== newAttrs.length) return true;
+
+  for (let i = 0; i < newAttrs.length; i++) {
+    const oldCount = (playerData.attributes[i]?.sub_attributes || []).length;
+    const newCount = (newAttrs[i]?.sub_attributes || []).length;
+    if (oldCount !== newCount) return true;
+  }
+  return false;
+}
+
+/**
+ * Update attribute and subattribute INPUT values in-place (for edit mode)
+ */
+function updateAttributeValuesInPlace(attrs) {
+  if (!Array.isArray(attrs)) return;
+
+  attrs.forEach((attr, idx) => {
+    // Attribute main value input (edit mode)
+    const attrInput = document.querySelector(`input[data-attr-index="${idx}"]`);
+    if (attrInput && document.activeElement !== attrInput) {
+      const newVal = String(attr.points || 0);
+      if (attrInput.value !== newVal) attrInput.value = newVal;
+    }
+
+    // Subattribute inputs (edit mode)
+    const subs = attr.sub_attributes || [];
+    subs.forEach((sub, subIdx) => {
+      // Name input
+      const nameInput = document.querySelector(`[data-sub-input="${idx}-${subIdx}"]`);
+      if (nameInput && document.activeElement !== nameInput) {
+        const newVal = sub.name || '';
+        if (nameInput.value !== newVal) nameInput.value = newVal;
+      }
+      // Value input
+      const valInput = document.querySelector(`[data-sub-input-val="${idx}-${subIdx}"]`);
+      if (valInput && document.activeElement !== valInput) {
+        const newVal = String(sub.points || 0);
+        if (valInput.value !== newVal) valInput.value = newVal;
+      }
+    });
+  });
+}
+
 function applyImported(json, options = {}) {
   // options.preserveUIState - if true, keep editMode, compactMode, ecMode, crewVisible, bgVisible, infoMode
   const preserveUIState = options.preserveUIState || false;
