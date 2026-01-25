@@ -11,7 +11,7 @@
             "btn_print": "Zur Druckansicht",
             "btn_info": "Erklärungen anzeigen",
             "btn_crew": "Meine Crew anzeigen",
-            "btn_bg": "Mein Background anzeigen",
+            "btn_bg": "Meinen Background anzeigen",
             "label_grundwerte": "Grundwerte",
             "label_spezialisierung": "Spezialisierung",
             "drop_file": "Datei importieren",
@@ -26,8 +26,8 @@
         "deco_svg": "palms.svg",
 
         "infopage": {
-            "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80-70-60-40-30-20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40-30-30-20-20-10 (im Bereich 10-40 bleiben). Zusätzlich können dann 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",
-            "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören, und muss individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne Teil von Intelligenz (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
+            "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80 70 60 40 30 20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40 30 30 20 20 10 (Bereich 10-40). Zusätzlich können dann 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",
+            "text_r": "Manchmal ist bei Spezialisierungen nicht ganz klar, wo sie hingehören. Das ist normal und muss dann individuell entschieden werden. Mögliche Entscheidungshilfe bei Geschick vs Gelerntes: Könnte man es einer anderen Person beschreiben und sie würde es ebenfalls hinbekommen? Aber up to debate, Gelerntes ist eh ein starkes Attribut. Deshalb sind Sinne Teil von Intelligenz (statt Körperbau oder Geschick), um hier etwas Balance zu erzeugen."
         },
 
         "infos": [

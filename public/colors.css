@@ -68,29 +68,29 @@
 
 
 /* color classes for attributes (1-13) and light variants for sub-attributes */
-.color-1{border-left:6px solid var(--color-1-accent);background-color:var(--color-1)}
-.color-1-light{border-left:6px solid var(--color-1);background-color:var(--color-1-light)}
-.color-2{border-left:6px solid var(--color-2-accent);background-color:var(--color-2)}
-.color-2-light{border-left:6px solid var(--color-2);background-color:var(--color-2-light)}
-.color-3{border-left:6px solid var(--color-3-accent);background-color:var(--color-3)}
-.color-3-light{border-left:6px solid var(--color-3);background-color:var(--color-3-light)}
-.color-4{border-left:6px solid var(--color-4-accent);background-color:var(--color-4)}
-.color-4-light{border-left:6px solid var(--color-4);background-color:var(--color-4-light)}
-.color-5{border-left:6px solid var(--color-5-accent);background-color:var(--color-5)}
-.color-5-light{border-left:6px solid var(--color-5);background-color:var(--color-5-light)}
-.color-6{border-left:6px solid var(--color-6-accent);background-color:var(--color-6)}
-.color-6-light{border-left:6px solid var(--color-6);background-color:var(--color-6-light)}
-.color-7{border-left:6px solid var(--color-7-accent);background-color:var(--color-7)}
-.color-7-light{border-left:6px solid var(--color-7);background-color:var(--color-7-light)}
-.color-8{border-left:6px solid var(--color-8-accent);background-color:var(--color-8)}
-.color-8-light{border-left:6px solid var(--color-8);background-color:var(--color-8-light)}
-.color-9{border-left:6px solid var(--color-9-accent);background-color:var(--color-9)}
-.color-9-light{border-left:6px solid var(--color-9);background-color:var(--color-9-light)}
-.color-10{border-left:6px solid var(--color-10-accent);background-color:var(--color-10)}
-.color-10-light{border-left:6px solid var(--color-10);background-color:var(--color-10-light)}
-.color-11{border-left:6px solid var(--color-11-accent);background-color:var(--color-11)}
-.color-11-light{border-left:6px solid var(--color-11);background-color:var(--color-11-light)}
-.color-12{border-left:6px solid var(--color-12-accent);background-color:var(--color-12)}
-.color-12-light{border-left:6px solid var(--color-12);background-color:var(--color-12-light)}
-.color-13{border-left:6px solid var(--color-13-accent);background-color:var(--color-13)}
-.color-13-light{border-left:6px solid var(--color-13);background-color:var(--color-13-light)}
+.color-1{border: 0 solid var(--color-1-accent);background-color:var(--color-1)}
+.color-1-light{border: 0 solid var(--color-1);background-color:var(--color-1-light)}
+.color-2{border: 0 solid var(--color-2-accent);background-color:var(--color-2)}
+.color-2-light{border: 0 solid var(--color-2);background-color:var(--color-2-light)}
+.color-3{border: 0 solid var(--color-3-accent);background-color:var(--color-3)}
+.color-3-light{border: 0 solid var(--color-3);background-color:var(--color-3-light)}
+.color-4{border: 0 solid var(--color-4-accent);background-color:var(--color-4)}
+.color-4-light{border: 0 solid var(--color-4);background-color:var(--color-4-light)}
+.color-5{border: 0 solid var(--color-5-accent);background-color:var(--color-5)}
+.color-5-light{border: 0 solid var(--color-5);background-color:var(--color-5-light)}
+.color-6{border: 0 solid var(--color-6-accent);background-color:var(--color-6)}
+.color-6-light{border: 0 solid var(--color-6);background-color:var(--color-6-light)}
+.color-7{border: 0 solid var(--color-7-accent);background-color:var(--color-7)}
+.color-7-light{border: 0 solid var(--color-7);background-color:var(--color-7-light)}
+.color-8{border: 0 solid var(--color-8-accent);background-color:var(--color-8)}
+.color-8-light{border: 0 solid var(--color-8);background-color:var(--color-8-light)}
+.color-9{border: 0 solid var(--color-9-accent);background-color:var(--color-9)}
+.color-9-light{border: 0 solid var(--color-9);background-color:var(--color-9-light)}
+.color-10{border: 0 solid var(--color-10-accent);background-color:var(--color-10)}
+.color-10-light{border: 0 solid var(--color-10);background-color:var(--color-10-light)}
+.color-11{border: 0 solid var(--color-11-accent);background-color:var(--color-11)}
+.color-11-light{border: 0 solid var(--color-11);background-color:var(--color-11-light)}
+.color-12{border: 0 solid var(--color-12-accent);background-color:var(--color-12)}
+.color-12-light{border: 0 solid var(--color-12);background-color:var(--color-12-light)}
+.color-13{border: 0 solid var(--color-13-accent);background-color:var(--color-13)}
+.color-13-light{border: 0 solid var(--color-13);background-color:var(--color-13-light)}

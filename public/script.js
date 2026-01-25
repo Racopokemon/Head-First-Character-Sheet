@@ -8,6 +8,7 @@ let bgVisible = false;
 let hasEnteredEditMode = false; // Track if user ever entered edit mode
 let originalCssVariables = null; // Store original CSS variable values
 let infoMode = false; // Track if info page is visible
+let printPreviewMode = false; // Track if print preview mode is active
 let shouldShowCrewBtn = true; // Track if crew button should be shown for current JSON
 let shouldShowBgBtn = true; // Track if bg button should be shown for current JSON
 
@@ -36,6 +37,44 @@ document.addEventListener('DOMContentLoaded', () => {
   // wire info button
   const infoBtn = document.getElementById('info-btn');
   if (infoBtn) infoBtn.addEventListener('click', toggleInfoMode);
+
+  // wire print button
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) printBtn.addEventListener('click', togglePrintPreview);
+
+  // Exit edit mode before actual printing
+  window.addEventListener('beforeprint', () => {
+    if (!infoMode && editMode) {
+      //manually leaving editMode without animations (such that we dont print a half-animated stated)
+      editMode = false;
+      const btn = document.getElementById('edit-btn');
+      btn.dataset.active = 'false';
+
+      // Re-enable EC button
+      const ecBtn = document.getElementById('ec-btn');
+      if (ecBtn) {
+        ecBtn.classList.remove('disabled');
+      }
+
+      // Remove all animation classes and update immediately
+      const row = document.getElementById('points-expander');
+      row.classList.remove('collapsing', 'expanding');
+      updatePointsDisplay();
+
+      // Remove container padding animation classes
+      const container = document.querySelector('.container');
+      container.classList.remove('padding-in', 'padding-out');
+
+      // Re-render attributes without animation
+      renderAttributes();
+
+      // Remove any sub-attribute buttons that might still be visible
+      if (!compactMode) {
+        document.querySelectorAll('.sub-add-btn, .sub-del-btn').forEach(btn => btn.remove());
+      }
+
+    }
+  });
 
   // wire drag and drop import
   document.addEventListener('dragover', handleDragOver);
@@ -379,6 +418,9 @@ function toggleCrewVisibility() {
   const crewBtn = document.getElementById('crew-btn');
   if (!other) { updateVisibility(); return; }
 
+  other.classList.remove('expanding');
+  other.classList.remove('collapsing');
+
   if (crewVisible) {
     // show then animate expand
     other.style.display = '';
@@ -399,13 +441,16 @@ function toggleBgVisibility() {
   const bgBtn = document.getElementById('bg-btn');
   if (!freetexts) { updateVisibility(); return; }
 
+  freetexts.classList.remove('expanding');
+  freetexts.classList.remove('collapsing');
+
   if (bgVisible) {
     freetexts.style.display = '';
     freetexts.classList.add('expanding');
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('expanding'); updateVisibility(); }, { once: true });
 
     // Show arrow icon on mobile when expanding
-    if (window.innerWidth <= 800 && bgBtn) {
+    if (window.innerWidth <= 850 && bgBtn) {
       const defaultIcon = bgBtn.querySelector('.bg-icon-default');
       const arrowIcon = bgBtn.querySelector('.bg-icon-arrow');
 
@@ -424,6 +469,19 @@ function toggleBgVisibility() {
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('collapsing'); updateVisibility(); }, { once: true });
   }
   if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
+}
+
+// Toggle print preview mode
+function togglePrintPreview() {
+  printPreviewMode = !printPreviewMode;
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) printBtn.dataset.active = printPreviewMode ? 'true' : 'false';
+
+  if (printPreviewMode) {
+    document.body.classList.add('prt-preview');
+  } else {
+    document.body.classList.remove('prt-preview');
+  }
 }
 
 // Toggle info mode (show info page instead of character sheet)
@@ -505,14 +563,14 @@ function renderInfoPage() {
 
     if (textL) {
       const textBoxL = document.createElement('div');
-      textBoxL.className = 'info-text-box';
+      textBoxL.className = 'box info-text-box';
       textBoxL.textContent = textL;
       textRow.appendChild(textBoxL);
     }
 
     if (textR) {
       const textBoxR = document.createElement('div');
-      textBoxR.className = 'info-text-box';
+      textBoxR.className = 'box info-text-box';
       textBoxR.textContent = textR;
       textRow.appendChild(textBoxR);
     }
@@ -545,7 +603,7 @@ function renderInfoPage() {
     if (!colContainer) return;
 
     const box = document.createElement('div');
-    box.className = 'info-attr-box color-' + (attr.color || 1);
+    box.className = 'box info-attr-box color-' + (attr.color || 1);
 
     const name = document.createElement('div');
     name.className = 'info-attr-name';
@@ -833,6 +891,7 @@ function renderAttributes() {
       const label = document.createElement('div');
       label.className = 'attr-value-label';
       label.dataset.attrLabel = idx;
+      label.dataset.value = storedValue || '0';
       if (ecMode) {
         const right = Number(storedValue || 0);
         const left = Math.round(right / 5);
@@ -930,7 +989,7 @@ function updateAttributePointLabels() {
           const mainPoints = playerData.attributes[idx].points || 0;
           const subPoints = subAttr.points || 0;
           const sum = mainPoints + subPoints;
-          if (ecMode) {
+          if (ecMode && !editMode) {
             const right = Number(sum || 0);
             const left = Math.round(right / 5);
             const mid = Math.round(right / 2);
@@ -1151,13 +1210,15 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       }
     });
     validateSubAttributeInput(valueInput); // initial validation
-    
+
     const totalLabel = document.createElement('div');
     totalLabel.className = 'attr-value-label';
     totalLabel.dataset.subLabel = `${attrIdx}-${subAttrIdx}`;
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
-    totalLabel.textContent = mainPoints + subPoints;
+    const sum = mainPoints + subPoints;
+    totalLabel.dataset.value = String(sum);
+    totalLabel.textContent = sum;
     
     // delete button for this subattribute
     const delBtn = document.createElement('button');
@@ -1194,6 +1255,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
     const sum = mainPoints + subPoints;
+    totalLabel.dataset.value = String(sum);
     if (ecMode) {
       const right = Number(sum || 0);
       const left = Math.round(right / 5);
