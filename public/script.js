@@ -1598,6 +1598,9 @@ function applyRemoteSmallChange(json) {
     });
   }
 
+  // Check if subattribute structure changed - if so, we need to re-render attributes
+  const subattrStructureChanged = hasSubattrStructureChanged(sp.attributes);
+
   // Update playerData with new attribute values
   if (Array.isArray(sp.attributes)) {
     playerData.attributes = sp.attributes.map(a => ({
@@ -1606,12 +1609,9 @@ function applyRemoteSmallChange(json) {
     }));
   }
 
-  // Check if subattribute structure changed - if so, we need to re-render attributes
-  const subattrStructureChanged = hasSubattrStructureChanged(sp.attributes);
-
   // Handle attributes
-  if (subattrStructureChanged) {
-    // Structure changed - must re-render attributes (focus loss is acceptable)
+  if (subattrStructureChanged || !editMode) {
+    // Structure changed (or not in edit mode so theres no focus to lose) - must re-render attributes (focus loss is acceptable)
     renderAttributes();
   } else {
     // Structure same - update attribute values in-place

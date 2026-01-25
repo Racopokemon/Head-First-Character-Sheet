@@ -308,7 +308,6 @@ function showReconnectingOverlay() {
     document.body.appendChild(overlay);
   }
   overlay.style.display = 'flex';
-  document.activeElement?.blur();
 
   // Disable all interactions on main content
   const container = document.querySelector('.container');
