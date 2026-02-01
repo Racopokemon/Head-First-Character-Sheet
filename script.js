@@ -325,6 +325,11 @@ function renderDecorativeBg() {
     .then(svgContent => {
       container.innerHTML = svgContent;
       container.style.display = '';
+      container.classList.add('loading');
+      // Remove animation class after animation completes
+      container.addEventListener('animationend', () => {
+        container.classList.remove('loading');
+      }, { once: true });
     })
     .catch(err => {
       console.warn('Could not load decorative SVG:', err);
