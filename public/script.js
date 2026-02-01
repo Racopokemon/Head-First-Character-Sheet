@@ -974,7 +974,7 @@ function updateAttributePointLabels() {
         const right = Number(storedValue || 0);
         const left = Math.round(right / 5);
         const mid = Math.round(right / 2);
-        mainLabel.innerHTML = `<span class="ec-light">${left}/${mid}</span>/<span>${right}</span>`;
+        mainLabel.innerHTML = `<span class="ec-light">${left} / ${mid}</span> / <span>${right}</span>`;
       } else {
         mainLabel.textContent = storedValue || '0';
       }
@@ -993,7 +993,7 @@ function updateAttributePointLabels() {
             const right = Number(sum || 0);
             const left = Math.round(right / 5);
             const mid = Math.round(right / 2);
-            subLabel.innerHTML = `<span class="ec-light">${left}/${mid}</span>/<span>${right}</span>`;
+            subLabel.innerHTML = `<span class="ec-light">${left} / ${mid}</span> / <span>${right}</span>`;
           } else {
             subLabel.textContent = sum;
           }
