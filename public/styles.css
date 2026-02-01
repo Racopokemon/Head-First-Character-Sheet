@@ -374,7 +374,7 @@ textarea::placeholder{color:var(--text-suggestion);}
 }
 .deco-bg.loading {
   opacity: 0;
-  animation: fadeIn 2s ease-in forwards;
+  animation: fadeIn 10s ease-in forwards;
 }
 .deco-bg svg {
   width: 100%;
