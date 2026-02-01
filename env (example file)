@@ -1,0 +1,9 @@
+Rename to .env
+Only keep the next lines. 
+Do not version this file. 
+Change parameters as you like. 
+
+MONGODB_URI=mongodb://localhost:27017/headfirst
+PORT=3000
+BUFFER_SYNC_INTERVAL=5
+CLEANUP_DAYS=500
