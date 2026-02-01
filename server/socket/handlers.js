@@ -69,6 +69,7 @@ function setupSocketHandlers(io) {
         set_by_gm: data.set_by_gm,
         set_by_player: data.set_by_player,
         gmHash: data.gmHash,
+        stateToken: data.stateToken,
         isNew
       });
 
@@ -77,29 +78,41 @@ function setupSocketHandlers(io) {
     });
 
     // Handle sheet updates
-    socket.on('sheet-update', ({ set_by_gm, set_by_player, gmHash }) => {
+    socket.on('sheet-update', ({ set_by_gm, set_by_player, gmHash, stateToken }) => {
       if (!currentRoom) {
         socket.emit('error', { message: 'Not in a room. Join a room first.' });
         return;
       }
 
-      // Update the buffer
-      const { changeType, gmHash: newGmHash } = sheetBuffer.updateSheet(
+      // Try to update the buffer (with optimistic concurrency check)
+      const { accepted, data } = sheetBuffer.updateSheet(
         currentRoom,
         set_by_gm,
         set_by_player,
-        gmHash
+        gmHash,
+        stateToken
       );
 
-      // Broadcast to all OTHER clients in the room
-      socket.to(currentRoom).emit('sheet-update', {
-        set_by_gm,
-        set_by_player,
-        gmHash: newGmHash,
-        changeType
-      });
-
-      console.log(`Sheet update in room ${currentRoom}: ${changeType} change`);
+      if (accepted) {
+        // Update accepted - broadcast to ALL clients in the room (including sender)
+        io.to(currentRoom).emit('sheet-update', {
+          set_by_gm: data.set_by_gm,
+          set_by_player: data.set_by_player,
+          gmHash: data.gmHash,
+          stateToken: data.stateToken
+        });
+        console.log(`Sheet update in room ${currentRoom}: accepted`);
+      } else {
+        // Update rejected - send current state back to only this client
+        socket.emit('sheet-data', {
+          set_by_gm: data.set_by_gm,
+          set_by_player: data.set_by_player,
+          gmHash: data.gmHash,
+          stateToken: data.stateToken,
+          isNew: false
+        });
+        console.log(`Sheet update in room ${currentRoom}: rejected (stale token)`);
+      }
     });
 
     // Handle disconnection

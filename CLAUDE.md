@@ -95,15 +95,23 @@ CLEANUP_DAYS=30             # Days until unused sheets are deleted
 
 Client → Server:
 - `join-room { sheetId }` - Join a sheet room
-- `sheet-update { set_by_gm, set_by_player, gmHash }` - Send changes
+- `sheet-update { set_by_gm, set_by_player, gmHash, stateToken }` - Send changes
 
 Server → Client:
-- `sheet-data { set_by_gm, set_by_player, gmHash, isNew }` - Initial data
-- `sheet-update { ..., changeType }` - Remote changes (`breaking` or `small`)
+- `sheet-data { set_by_gm, set_by_player, gmHash, stateToken, isNew }` - Initial data (or resync after rejected update)
+- `sheet-update { set_by_gm, set_by_player, gmHash, stateToken }` - Remote changes (broadcast to all)
 - `user-count { count }` - Number of connected users
 
-**Change Detection:**
+**Optimistic Concurrency Control:**
+- `stateToken` = random string, changes with every accepted update
+- Client sends token with update → Server validates:
+  - Token matches → Accept, generate new token, broadcast to ALL clients
+  - Token stale → Reject, send `sheet-data` with current state to only this client
+- Prevents clients with bad connections from overwriting newer changes
+
+**Change Detection (client-side):**
 - `gmHash` = hash of `set_by_gm` object
+- Client compares local `gmHash` with received → determines `breaking` vs `small` change
 - Same hash → `small` change (only player data changed, update in-place)
 - Different hash → `breaking` change (template changed, full re-render)
 

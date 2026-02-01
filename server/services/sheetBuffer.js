@@ -37,6 +37,14 @@ function normalizeSheetId(sheetId) {
 }
 
 /**
+ * Generate a random state token for optimistic concurrency control
+ * @returns {string}
+ */
+function generateStateToken() {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+/**
  * Compute a simple hash of the set_by_gm object for change detection
  * @param {Object} setByGm
  * @returns {string}
@@ -94,7 +102,8 @@ async function getSheet(sheetId) {
         sheetId: sheet.sheetId,
         set_by_gm: sheet.set_by_gm,
         set_by_player: sheet.set_by_player || {},
-        gmHash: sheet.gmHash
+        gmHash: sheet.gmHash,
+        stateToken: generateStateToken() // Generate fresh token when loading into memory
       };
       buffer.set(sheetId, data);
       return { data, isNew: false };
@@ -109,7 +118,8 @@ async function getSheet(sheetId) {
     sheetId,
     set_by_gm: defaultData.set_by_gm,
     set_by_player: defaultData.set_by_player || {},
-    gmHash: computeGmHash(defaultData.set_by_gm)
+    gmHash: computeGmHash(defaultData.set_by_gm),
+    stateToken: generateStateToken()
   };
   buffer.set(sheetId, newData);
   dirtySheets.add(sheetId);
@@ -118,31 +128,38 @@ async function getSheet(sheetId) {
 }
 
 /**
- * Update sheet in buffer
+* Update sheet in buffer with optimistic concurrency control
  * @param {string} sheetId
  * @param {Object} setByGm
  * @param {Object} setByPlayer
  * @param {string} newGmHash
- * @returns {{changeType: 'breaking'|'small', gmHash: string}}
+ * @param {string} clientStateToken - Token the client believes is current
+ * @returns {{accepted: boolean, data: Object}} - If rejected, data contains current state
  */
-function updateSheet(sheetId, setByGm, setByPlayer, newGmHash) {
+function updateSheet(sheetId, setByGm, setByPlayer, newGmHash, clientStateToken) {
   const existing = buffer.get(sheetId);
-  const oldGmHash = existing ? existing.gmHash : '';
 
+    // Check if client's token matches current state
+  if (!existing || existing.stateToken !== clientStateToken) {
+    // Client is out of sync - reject update, return current state
+    console.log(`Rejected update for ${sheetId}: token mismatch (client: ${clientStateToken}, server: ${existing?.stateToken})`);
+    return { accepted: false, data: existing };
+  }
+
+  // Token matches - accept update with new token
+  const newStateToken = generateStateToken();
   const data = {
     sheetId,
     set_by_gm: setByGm,
     set_by_player: setByPlayer || {},
-    gmHash: newGmHash
+    gmHash: newGmHash,
+    stateToken: newStateToken
   };
 
   buffer.set(sheetId, data);
   dirtySheets.add(sheetId);
 
-  // Determine change type
-  const changeType = (oldGmHash !== newGmHash) ? 'breaking' : 'small';
-
-  return { changeType, gmHash: newGmHash };
+  return { accepted: true, data };
 }
 
 /**

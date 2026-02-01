@@ -9,6 +9,7 @@ let currentSheetId = null;
 let socket = null;
 let isOnline = false;
 let currentGmHash = '';
+let currentStateToken = null; // For optimistic concurrency control
 let reconnectAttempts = 0;
 let broadcastTimeout = null;
 const BROADCAST_DEBOUNCE_MS = 300;
@@ -43,28 +44,10 @@ function parseUrl() {
     return { syncEnabled: false, sheetId: null };
   }
 
-  // Extract sheet ID from path (decode URL-encoded characters like %C3%A4 → ä)
-  // Only reject . / \ and control characters
-  const match = path.match(/^\/(.+)$/);
+  // Extract sheet ID from path
+  const match = path.match(/^\/([a-zA-Z0-9-]{1,64})$/);
   if (match) {
-    let sheetId;
-    try {
-      sheetId = decodeURIComponent(match[1]);
-    } catch (e) {
-      // Invalid URI encoding
-      return { syncEnabled: false, sheetId: null };
-    }
-
-    // Validate: length 1-64, no . / \ or control chars
-    if (sheetId.length < 1 || sheetId.length > 64) {
-      return { syncEnabled: false, sheetId: null };
-    }
-    if (/[./\\]/.test(sheetId) || /[\x00-\x1F\x7F]/.test(sheetId)) {
-      return { syncEnabled: false, sheetId: null };
-    }
-
-    // Normalize to lowercase for case-insensitive matching
-    return { syncEnabled: true, sheetId: sheetId.toLowerCase() };
+    return { syncEnabled: true, sheetId: match[1] };
   }
 
   // Invalid path, no sync
@@ -138,13 +121,13 @@ function connectSocket() {
 }
 
 /**
- * Handle initial sheet data from server
- * @param {{set_by_gm: Object, set_by_player: Object, gmHash: string, isNew: boolean}} data
- */
+ * Handle initial sheet data from server (also used when update is rejected)
+ * @param {{set_by_gm: Object, set_by_player: Object, gmHash: string, stateToken: string, isNew: boolean}} data */
 function handleSheetData(data) {
-  console.log('Received sheet data:', { isNew: data.isNew, gmHash: data.gmHash });
+  console.log('Received sheet data:', { isNew: data.isNew, gmHash: data.gmHash, stateToken: data.stateToken });
 
   currentGmHash = data.gmHash;
+  currentStateToken = data.stateToken;
 
   // Apply the data using the global applyImported function
   const json = {
@@ -159,20 +142,24 @@ function handleSheetData(data) {
 }
 
 /**
- * Handle remote updates from other clients
- * @param {{set_by_gm: Object, set_by_player: Object, gmHash: string, changeType: 'breaking'|'small'}} data
+ * Handle remote updates from other clients (or confirmation of own update)
+ * @param {{set_by_gm: Object, set_by_player: Object, gmHash: string, stateToken: string}} data
  */
 function handleRemoteUpdate(data) {
-  console.log('Remote update:', { changeType: data.changeType, gmHash: data.gmHash });
+// Determine change type locally by comparing gmHash
+  const isBreakingChange = (currentGmHash !== data.gmHash);
+  console.log('Remote update:', { isBreakingChange, oldGmHash: currentGmHash, newGmHash: data.gmHash, stateToken: data.stateToken });
 
+  // Update local state
   currentGmHash = data.gmHash;
+  currentStateToken = data.stateToken;
 
   const json = {
     set_by_gm: data.set_by_gm,
     set_by_player: data.set_by_player
   };
 
-  if (data.changeType === 'breaking') {
+  if (isBreakingChange) {
     // Full re-render with animations
     if (typeof applyImported === 'function') {
       applyImported(json);
@@ -290,9 +277,9 @@ function broadcastChange() {
     socket.emit('sheet-update', {
       set_by_gm: state.set_by_gm,
       set_by_player: state.set_by_player,
-      gmHash: newGmHash
+      gmHash: newGmHash,
+      stateToken: currentStateToken // Send current token for concurrency check
     });
-
     currentGmHash = newGmHash;
   }, BROADCAST_DEBOUNCE_MS);
 }
