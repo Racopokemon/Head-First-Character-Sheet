@@ -1,9 +1,18 @@
 Rename to .env
-Only keep the next lines. 
+Only keep the last four lines. 
 Do not version this file. 
 Change parameters as you like. 
 
+Documentation: 
+MONGODB_URI - copy-paste the link (including your admin password) from the mongodb website
+PORT - well
+BUFFER_SYNC_INTERVAL - time in minutes before sheets are backuped to the db (they are always backed up once the last user closes their tab)
+CLEANUP_DAYS - remove sheets not accessed after so many days
+
+
+
+
 MONGODB_URI=mongodb://localhost:27017/headfirst
-PORT=3000
+PORT=443
 BUFFER_SYNC_INTERVAL=5
 CLEANUP_DAYS=500
