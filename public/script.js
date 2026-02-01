@@ -8,6 +8,7 @@ let bgVisible = false;
 let hasEnteredEditMode = false; // Track if user ever entered edit mode
 let originalCssVariables = null; // Store original CSS variable values
 let infoMode = false; // Track if info page is visible
+let printPreviewMode = false; // Track if print preview mode is active
 let shouldShowCrewBtn = true; // Track if crew button should be shown for current JSON
 let shouldShowBgBtn = true; // Track if bg button should be shown for current JSON
 
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // wire edit button toggle
   document.getElementById('edit-btn').addEventListener('click', toggleEditMode);
-  
+
   // wire expand button toggle
   document.getElementById('toggle-btn').addEventListener('click', toggleCompactMode);
 
@@ -37,6 +38,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const infoBtn = document.getElementById('info-btn');
   if (infoBtn) infoBtn.addEventListener('click', toggleInfoMode);
 
+  // wire print button
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) printBtn.addEventListener('click', togglePrintPreview);
+
+  // Exit edit mode before actual printing
+  window.addEventListener('beforeprint', () => {
+    if (!infoMode && editMode) {
+      //manually leaving editMode without animations (such that we dont print a half-animated stated)
+      editMode = false;
+      const btn = document.getElementById('edit-btn');
+      btn.dataset.active = 'false';
+
+      // Re-enable EC button
+      const ecBtn = document.getElementById('ec-btn');
+      if (ecBtn) {
+        ecBtn.classList.remove('disabled');
+      }
+
+      // Remove all animation classes and update immediately
+      const row = document.getElementById('points-expander');
+      row.classList.remove('collapsing', 'expanding');
+      updatePointsDisplay();
+
+      // Remove container padding animation classes
+      const container = document.querySelector('.container');
+      container.classList.remove('padding-in', 'padding-out');
+
+      // Re-render attributes without animation
+      renderAttributes();
+
+      // Remove any sub-attribute buttons that might still be visible
+      if (!compactMode) {
+        document.querySelectorAll('.sub-add-btn, .sub-del-btn').forEach(btn => btn.remove());
+      }
+
+    }
+  });
+
   // wire drag and drop import
   document.addEventListener('dragover', handleDragOver);
   document.addEventListener('drop', handleDrop);
@@ -46,24 +85,43 @@ document.addEventListener('DOMContentLoaded', () => {
     //}
   });
 
-  // Warn user before leaving if they've entered edit mode
+  // Warn user before leaving if they've entered edit mode (only in non-sync mode)
   window.addEventListener('beforeunload', (e) => {
+    // Skip warning if sync is enabled - data is saved online
+    if (window.syncModule && window.syncModule.isSyncEnabled()) {
+      return;
+    }
     if (hasEnteredEditMode) {
       e.preventDefault();
       e.returnValue = ''; // Chrome requires returnValue to be set
     }
   });
 
-  // load default.json
-  fetch('default.json')
-    .then(r => r.json())
-    .then(data => {
-      applyImported(data);
-    })
-    .catch(err => {
-      console.error('Could not load default.json', err);
-      alert('Could not load default.json. Make sure that the file exists and the website is hosted on a server :)');
-    });
+  // Setup global input listener for sync broadcasting
+  document.addEventListener('input', (e) => {
+    if (window.syncModule && window.syncModule.isSyncEnabled()) {
+      window.syncModule.debouncedBroadcast();
+    }
+  });
+
+  // Initialize sync module if available
+  let syncActive = false;
+  if (window.syncModule) {
+    syncActive = window.syncModule.initSync();
+  }
+
+  // Only load default.json if sync is not active (sync will load data from server)
+  if (!syncActive) {
+    fetch('default.json')
+      .then(r => r.json())
+      .then(data => {
+        applyImported(data);
+      })
+      .catch(err => {
+        console.error('Could not load default.json', err);
+        alert('Could not load default.json. Make sure that the file exists and the website is hosted on a server :)');
+      });
+  }
 });
 
 function toggleEditMode() {
@@ -247,6 +305,10 @@ function applyLocalization() {
   const bgBtn = document.getElementById('bg-btn');
   if (bgBtn) bgBtn.title = loc.btn_bg || 'Show character details';
 
+  // Set user count tooltip
+  const userCountLabel = document.getElementById('user-count-label');
+  if (userCountLabel) userCountLabel.title = loc.user_count_tooltip || 'Connected users';
+
   // Set footer text
   const footerText = document.getElementById('footer-text');
   if (footerText) footerText.textContent = loc.footer || 'Just another little TTRPG ruleset, by Ramin.';
@@ -361,6 +423,9 @@ function toggleCrewVisibility() {
   const crewBtn = document.getElementById('crew-btn');
   if (!other) { updateVisibility(); return; }
 
+  other.classList.remove('expanding');
+  other.classList.remove('collapsing');
+
   if (crewVisible) {
     // show then animate expand
     other.style.display = '';
@@ -381,13 +446,16 @@ function toggleBgVisibility() {
   const bgBtn = document.getElementById('bg-btn');
   if (!freetexts) { updateVisibility(); return; }
 
+  freetexts.classList.remove('expanding');
+  freetexts.classList.remove('collapsing');
+
   if (bgVisible) {
     freetexts.style.display = '';
     freetexts.classList.add('expanding');
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('expanding'); updateVisibility(); }, { once: true });
 
     // Show arrow icon on mobile when expanding
-    if (window.innerWidth <= 800 && bgBtn) {
+    if (window.innerWidth <= 850 && bgBtn) {
       const defaultIcon = bgBtn.querySelector('.bg-icon-default');
       const arrowIcon = bgBtn.querySelector('.bg-icon-arrow');
 
@@ -406,6 +474,19 @@ function toggleBgVisibility() {
     freetexts.addEventListener('animationend', () => { freetexts.classList.remove('collapsing'); updateVisibility(); }, { once: true });
   }
   if (bgBtn) bgBtn.dataset.active = bgVisible ? 'true' : 'false';
+}
+
+// Toggle print preview mode
+function togglePrintPreview() {
+  printPreviewMode = !printPreviewMode;
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) printBtn.dataset.active = printPreviewMode ? 'true' : 'false';
+
+  if (printPreviewMode) {
+    document.body.classList.add('prt-preview');
+  } else {
+    document.body.classList.remove('prt-preview');
+  }
 }
 
 // Toggle info mode (show info page instead of character sheet)
@@ -487,14 +568,14 @@ function renderInfoPage() {
 
     if (textL) {
       const textBoxL = document.createElement('div');
-      textBoxL.className = 'info-text-box';
+      textBoxL.className = 'box info-text-box';
       textBoxL.textContent = textL;
       textRow.appendChild(textBoxL);
     }
 
     if (textR) {
       const textBoxR = document.createElement('div');
-      textBoxR.className = 'info-text-box';
+      textBoxR.className = 'box info-text-box';
       textBoxR.textContent = textR;
       textRow.appendChild(textBoxR);
     }
@@ -527,7 +608,7 @@ function renderInfoPage() {
     if (!colContainer) return;
 
     const box = document.createElement('div');
-    box.className = 'info-attr-box color-' + (attr.color || 1);
+    box.className = 'box info-attr-box color-' + (attr.color || 1);
 
     const name = document.createElement('div');
     name.className = 'info-attr-name';
@@ -815,6 +896,7 @@ function renderAttributes() {
       const label = document.createElement('div');
       label.className = 'attr-value-label';
       label.dataset.attrLabel = idx;
+      label.dataset.value = storedValue || '0';
       if (ecMode) {
         const right = Number(storedValue || 0);
         const left = Math.round(right / 5);
@@ -861,6 +943,10 @@ function addSubAttribute(attrIdx, atIndex) {
   }
   renderAttributes();
   updatePointsDisplay();
+  // Broadcast change to sync
+  if (window.syncModule && window.syncModule.isSyncEnabled()) {
+    window.syncModule.broadcastChange();
+  }
   // focus the new subattr name input
   const selector = `[data-sub-input="${attrIdx}-${newIndex}"]`;
   const el = document.querySelector(selector);
@@ -875,6 +961,10 @@ function removeSubAttribute(attrIdx, subIdx) {
   playerData.attributes[attrIdx].sub_attributes.splice(subIdx, 1);
   renderAttributes();
   updatePointsDisplay();
+  // Broadcast change to sync
+  if (window.syncModule && window.syncModule.isSyncEnabled()) {
+    window.syncModule.broadcastChange();
+  }
 }
 
 function updateAttributePointLabels() {
@@ -904,7 +994,7 @@ function updateAttributePointLabels() {
           const mainPoints = playerData.attributes[idx].points || 0;
           const subPoints = subAttr.points || 0;
           const sum = mainPoints + subPoints;
-          if (ecMode) {
+          if (ecMode && !editMode) {
             const right = Number(sum || 0);
             const left = Math.round(right / 5);
             const mid = Math.round(right / 2);
@@ -1014,6 +1104,10 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       validateSubAttributeInput(valueInput);
       updateAttributePointLabels();
       updatePointsDisplay();
+      // Broadcast change to sync
+      if (window.syncModule && window.syncModule.isSyncEnabled()) {
+        window.syncModule.broadcastChange();
+      }
     }
 
     nameInput.addEventListener('input', (e) => {
@@ -1121,13 +1215,15 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
       }
     });
     validateSubAttributeInput(valueInput); // initial validation
-    
+
     const totalLabel = document.createElement('div');
     totalLabel.className = 'attr-value-label';
     totalLabel.dataset.subLabel = `${attrIdx}-${subAttrIdx}`;
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
-    totalLabel.textContent = mainPoints + subPoints;
+    const sum = mainPoints + subPoints;
+    totalLabel.dataset.value = String(sum);
+    totalLabel.textContent = sum;
     
     // delete button for this subattribute
     const delBtn = document.createElement('button');
@@ -1164,6 +1260,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     const mainPoints = playerData.attributes[attrIdx].points || 0;
     const subPoints = subAttr.points || 0;
     const sum = mainPoints + subPoints;
+    totalLabel.dataset.value = String(sum);
     if (ecMode) {
       const right = Number(sum || 0);
       const left = Math.round(right / 5);
@@ -1430,6 +1527,10 @@ function handleFileImport(e) {
     try {
       const json = JSON.parse(ev.target.result);
       applyImported(json);
+      // Broadcast change to other clients if sync is enabled
+      if (window.syncModule && window.syncModule.isSyncEnabled()) {
+        window.syncModule.broadcastChange();
+      }
     } catch (err) {
       alert('Could not parse json data :(');
     }
@@ -1443,8 +1544,12 @@ function handleDragOver(e) {
   e.preventDefault();
   e.stopPropagation();
   e.dataTransfer.dropEffect = 'copy';
-  // Only show overlay if dragging files
+  // Only show overlay if dragging files and not offline in sync mode
   if (e.dataTransfer.types.includes('Files')) {
+    // Don't show overlay if offline in sync mode
+    if (window.syncModule && window.syncModule.isSyncEnabled() && !window.syncModule.isSyncOnline()) {
+      return;
+    }
     showDragOverlay();
   }
 }
@@ -1453,16 +1558,25 @@ function handleDrop(e) {
   e.preventDefault();
   e.stopPropagation();
   hideDragOverlay();
-  
+
+  // Silently ignore drop when offline in sync mode
+  if (window.syncModule && window.syncModule.isSyncEnabled() && !window.syncModule.isSyncOnline()) {
+    return;
+  }
+
   const files = e.dataTransfer.files;
   if (!files || files.length === 0) return;
-  
+
   const file = files[0];
   const reader = new FileReader();
   reader.onload = ev => {
     try {
       const json = JSON.parse(ev.target.result);
       applyImported(json);
+      // Broadcast change to other clients if sync is enabled
+      if (window.syncModule && window.syncModule.isSyncEnabled()) {
+        window.syncModule.broadcastChange();
+      }
     } catch (err) {
       alert('Could not parse json data :(');
     }
@@ -1494,7 +1608,151 @@ function hideDragOverlay() {
   }, 30);
 }
 
-function applyImported(json) {
+/**
+ * Apply remote small changes in-place without recreating DOM elements.
+ * This preserves focus and mobile keyboard state.
+ * @param {Object} json - Full json with set_by_gm and set_by_player
+ * @returns {boolean} - true if applied in-place, false if full re-render needed
+ */
+function applyRemoteSmallChange(json) {
+  const sp = json.set_by_player;
+  if (!sp) return false;
+
+  // Update simple text fields in-place (skip if focused)
+  if (Array.isArray(sp.infos)) {
+    document.querySelectorAll('input[data-info-index]').forEach(input => {
+      const idx = Number(input.dataset.infoIndex);
+      const newVal = sp.infos[idx] || '';
+      if (input.value !== newVal) {
+        input.value = newVal;
+      }
+    });
+  }
+
+  const bigEl = document.querySelector('[data-key="info_big"]');
+  if (bigEl) {
+    const newVal = sp.info_big || '';
+    if (bigEl.value !== newVal) bigEl.value = newVal;
+  }
+
+  if (Array.isArray(sp.scales)) {
+    document.querySelectorAll('input[data-scale-index]').forEach(input => {
+      const idx = Number(input.dataset.scaleIndex);
+      const newVal = sp.scales[idx] || '';
+      if (input.value !== newVal) {
+        input.value = newVal;
+      }
+    });
+  }
+
+  if (Array.isArray(sp.freetexts)) {
+    document.querySelectorAll('textarea[data-freetext-index]').forEach(ta => {
+      const idx = Number(ta.dataset.freetextIndex);
+      const newVal = sp.freetexts[idx] || '';
+      if (ta.value !== newVal) {
+        ta.value = newVal;
+      }
+    });
+  }
+
+  if (Array.isArray(sp.other_players)) {
+    document.querySelectorAll('textarea[data-other-player-index]').forEach(ta => {
+      const idx = Number(ta.dataset.otherPlayerIndex);
+      const newVal = sp.other_players[idx] || '';
+      if (ta.value !== newVal) {
+        ta.value = newVal;
+      }
+    });
+  }
+
+  // Check if subattribute structure changed - if so, we need to re-render attributes
+  const subattrStructureChanged = hasSubattrStructureChanged(sp.attributes);
+
+  // Update playerData with new attribute values
+  if (Array.isArray(sp.attributes)) {
+    playerData.attributes = sp.attributes.map(a => ({
+      points: a.points || 0,
+      sub_attributes: a.sub_attributes || []
+    }));
+  }
+
+  // Handle attributes
+  if (subattrStructureChanged || !editMode) {
+    // Structure changed (or not in edit mode so theres no focus to lose) - must re-render attributes (focus loss is acceptable)
+    renderAttributes();
+  } else {
+    // Structure same - update attribute values in-place
+    updateAttributeValuesInPlace(sp.attributes);
+  }
+
+  updateAttributePointLabels();
+  updatePointsDisplay();
+
+  return true;
+}
+
+/**
+ * Check if subattribute structure (count per attribute) has changed
+ */
+function hasSubattrStructureChanged(newAttrs) {
+  if (!playerData.attributes || !newAttrs) return true;
+  if (playerData.attributes.length !== newAttrs.length) return true;
+
+  for (let i = 0; i < newAttrs.length; i++) {
+    const oldCount = (playerData.attributes[i]?.sub_attributes || []).length;
+    const newCount = (newAttrs[i]?.sub_attributes || []).length;
+    if (oldCount !== newCount) return true;
+  }
+  return false;
+}
+
+/**
+ * Update attribute and subattribute INPUT values in-place (for edit mode)
+ */
+function updateAttributeValuesInPlace(attrs) {
+  if (!Array.isArray(attrs)) return;
+
+  attrs.forEach((attr, idx) => {
+    // Attribute main value input (edit mode)
+    const attrInput = document.querySelector(`input[data-attr-index="${idx}"]`);
+    if (attrInput) {
+      const newVal = String(attr.points || 0);
+      if (attrInput.value !== newVal) attrInput.value = newVal;
+    }
+
+    // Subattribute inputs (edit mode)
+    const subs = attr.sub_attributes || [];
+    subs.forEach((sub, subIdx) => {
+      // Name input
+      const nameInput = document.querySelector(`[data-sub-input="${idx}-${subIdx}"]`);
+      if (nameInput) {
+        const newVal = sub.name || '';
+        if (nameInput.value !== newVal) nameInput.value = newVal;
+      }
+      // Value input
+      const valInput = document.querySelector(`[data-sub-input-val="${idx}-${subIdx}"]`);
+      if (valInput) {
+        const newVal = String(sub.points || 0);
+        if (valInput.value !== newVal) valInput.value = newVal;
+      }
+    });
+  });
+}
+
+function applyImported(json, options = {}) {
+  // options.preserveUIState - if true, keep editMode, compactMode, ecMode, crewVisible, bgVisible, infoMode
+  const preserveUIState = options.preserveUIState || false;
+
+  // Save current UI state if preserving
+  const savedState = preserveUIState ? {
+    editMode,
+    compactMode,
+    ecMode,
+    crewVisible,
+    bgVisible,
+    infoMode
+  } : null;
+
   // if set_by_gm present, replace template and re-render labels
   if (!json.set_by_gm) {
     // actually this would be a problem, were always expecting the set_by_gm to exist
@@ -1632,13 +1890,52 @@ function applyImported(json) {
   renderAttributes();
   updatePointsDisplay();
 
-  infoMode = true;
-  toggleInfoMode(); //makes sure were never in boring info mode when loading a new sheet, and also plays the nice face-in animation
+  if (preserveUIState && savedState) {
+    // Restore saved UI state without animations
+    editMode = savedState.editMode;
+    compactMode = savedState.compactMode;
+    ecMode = savedState.ecMode;
+    crewVisible = savedState.crewVisible;
+    bgVisible = savedState.bgVisible;
+    infoMode = savedState.infoMode;
 
-  if (editMode) {
-    toggleEditMode();
+    // Update button states
+    const editBtn = document.getElementById('edit-btn');
+    if (editBtn) editBtn.dataset.active = editMode ? 'true' : 'false';
+    const toggleBtn = document.getElementById('toggle-btn');
+    if (toggleBtn) toggleBtn.dataset.active = compactMode ? 'true' : 'false';
+    const ecBtn = document.getElementById('ec-btn');
+    if (ecBtn) ecBtn.dataset.active = ecMode ? 'true' : 'false';
+
+    updateVisibility();
+    renderAttributes();
+    updatePointsDisplay();
+
+    // Handle info mode display without animation
+    const infoPage = document.getElementById('info-page-container');
+    const charSheet = document.getElementById('char-sheet-container');
+    const subtitle = document.getElementById('subtitle');
+    if (infoMode) {
+      if (charSheet) charSheet.style.display = 'none';
+      if (subtitle) subtitle.style.display = 'block';
+      if (infoPage) infoPage.classList.add('active');
+    } else {
+      if (charSheet) charSheet.style.display = '';
+      if (subtitle) subtitle.style.display = 'none';
+      if (infoPage) infoPage.classList.remove('active');
+    }
+
+    // Handle edit mode points display
+    const row = document.getElementById('points-expander');
+    if (row) row.style.display = editMode ? null : 'none';
+  } else {
+    infoMode = true;
+    toggleInfoMode(); //makes sure were never in boring info mode when loading a new sheet, and also plays the nice face-in animation
+
+    if (editMode) {
+      toggleEditMode();
+    }
   }
-
 }
 
 function setInputValue(key, value) {
