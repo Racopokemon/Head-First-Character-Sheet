@@ -44,10 +44,28 @@ function parseUrl() {
     return { syncEnabled: false, sheetId: null };
   }
 
-  // Extract sheet ID from path
-  const match = path.match(/^\/([a-zA-Z0-9-]{1,64})$/);
+  // Extract sheet ID from path (decode URL-encoded characters like %C3%A4 → ä)
+  // Only reject . / \ and control characters
+  const match = path.match(/^\/(.+)$/);
   if (match) {
-    return { syncEnabled: true, sheetId: match[1] };
+    let sheetId;
+    try {
+      sheetId = decodeURIComponent(match[1]);
+    } catch (e) {
+      // Invalid URI encoding
+      return { syncEnabled: false, sheetId: null };
+    }
+
+    // Validate: length 1-64, no . / \ or control chars
+    if (sheetId.length < 1 || sheetId.length > 64) {
+      return { syncEnabled: false, sheetId: null };
+    }
+    if (/[./\\]/.test(sheetId) || /[\x00-\x1F\x7F]/.test(sheetId)) {
+      return { syncEnabled: false, sheetId: null };
+    }
+
+    // Normalize to lowercase for case-insensitive matching
+    return { syncEnabled: true, sheetId: sheetId.toLowerCase() };
   }
 
   // Invalid path, no sync
