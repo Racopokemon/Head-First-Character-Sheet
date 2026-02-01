@@ -94,13 +94,18 @@ function setupSocketHandlers(io) {
       );
 
       if (accepted) {
-        // Update accepted - broadcast to ALL clients in the room (including sender)
-        io.to(currentRoom).emit('sheet-update', {
+        // Update accepted - broadcast to all OTHER clients in the room
+        socket.to(currentRoom).emit('sheet-update', {
           set_by_gm: data.set_by_gm,
           set_by_player: data.set_by_player,
           gmHash: data.gmHash,
           stateToken: data.stateToken
         });
+        // Confirm to sending client by updating its stateToken
+        socket.emit('stateToken-update', {
+          stateToken: data.stateToken
+        });
+
         console.log(`Sheet update in room ${currentRoom}: accepted`);
       } else {
         // Update rejected - send current state back to only this client

@@ -133,6 +133,7 @@ function connectSocket() {
   });
 
   socket.on('sheet-data', handleSheetData);
+  socket.on('stateToken-update', handleStateTokenUpdate)
   socket.on('sheet-update', handleRemoteUpdate);
   socket.on('user-count', handleUserCount);
   socket.on('error', handleServerError);
@@ -157,6 +158,10 @@ function handleSheetData(data) {
   if (typeof applyImported === 'function') {
     applyImported(json);
   }
+}
+
+function handleStateTokenUpdate(data) {
+  currentStateToken = data.stateToken;
 }
 
 /**
