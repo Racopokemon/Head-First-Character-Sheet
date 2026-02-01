@@ -47,7 +47,7 @@ HeadFirst/
 | `/nosync` | No sync (explicit) |
 | `/:sheetId` | Real-time sync enabled (e.g., `/my-group-2024`) |
 
-Sheet IDs: `a-z`, `A-Z`, `0-9`, `-`, length 1-64 characters.
+Sheet IDs: Any characters except `.` `/` `\` and control characters, length 1-64. **Case-insensitive** (e.g., `Test` and `test` → same sheet).
 
 ### Environment Variables (.env)
 

@@ -36,9 +36,12 @@ function setupSocketHandlers(io) {
     socket.on('join-room', async ({ sheetId }) => {
       // Validate sheet ID
       if (!sheetBuffer.isValidSheetId(sheetId)) {
-        socket.emit('error', { message: 'Invalid sheet ID. Use only letters, numbers, and hyphens (1-64 characters).' });
+        socket.emit('error', { message: 'Invalid sheet ID (1-64 characters, no . / \\ allowed).' });
         return;
       }
+
+      // Normalize to lowercase for case-insensitive matching
+      const normalizedId = sheetBuffer.normalizeSheetId(sheetId);
 
       // Leave previous room if any
       if (currentRoom) {
@@ -52,14 +55,14 @@ function setupSocketHandlers(io) {
         }
       }
 
-      // Join new room
-      currentRoom = sheetId;
-      socket.join(sheetId);
+      // Join new room (using normalized ID)
+      currentRoom = normalizedId;
+      socket.join(normalizedId);
 
-      console.log(`Client ${socket.id} joined room: ${sheetId}`);
+      console.log(`Client ${socket.id} joined room: ${normalizedId}`);
 
-      // Get or create sheet data
-      const { data, isNew } = await sheetBuffer.getSheet(sheetId);
+      // Get or create sheet data (using normalized ID)
+      const { data, isNew } = await sheetBuffer.getSheet(normalizedId);
 
       // Send initial data to the client
       socket.emit('sheet-data', {
@@ -70,7 +73,7 @@ function setupSocketHandlers(io) {
       });
 
       // Broadcast updated user count
-      broadcastUserCount(io, sheetId);
+      broadcastUserCount(io, normalizedId);
     });
 
     // Handle sheet updates

@@ -8,10 +8,13 @@ const sheetSchema = new mongoose.Schema({
     index: true,
     validate: {
       validator: function(v) {
-        // Only allow a-z, A-Z, 0-9, - and length 1-64
-        return /^[a-zA-Z0-9-]{1,64}$/.test(v);
+        // Allow any chars except . / \ and control characters, length 1-64
+        if (!v || v.length < 1 || v.length > 64) return false;
+        if (/[./\\]/.test(v)) return false;
+        if (/[\x00-\x1F\x7F]/.test(v)) return false;
+        return true;
       },
-      message: props => `${props.value} is not a valid sheet ID. Use only letters, numbers, and hyphens (1-64 characters).`
+      message: props => `${props.value} is not a valid sheet ID (1-64 characters, no . / \\ allowed).`
     }
   },
   set_by_gm: {

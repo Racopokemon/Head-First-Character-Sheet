@@ -14,11 +14,26 @@ const userCounts = new Map();
 
 /**
  * Validate sheet ID format
+ * Allows any characters except . / \ and control characters
  * @param {string} sheetId
  * @returns {boolean}
  */
 function isValidSheetId(sheetId) {
-  return /^[a-zA-Z0-9-]{1,64}$/.test(sheetId);
+  if (!sheetId || typeof sheetId !== 'string') return false;
+  if (sheetId.length < 1 || sheetId.length > 64) return false;
+  // Forbid . / \ and control characters (0x00-0x1F, 0x7F)
+  if (/[./\\]/.test(sheetId)) return false;
+  if (/[\x00-\x1F\x7F]/.test(sheetId)) return false;
+  return true;
+}
+
+/**
+ * Normalize sheet ID to lowercase for case-insensitive matching
+ * @param {string} sheetId
+ * @returns {string}
+ */
+function normalizeSheetId(sheetId) {
+  return sheetId.toLowerCase();
 }
 
 /**
@@ -216,6 +231,7 @@ function getUserCount(sheetId) {
 
 module.exports = {
   isValidSheetId,
+  normalizeSheetId,
   computeGmHash,
   getSheet,
   updateSheet,

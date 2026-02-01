@@ -39,14 +39,17 @@ app.get('/:sheetId', (req, res) => {
   const { sheetId } = req.params;
 
   // Basic validation - reject obvious non-sheet-id paths
-  if (sheetId.includes('.') || sheetId.length > 64) {
+  // Forbid . / \ and control characters, max 64 chars
+  if (sheetId.includes('.') || sheetId.includes('/') || sheetId.includes('\\')) {
     res.status(404).send('Not found');
     return;
   }
-
-  // Validate sheet ID format
-  if (!/^[a-zA-Z0-9-]{1,64}$/.test(sheetId)) {
-    res.status(400).send('Invalid sheet ID. Use only letters, numbers, and hyphens (1-64 characters).');
+  if (sheetId.length > 64 || sheetId.length < 1) {
+    res.status(400).send('Invalid sheet ID (1-64 characters).');
+    return;
+  }
+  if (/[\x00-\x1F\x7F]/.test(sheetId)) {
+    res.status(400).send('Invalid sheet ID (control characters not allowed).');
     return;
   }
 
