@@ -762,8 +762,8 @@ function renderScales() {
     row.addEventListener('click', (e) => {
       if (e.target !== input) {
         input.focus();
-        const len = input.value.length;
-        input.setSelectionRange(len, len);
+        //const len = input.value.length;
+        //input.setSelectionRange(len, len); //doesnt work for number input :(
       }
     });
     // keyboard navigation: up/down/enter moves to next/prev scale input
@@ -886,9 +886,9 @@ function renderAttributes() {
       // Focus input when clicking box (in edit mode)
       box.addEventListener('click', (e) => {
         if (e.target !== input && !e.target.classList.contains('sub-add-btn') && editMode) {
-          input.focus();
           const len = input.value.length;
-          input.setSelectionRange(len, len); //this threw errors when clicking in non-edit mode, but the && editMode doesnt entirely fix it - if you spam during the very first edit animation, it still fires. Whatever. Last line here anyways :D
+          input.focus();
+          //input.setSelectionRange(len, len); (bro what weird error is this I dont wanna switch to 'tel')
         }
       });
     } else {

@@ -15,4 +15,4 @@ CLEANUP_DAYS - remove sheets not accessed after so many days
 MONGODB_URI=mongodb://localhost:27017/headfirst
 PORT=443
 BUFFER_SYNC_INTERVAL=5
-CLEANUP_DAYS=500
+CLEANUP_DAYS=700
