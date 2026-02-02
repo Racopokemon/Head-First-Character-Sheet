@@ -1671,8 +1671,8 @@ function applyRemoteSmallChange(json) {
   // Update playerData with new attribute values
   if (Array.isArray(sp.attributes)) {
     playerData.attributes = sp.attributes.map(a => ({
-      points: a.points || 0,
-      sub_attributes: a.sub_attributes || []
+      points: (a && a.points) || 0,
+      sub_attributes: (a && a.sub_attributes) || []
     }));
   }
 
