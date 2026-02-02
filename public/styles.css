@@ -14,6 +14,7 @@
   --add-btn-size:28px;
   --button-size:43px;
   --mobile-edit-additional-height:215px;
+  --user-count-height:28px;
 
   --font-family:Segoe UI, Roboto, Arial, sans-serif;
   /*--font-weight:500;*/
@@ -73,7 +74,7 @@
 *{box-sizing:border-box;font-family:var(--font-family);font-size:var(--text-size-normal);/*font-weight:var(--font-weight);*/border:0px;color:var(--text)}
 body{background:var(--bg);margin:0;padding:20px;display:flex;justify-content:center}
 .container{width:100%;max-width:var(--max-width)}
-h1{text-align:center;margin:50px 0 50px 0;font-size:28px;color:var(--header-text);}
+h1{text-align:center;margin:calc(50px - var(--user-count-height)) 0 50px 0;font-size:28px;color:var(--header-text);}
 h2{text-align:center;margin:-25px 0 50px 0;font-size:20px;color:var(--header-text);}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
 .top-buttons-row{align-items: center;}
@@ -492,9 +493,9 @@ textarea::placeholder{color:var(--text-suggestion);}
   justify-content: center;
   gap: 4px;
   min-width: 28px;
-  height: 28px;
+  height: var(--user-count-height);
   padding: 0 8px;
-  margin-right: 8px;
+  /*margin-right: 8px;*/
   background: var(--box-bg);
   border-radius: 17px;
   font-size: 17px;
@@ -506,7 +507,12 @@ textarea::placeholder{color:var(--text-suggestion);}
   width: 18px;
   height: 18px;
   fill: var(--text);
-  opacity: 0.7;
+  /*opacity: 0.7;*/
+}
+.user-count-row {
+  height: var(--user-count-height);
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 /* Reconnecting overlay */

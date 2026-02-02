@@ -886,8 +886,8 @@ function renderAttributes() {
       // Focus input when clicking box (in edit mode)
       box.addEventListener('click', (e) => {
         if (e.target !== input && !e.target.classList.contains('sub-add-btn') && editMode) {
-          const len = input.value.length;
           input.focus();
+          //const len = input.value.length;
           //input.setSelectionRange(len, len); (bro what weird error is this I dont wanna switch to 'tel')
         }
       });
