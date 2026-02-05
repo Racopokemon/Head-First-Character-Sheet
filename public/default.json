@@ -23,7 +23,7 @@
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",
             "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
         },
-        "deco_svg": "palms.svg",
+        "deco_svg": null,
 
         "infopage": {
             "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80 70 60 40 30 20, und der Char ist bereit fürs Abenteuer! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40 30 30 20 20 10 (Bereich 10-40). Zusätzlich können dann 250 Punkte auf Spezialisierungen der Attribute verteilt werden. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind (unter Rücksprache) immer willkommen!",

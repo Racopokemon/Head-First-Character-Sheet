@@ -78,6 +78,7 @@ h1{text-align:center;margin:calc(50px - var(--user-count-height)) 0 50px 0;font-
 h2{text-align:center;margin:-25px 0 50px 0;font-size:20px;color:var(--header-text);}
 .row{display:flex;gap:var(--gap);margin-bottom:12px}
 .top-buttons-row{align-items: center;}
+.viz-buttons-row{background-color: var(--box-bg); border-radius: 6px; padding: 8px 10px;width: fit-content;margin-left: auto;}
 .row-4 > div{flex:1}
 .row-3 .col-left{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
