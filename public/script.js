@@ -305,6 +305,15 @@ function applyLocalization() {
   const bgBtn = document.getElementById('bg-btn');
   if (bgBtn) bgBtn.title = loc.btn_bg || 'Show character details';
 
+  const picBtn = document.getElementById('pic-btn');
+  if (picBtn) picBtn.title = loc.btn_pic || 'Show character image';
+
+  const shareBtn = document.getElementById('share-btn');
+  if (shareBtn) shareBtn.title = loc.btn_share || 'Share this character sheet';
+
+  const moreBtn = document.getElementById('more-btn');
+  if (moreBtn) moreBtn.title = loc.btn_more || 'More ...';
+
   // Set user count tooltip
   const userCountLabel = document.getElementById('user-count-label');
   if (userCountLabel) userCountLabel.title = loc.user_count_tooltip || 'Connected users';
