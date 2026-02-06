@@ -20,7 +20,8 @@
             "drop_file": "Datei importieren",
             "footer": "Just another little TTRPG ruleset, by Ramin. ",
             "reconnecting": "Verbindungsaufbau...",
-            "user_count_tooltip": "Online außerdem dabei"
+            "user_count_tooltip": "Online außerdem dabei",
+            "link_copied": "Link in die Zwischenablage kopiert :)"
         },
         "style": {
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",

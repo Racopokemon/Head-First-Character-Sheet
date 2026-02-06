@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const printBtn = document.getElementById('print-btn');
   if (printBtn) printBtn.addEventListener('click', togglePrintPreview);
 
+  // wire share button
+  const shareBtn = document.getElementById('share-btn');
+  if (shareBtn) shareBtn.addEventListener('click', handleShare);
+
   // Exit edit mode before actual printing
   window.addEventListener('beforeprint', () => {
     if (!infoMode && editMode) {
@@ -1446,6 +1450,17 @@ function renderFreetexts() {
       }
     });
     container.appendChild(box);
+  });
+}
+
+function handleShare() {
+  navigator.clipboard.writeText(window.location.hostname + window.location.pathname).then(() => {
+    const loc = gmTemplate && gmTemplate.localization ? gmTemplate.localization : {};
+    const toast = document.getElementById('toast');
+    toast.textContent = loc.link_copied || 'Copied link to clipboard :)';
+    toast.classList.add('visible');
+    clearTimeout(toast._hideTimeout);
+    toast._hideTimeout = setTimeout(() => toast.classList.remove('visible'), 1250);
   });
 }
 
