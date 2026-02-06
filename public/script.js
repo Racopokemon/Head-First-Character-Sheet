@@ -1460,7 +1460,32 @@ function handleShare() {
     toast.textContent = loc.link_copied || 'Copied link to clipboard :)';
     toast.classList.add('visible');
     clearTimeout(toast._hideTimeout);
-    toast._hideTimeout = setTimeout(() => toast.classList.remove('visible'), 1250);
+    
+    // Switch share button icon to copy icon
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) {
+      const defaultIcon = shareBtn.querySelector('.share-icon-default');
+      const copyIcon = shareBtn.querySelector('.share-icon-copy');
+      if (defaultIcon && copyIcon) {
+        defaultIcon.style.display = 'none';
+        copyIcon.style.display = '';
+      }
+    }
+    
+    toast._hideTimeout = setTimeout(() => {
+      toast.classList.remove('visible');
+      
+      // Switch share button icon back to share icon
+      const shareBtn = document.getElementById('share-btn');
+      if (shareBtn) {
+        const defaultIcon = shareBtn.querySelector('.share-icon-default');
+        const copyIcon = shareBtn.querySelector('.share-icon-copy');
+        if (defaultIcon && copyIcon) {
+          defaultIcon.style.display = '';
+          copyIcon.style.display = 'none';
+        }
+      }
+    }, 1250);
   });
 }
 
