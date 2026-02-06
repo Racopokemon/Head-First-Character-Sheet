@@ -46,6 +46,46 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareBtn = document.getElementById('share-btn');
   if (shareBtn) shareBtn.addEventListener('click', handleShare);
 
+  // wire more-btn dropdown menu
+  const moreBtn = document.getElementById('more-btn');
+  const ioMenu = document.getElementById('io-menu');
+  if (moreBtn && ioMenu) {
+    moreBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (ioMenu.classList.contains('open')) {
+        closeIoMenu();
+      } else {
+        ioMenu.classList.remove('closing');
+        ioMenu.classList.add('open');
+        moreBtn.dataset.active = 'true';
+      }
+    });
+    // close when clicking a button inside the menu
+    ioMenu.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.setTimeout(() => {closeIoMenu();}, 180);
+      });
+    });
+    // close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (ioMenu.classList.contains('open') && !ioMenu.contains(e.target)) {
+        closeIoMenu();
+      }
+    });
+  }
+
+  function closeIoMenu() {
+    const menu = document.getElementById('io-menu');
+    const btn = document.getElementById('more-btn');
+    if (!menu || !menu.classList.contains('open')) return;
+    menu.classList.remove('open');
+    menu.classList.add('closing');
+    btn.dataset.active = 'false';
+    menu.addEventListener('animationend', () => {
+      menu.classList.remove('closing');
+    }, { once: true });
+  }
+
   // Exit edit mode before actual printing
   window.addEventListener('beforeprint', () => {
     if (!infoMode && editMode) {
