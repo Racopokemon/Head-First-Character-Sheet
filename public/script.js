@@ -465,8 +465,10 @@ function updateVisibility() {
 
   // Show/hide info button based on show_infopage setting
   const infoBtn = document.getElementById('info-btn');
+  const infoBtnFlex = document.getElementById('top-buttons-row-flex');
   const showInfopage = gmTemplate && gmTemplate.show_infopage !== false;
   if (infoBtn) infoBtn.style.display = showInfopage ? '' : 'none';
+  if (infoBtnFlex) infoBtnFlex.style.display = showInfopage ? '' : 'none';
 }
 
 // Toggle crew section with animation
