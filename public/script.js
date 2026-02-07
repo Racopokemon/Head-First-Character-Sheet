@@ -729,7 +729,13 @@ function renderInfos() {
     box.appendChild(input);
     left.appendChild(box);
 
-    if (i === 0) input.className += ' info-char-name';
+    if (i === 0) {
+      input.className += ' info-char-name';
+      input.addEventListener('input', (e) => {
+        updateTitle();
+      });
+    }
+
     // Focus input when clicking box
     box.addEventListener('click', (e) => {
       if (e.target !== input) {
@@ -783,6 +789,15 @@ function renderInfos() {
 
   box4.appendChild(ta4);
   mid.appendChild(box4);
+}
+
+function updateTitle() {
+  const input = document.querySelector('input[data-info-index="0"]');
+  if (input && input.value) {
+    document.title = input.value + ' - Head First! Character Sheet';
+  } else {
+    document.title = 'Head First! Character Sheet';
+  }
 }
 
 function renderScales() {
@@ -1778,6 +1793,7 @@ function applyRemoteSmallChange(json) {
 
   updateAttributePointLabels();
   updatePointsDisplay();
+  updateTitle();
 
   return true;
 }
@@ -2027,6 +2043,7 @@ function applyImported(json, options = {}) {
       toggleEditMode();
     }
   }
+  updateTitle();
 }
 
 function setInputValue(key, value) {
