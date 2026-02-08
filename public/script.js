@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Only load default.json if sync is not active (sync will load data from server)
   if (!syncActive) {
-    fetch('default.json')
+    fetch('nosync-default.json')
       .then(r => r.json())
       .then(data => {
         applyImported(data);
