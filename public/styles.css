@@ -481,7 +481,7 @@ textarea::placeholder{color:var(--text-suggestion);}
     left:12px;
     right:12px;
     width:auto;
-    background:var(--bg);
+    background:var(--points-label-bg);
     padding:12px;
     border-radius:8px;
     box-shadow:0 -2px 12px rgba(0,0,0,0.12);
