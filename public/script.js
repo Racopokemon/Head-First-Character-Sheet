@@ -1,7 +1,7 @@
 const PRESET_TEMPLATES = [
-  { emoji: '⭐', lang: 'DE', label: 'Head First! (Default)', file: 'default.json' },
-  { emoji: '🌃', lang: 'DE', label: 'Neon Shadows', file: 'neon shadows.json' },
-  { emoji: '🏝️', lang: 'DE', label: 'Good Times Island', file: 'gti.json' },
+  { emoji: '⭐', lang: '🇩🇪', label: 'Head First! (Default)', file: 'default.json' },
+  { emoji: '🌃', lang: '🇩🇪', label: 'Neon Shadows', file: 'neon shadows.json' },
+  { emoji: '🏝️', lang: '🇩🇪', label: 'Good Times Island', file: 'gti.json' },
 ];
 
 let gmTemplate = null;
@@ -1658,7 +1658,7 @@ function openImportModal() {
   if (existing) existing.remove();
 
   const loc = (gmTemplate && gmTemplate.localization) || {};
-  const infoText = loc.import_modal_info || 'Start from a new character sheet or upload your own. Be advised: This overrides the current sheet.';
+  const infoText = loc.import_modal_info || 'Start from a new template or upload your own sheet. Be advised: This overrides the current sheet.';
   const uploadLabel = loc.import_modal_upload || 'Upload ...';
 
   const overlay = document.createElement('div');
@@ -1689,8 +1689,9 @@ function openImportModal() {
   // Preset buttons
   PRESET_TEMPLATES.forEach(preset => {
     const btn = document.createElement('button');
-    btn.className = 'toggle-btn';
+    btn.className = 'toggle-btn import-modal-btn';
     btn.textContent = preset.label;
+    btn.innerHTML = preset.emoji + '<span style="width:10px"></span>' + preset.label +  '<span style="flex:1"></span>' + preset.lang;
     btn.addEventListener('click', () => {
       closeImportModal();
       loadPresetTemplate(preset.file);
