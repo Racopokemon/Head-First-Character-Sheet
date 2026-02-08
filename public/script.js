@@ -1678,7 +1678,7 @@ function openImportModal() {
 
   // Upload button
   const uploadBtn = document.createElement('button');
-  uploadBtn.className = 'import-modal-btn upload';
+  uploadBtn.className = 'toggle-btn import-modal-btn-upload';
   uploadBtn.textContent = uploadLabel;
   uploadBtn.addEventListener('click', () => {
     closeImportModal();
@@ -1689,7 +1689,7 @@ function openImportModal() {
   // Preset buttons
   PRESET_TEMPLATES.forEach(preset => {
     const btn = document.createElement('button');
-    btn.className = 'import-modal-btn';
+    btn.className = 'toggle-btn';
     btn.textContent = preset.label;
     btn.addEventListener('click', () => {
       closeImportModal();
