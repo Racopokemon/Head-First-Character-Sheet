@@ -18,7 +18,11 @@
             "footer": "Just another little TTRPG ruleset, by Ramin. "
         },
         "style": {
-            "font-family":"Segoe UI, Roboto, Arial, sans-serif",
+            "font-family":"Monaco, monospace",
+            "bg":"#d3cacf",
+            "box-bx":"#ece1e9",
+            "btn-bg":"#f5f5f5",
+            "points-label-bg":"#f5f5f5",
             "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
         },
 
@@ -32,13 +36,6 @@
             "Archetyp"
         ],
         "info_big": "Beschreibung",
-
-        "scales": [
-            {
-                "label": "(Lieblingszahl)",
-                "initial": 67
-            }
-        ],
 
         "show_subattributes": false,
         "show_success_levels": false,
