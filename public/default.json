@@ -21,7 +21,9 @@
             "footer": "Just another little TTRPG ruleset, by Ramin. ",
             "reconnecting": "Verbindungsaufbau...",
             "user_count_tooltip": "Online außerdem dabei",
-            "link_copied": "Link in die Zwischenablage kopiert :)"
+            "link_copied": "Link in die Zwischenablage kopiert :)",
+            "import_modal_info": "Wähle einen Charakterbogen aus, der geladen werden soll. Achtung: Der aktuelle Bogen geht verloren.",
+            "import_modal_upload": "Hochladen ..."
         },
         "style": {
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",

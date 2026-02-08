@@ -1,3 +1,9 @@
+const PRESET_TEMPLATES = [
+  { emoji: '⭐', lang: 'DE', label: 'Head First! (Default)', file: 'default.json' },
+  { emoji: '🌃', lang: 'DE', label: 'Neon Shadows', file: 'neon shadows.json' },
+  { emoji: '🏝️', lang: 'DE', label: 'Good Times Island', file: 'gti.json' },
+];
+
 let gmTemplate = null;
 let playerData = {};
 let editMode = false;
@@ -14,7 +20,7 @@ let shouldShowBgBtn = true; // Track if bg button should be shown for current JS
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
-  document.getElementById('import-btn').addEventListener('click', () => document.getElementById('file-input').click());
+  document.getElementById('import-btn').addEventListener('click', openImportModal);
   document.getElementById('file-input').addEventListener('change', handleFileImport);
   document.getElementById('export-btn').addEventListener('click', handleExport);
 
@@ -162,8 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
         applyImported(data);
       })
       .catch(err => {
-        console.error('Could not load default.json', err);
-        alert('Could not load default.json. Make sure that the file exists and the website is hosted on a server :)');
+        console.error('Could not load nosync json', err);
+        alert('Could not load the nosync json. Make sure that default.json exists, or any other file in you specified in the env variable DEFAULT_FILE.');
       });
   }
 });
@@ -1646,6 +1652,93 @@ function handleFileImport(e) {
   e.target.value = '';
 }
 
+function openImportModal() {
+  // Remove existing modal if any
+  const existing = document.getElementById('import-modal-overlay');
+  if (existing) existing.remove();
+
+  const loc = (gmTemplate && gmTemplate.localization) || {};
+  const infoText = loc.import_modal_info || 'Start from a new character sheet or upload your own. Be advised: This overrides the current sheet.';
+  const uploadLabel = loc.import_modal_upload || 'Upload ...';
+
+  const overlay = document.createElement('div');
+  overlay.id = 'import-modal-overlay';
+  overlay.className = 'import-modal-overlay';
+
+  const modal = document.createElement('div');
+  modal.className = 'import-modal';
+
+  const info = document.createElement('p');
+  info.className = 'import-modal-info';
+  info.textContent = infoText;
+  modal.appendChild(info);
+
+  const grid = document.createElement('div');
+  grid.className = 'import-modal-grid';
+
+  // Upload button
+  const uploadBtn = document.createElement('button');
+  uploadBtn.className = 'import-modal-btn upload';
+  uploadBtn.textContent = uploadLabel;
+  uploadBtn.addEventListener('click', () => {
+    closeImportModal();
+    document.getElementById('file-input').click();
+  });
+  grid.appendChild(uploadBtn);
+
+  // Preset buttons
+  PRESET_TEMPLATES.forEach(preset => {
+    const btn = document.createElement('button');
+    btn.className = 'import-modal-btn';
+    btn.textContent = preset.label;
+    btn.addEventListener('click', () => {
+      closeImportModal();
+      loadPresetTemplate(preset.file);
+    });
+    grid.appendChild(btn);
+  });
+
+  modal.appendChild(grid);
+  overlay.appendChild(modal);
+
+  // Close on overlay click (outside modal)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeImportModal();
+  });
+
+  // Close on Escape key
+  overlay._escHandler = (e) => {
+    if (e.key === 'Escape') closeImportModal();
+  };
+  document.addEventListener('keydown', overlay._escHandler);
+
+  document.body.appendChild(overlay);
+}
+
+function closeImportModal() {
+  const overlay = document.getElementById('import-modal-overlay');
+  if (!overlay) return;
+  document.removeEventListener('keydown', overlay._escHandler);
+  overlay.remove();
+}
+
+function loadPresetTemplate(filename) {
+  fetch('/' + encodeURIComponent(filename))
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to load template');
+      return res.json();
+    })
+    .then(json => {
+      applyImported(json);
+      if (window.syncModule && window.syncModule.isSyncEnabled()) {
+        window.syncModule.broadcastChange();
+      }
+    })
+    .catch(() => {
+      alert('Could not load template :(');
+    });
+}
+
 function handleDragOver(e) {
   e.preventDefault();
   e.stopPropagation();
@@ -1701,6 +1794,7 @@ function showDragOverlay() {
     const loc = gmTemplate && gmTemplate.localization ? gmTemplate.localization : {};
     overlay.textContent = loc.drop_file || 'Drop file here';
     document.body.appendChild(overlay);
+    closeImportModal();
   }
 }
 
