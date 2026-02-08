@@ -23,7 +23,7 @@
             "user_count_tooltip": "Online außerdem dabei",
             "link_copied": "Link in die Zwischenablage kopiert :)",
             "import_modal_info": "Starte von einer Vorlage oder einem eigenen Charakterbogen. Achtung: Das löscht den aktuellen Bogen.",
-            "import_modal_upload": "Hochladen ..."
+            "import_modal_upload": "Datei öffnen ..."
         },
         "style": {
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",

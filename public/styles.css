@@ -612,7 +612,7 @@ textarea::placeholder{color:var(--text-suggestion);}
   background: var(--box-bg);
   border-radius: 14px;
   padding: 28px 32px;
-  max-width: 480px;
+  max-width: 420px;
   width: 90%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   animation: modalSlideIn 0.2s ease-out;
@@ -622,7 +622,7 @@ textarea::placeholder{color:var(--text-suggestion);}
   to { opacity: 1; transform: scale(1); }
 }
 .import-modal-info {
-  font-size: 15px;
+  font-size: var(--text-size-normal);
   color: var(--text);
   margin: 0 0 20px 0;
   line-height: 1.45;
@@ -632,22 +632,19 @@ textarea::placeholder{color:var(--text-suggestion);}
   grid-template-columns: 1fr;
   gap: 10px;
 }
-/*
-.import-modal-btn {
-  padding: 12px 16px;
-  border: none;
-  border-radius: 8px;
-  background: var(--box-bg);
-  color: var(--text);
-  font-size: 15px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.15s;
+.import-modal-btn{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /*font-size: var(--text-size-infobox);*/
+  height: 48px;
 }
-.import-modal-btn:hover {
-  background: var(--btn-side-hover);
-  }*/
-.import-modal-btn{display: flex;}
-.import-modal-btn-upload{margin-bottom: 12px;}
+.import-modal-btn-upload{
+  /*font-size: var(--text-size-infobox);*/
+  height: 48px;
+  margin-bottom: 12px;
+}
+.import-modal-btn-spacer{flex: 1;}
+.import-modal-btn-emoji{font-size: 24px; padding-bottom: 2px;}
+/*.import-modal-btn-lang{}*/
   

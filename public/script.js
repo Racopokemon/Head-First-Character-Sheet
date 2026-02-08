@@ -1659,7 +1659,7 @@ function openImportModal() {
 
   const loc = (gmTemplate && gmTemplate.localization) || {};
   const infoText = loc.import_modal_info || 'Start from a new template or upload your own sheet. Be advised: This overrides the current sheet.';
-  const uploadLabel = loc.import_modal_upload || 'Upload ...';
+  const uploadLabel = loc.import_modal_upload || 'From file ...';
 
   const overlay = document.createElement('div');
   overlay.id = 'import-modal-overlay';
@@ -1688,10 +1688,15 @@ function openImportModal() {
 
   // Preset buttons
   PRESET_TEMPLATES.forEach(preset => {
-    const btn = document.createElement('button');
-    btn.className = 'toggle-btn import-modal-btn';
-    btn.textContent = preset.label;
-    btn.innerHTML = preset.emoji + '<span style="width:10px"></span>' + preset.label +  '<span style="flex:1"></span>' + preset.lang;
+    const btn = document.createElement('button'); btn.className = 'toggle-btn import-modal-btn';
+    const emoji = document.createElement('span'); emoji.className = 'import-modal-btn-emoji'; emoji.textContent = preset.emoji;
+    const spacer = document.createElement('span'); spacer.className = 'import-modal-btn-spacer';
+    const lang = document.createElement('span'); /*lang.className = 'import-modal-btn-lang';*/ lang.textContent = preset.lang;
+
+    btn.appendChild(emoji);
+    btn.append(preset.label);
+    btn.appendChild(spacer);
+    btn.appendChild(lang);
     btn.addEventListener('click', () => {
       closeImportModal();
       loadPresetTemplate(preset.file);
