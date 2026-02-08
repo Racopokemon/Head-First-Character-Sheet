@@ -1,0 +1,178 @@
+{
+    "set_by_gm": {
+        "localization": {
+            "title": "🏝️ Good Times Island 🏝️",
+            "subtitle_info": "Attributübersicht",
+            "btn_edit": "Bearbeiten",
+            "btn_compact": "Kompakt",
+            "btn_ec": "Erfolgsklassen",
+            "btn_import": "Charakterbogen importieren",
+            "btn_export": "Charakterbogen herunterladen",
+            "btn_print": "Zur Druckansicht",
+            "btn_info": "Erklärungen anzeigen",
+            "btn_crew": "Meine Crew anzeigen",
+            "btn_bg": "Meinen Background anzeigen",
+            "btn_pic": "Charakterbild anzeigen",
+            "btn_share": "Link teilen",
+            "btn_more": "Mehr ...",
+            "label_grundwerte": "Grundwerte",
+            "label_spezialisierung": "Spezialisierung",
+            "drop_file": "Datei importieren",
+            "footer": "Just another little TTRPG ruleset, by Ramin. ",
+            "reconnecting": "Verbindungsaufbau...",
+            "user_count_tooltip": "Online außerdem dabei",
+            "link_copied": "Link in die Zwischenablage kopiert :)",
+            "import_modal_info": "Starte von einer Vorlage oder einem eigenen Charakterbogen. Achtung: Das löscht den aktuellen Bogen.",
+            "import_modal_upload": "Datei öffnen ..."
+        },
+        "style": {
+            "font-family":"Segoe UI, Roboto, Arial, sans-serif",
+            "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
+        },
+        "deco_svg": "palms.svg",
+
+        "infopage": {
+            "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80 70 60 40 30 20, und der Char ist reif für die Insel! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40 30 30 20 20 10 (Bereich 10-40). Zusätzlich können dann 250 Punkte auf Spezialisierungen verteilt werden.",
+            "text_r": "Im Reiseprospekt steht, dass mit einem Stern (*) markierte Spezialitäten besonders geeignet sind, um eine gute Zeit auf der Good Times Island zu haben. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind immer willkommen! Mögliche Charakterkonzepte: ..."
+        },
+
+        "infos": [
+            "Name",
+            "Alter",
+            "Beruf"
+        ],
+        "info_big": "Beschreibung",
+
+        "scales": [
+            {
+                "label": "Glück",
+                "initial": 35
+            }
+        ],
+
+        "show_subattributes": true,
+        "show_success_levels": false,
+        "show_infopage": true,
+        "show_freetext_button": true,
+        "show_others_button": true,
+
+        "attribute_points": 150,
+        "sub_attribute_points": 250,
+        "attribute_points_min": 10, 
+        "attribute_points_max": 40, 
+        "sub_attribute_points_max": 80,
+
+        "freetexts": [
+            "Eigenschaften / sagt immer / ...",
+            "Inventar",
+            "Zustände"
+        ],
+        "other_players": [
+            "Char #1",
+            "Char #2",
+            "Char #3"
+        ],
+
+        "attributes": [
+            {
+                "name": "Miteinander",
+                "color": 1,
+                "column": 1,
+                "description": "'Positive' soziale Fähigkeiten; Empathie. Macht sympathisch, aber nicht 'stark'.",
+                "sub_attribute_suggestions": [
+                    "Menschenkenntnis",
+                    "Beruhigen",
+                    "Überreden",
+                    "(An)führen",
+                    "Ausstrahlung",
+                    "Schauspielen",
+                    "Diplomatie"
+                ]
+            },
+            {
+                "name": "Gegeneinander",
+                "color": 1,
+                "column": 1,
+                "description": "'Negative' soziale Fähigkeiten; bekommen, was man will. Resilienz, mentale Stärke.",
+                "sub_attribute_suggestions": [
+                    "Lügen",
+                    "Einschüchtern",
+                    "Manipulieren",
+                    "Feilschen",
+                    "Echauffieren",
+                    "Autorität",
+                    "Stabilität"
+                ]
+            },
+            {
+                "name": "Körper(bau)",
+                "color": 2,
+                "column": 2,
+                "description": "Stärke; genereller physischer Zustand & Belastbarkeit. Und Erscheinung.",
+                "sub_attribute_suggestions": [
+                    "Schwimmen",
+                    "Handgemenge",
+                    "Zechen",
+                    "Boxen",
+                    "Stichwaffen",
+                    "Laufen",
+                    "Aussehen",
+                    "Muskelkraft"
+                ]
+            },
+            {
+                "name": "Geschick",
+                "color": 2,
+                "column": 2,
+                "description": "Verbleibende körperliche Fähigkeiten, die nicht primär Stärke erfordern.",
+                "sub_attribute_suggestions": [
+                    "Ausweichen",
+                    "Schusswaffen",
+                    "Tanzen",
+                    "Singen",
+                    "Klavier",
+                    "Klettern",
+                    "Schleichen",
+                    "Verstecken",
+                    "Autofahren",
+                    "Mechanische Reparaturen",
+                    "Holzverarbeitung",
+                    "Elektrische Reparaturen"
+                ]
+            },
+            {
+                "name": "Scharfsinn",
+                "color": 3,
+                "column": 3,
+                "description": "Geistiges #1: Intelligenz & alles, was nur 'begrenzt' lernbar ist. Und Sinne.",
+                "sub_attribute_suggestions": [
+                    "Auffassungsgabe",
+                    "Orientierung",
+                    "Mathematik",
+                    "Logik",
+                    "Erinnerungsvermögen",
+                    "Horchen",
+                    "Adleraugen"
+                ]
+            },
+            {
+                "name": "Gelerntes",
+                "color": 3,
+                "column": 3,
+                "description": "Geistiges #2: Wissen; Bildung & Ausbildung. Auch Erziehung, Kultur ...",
+                "sub_attribute_suggestions": [
+                    "Chemie",
+                    "Latein",
+                    "High Society",
+                    "Okkultes",
+                    "Verkleiden",
+                    "Hacken",
+                    "Bibliotheksnutzung",
+                    "PC-Nutzung",
+                    "Schlösser knacken",
+                    "Social Media"
+                ]
+            }
+        ]
+    }
+}
