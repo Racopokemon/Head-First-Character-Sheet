@@ -38,6 +38,7 @@
 
   /* Border & input colors */
   --input-border: #ccc;
+  --input-bg: white;
 
   /* Button colors */
   --btn-text:#000;
@@ -102,7 +103,7 @@ h2{text-align:center;margin:-25px 0 var(--header-gap) 0;font-size:20px;color:var
 .box{border-radius:8px;background-color:var(--box-bg);}
 .label{color:var(--text-suggestion); font-style: italic; margin-bottom:1px;font-size: var(--text-size-descr);margin-left:-4px;margin-right:-1px;}
 .textareabox textarea{width:100%;flex:1;min-height:0;border:0;background:transparent;resize:none;}
-.box input[type="number"]{padding:6px;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600;font-size:var(--text-size-numbers);border:1px solid var(--input-border);}
+.box input[type="number"]{padding:6px;border-radius:6px;text-align:center;width:var(--number-width);font-weight:600;font-size:var(--text-size-numbers);border:1px solid var(--input-border);background:var(--input-bg);}
 textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: italic;}
 .info-single{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height)}
 .info-single input{width:100%;padding:6px;border:0;background:transparent;height:auto;}
