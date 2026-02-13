@@ -1517,13 +1517,29 @@ function renderFreetexts() {
 }
 
 function handleShare() {
+  // Check if sync is enabled
+  const isSyncMode = window.syncModule && window.syncModule.isSyncEnabled();
+
+  if (isSyncMode) {
+    // Sync mode: just copy the link
+    copyLinkToClipboard();
+  } else {
+    // No sync mode: upload first
+    handleUpload();
+  }
+}
+
+/**
+ * Copy current URL to clipboard and show toast
+ */
+function copyLinkToClipboard() {
   navigator.clipboard.writeText(window.location.hostname + window.location.pathname).then(() => {
     const loc = gmTemplate && gmTemplate.localization ? gmTemplate.localization : {};
     const toast = document.getElementById('toast');
     toast.textContent = loc.link_copied || 'Copied link to clipboard :)';
     toast.classList.add('visible');
     clearTimeout(toast._hideTimeout);
-    
+
     // Switch share button icon to copy icon
     const shareBtn = document.getElementById('share-btn');
     if (shareBtn) {
@@ -1534,10 +1550,10 @@ function handleShare() {
         copyIcon.style.display = '';
       }
     }
-    
+
     toast._hideTimeout = setTimeout(() => {
       toast.classList.remove('visible');
-      
+
       // Switch share button icon back to share icon
       const shareBtn = document.getElementById('share-btn');
       if (shareBtn) {
@@ -1550,6 +1566,199 @@ function handleShare() {
       }
     }, 1250);
   });
+}
+
+/**
+ * Generate a suggested sheet ID based on date and character name
+ * @returns {string}
+ */
+function generateSuggestedSheetId() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const datePrefix = `${year}-${month}-${day}`;
+
+  // Get character name from first info field
+  const nameInput = document.querySelector('input[data-info-index="0"]');
+  const charName = nameInput ? nameInput.value.trim() : '';
+
+  if (charName) {
+    // Sanitize character name: lowercase, remove /\., replace spaces with -
+    const sanitized = charName
+      .toLowerCase()
+      .replace(/[\s]+/g, '-')
+      .replace(/[/\\.]/g, '')
+      /*.replace(/[^a-z0-9\-_]/g, '');*/
+
+    return `${datePrefix}-${sanitized}`;
+  } else {
+    // No character name: use random 4-digit number
+    const random = Math.floor(1000 + Math.random() * 9000);
+    return `${datePrefix}-char-${random}`;
+  }
+}
+
+/**
+ * Sanitize user input for sheet ID
+ * @param {string} input
+ * @returns {string}
+ */
+function sanitizeSheetId(input) {
+  if (!input) return '';
+  return input
+    .trim()
+    .toLowerCase()
+    .replace(/[/\\.]/g, '');
+}
+
+/**
+ * Upload current sheet to server and navigate to sync URL
+ */
+async function handleUpload() {
+  const loc = gmTemplate && gmTemplate.localization ? gmTemplate.localization : {};
+
+  // Generate suggested sheet ID
+  const suggestion = generateSuggestedSheetId();
+
+  // Prompt user for sheet ID
+  const promptTitle = loc.upload_prompt_title || 'Under which link do you want to upload the sheet?';
+  const promptPlaceholder = loc.upload_prompt_placeholder || 'e.g. 2026-02-13-maxmustermann';
+
+  let userInput = prompt(`${promptTitle}\n\n${promptPlaceholder}`, suggestion);
+
+  // User cancelled
+  if (userInput === null) return;
+
+  // Sanitize input
+  const sheetId = sanitizeSheetId(userInput);
+
+  // Validate input
+  if (!sheetId || sheetId.length === 0 || sheetId.length > 64 || sheetId === 'nosync') {
+    alert(loc.upload_error_empty || 'Please enter a valid name.');
+    return;
+  }
+
+  // Show uploading overlay
+  if (window.syncModule) {
+    window.syncModule.showOverlay(loc.uploading || 'Uploading...', 'uploading-overlay');
+  }
+
+  // Collect current sheet data
+  const data = collectSheetDataForUpload(); //pretty sure this doesnt have to be its own function-.-
+
+  try {
+    // Send POST request
+    const response = await fetch('/upload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sheetId,
+        data
+      })
+    });
+
+    const result = await response.json();
+
+    // Hide uploading overlay
+    if (window.syncModule) {
+      window.syncModule.hideOverlay('uploading-overlay');
+    }
+
+    if (response.ok && result.success) {
+      // Success: copy link and navigate
+      const newUrl = window.location.origin + result.url;
+
+      // Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(newUrl);
+      } catch (e) {
+        console.warn('Could not copy to clipboard:', e);
+      }
+
+      // Navigate to new URL
+      window.location.href = result.url;
+    } else {
+      // Handle errors
+      if (result.error === 'exists') {
+        alert(loc.upload_error_exists || 'Error while uploading the sheet. A sheet already exists under this name.');
+      } else if (result.error === 'invalid') {
+        alert(loc.upload_error_general || 'Error uploading sheet.');
+      }
+    }
+  } catch (error) {
+    // Hide uploading overlay
+    if (window.syncModule) {
+      window.syncModule.hideOverlay('uploading-overlay');
+    }
+
+    console.error('Upload error:', error);
+    alert(loc.upload_error_general || 'Error uploading sheet.');
+  }
+}
+
+/**
+ * Collect current sheet data for upload
+ * Similar to handleExport but returns the object instead of downloading
+ * @returns {Object}
+ */
+function collectSheetDataForUpload() {
+  if (!gmTemplate) return null;
+
+  const out = { set_by_gm: gmTemplate, set_by_player: {} };
+
+  // infos array
+  const infoValues = [];
+  const infoInputs = document.querySelectorAll('input[data-info-index]');
+  infoInputs.forEach((input) => {
+    const idx = Number(input.dataset.infoIndex);
+    infoValues[idx] = input.value || '';
+  });
+  out.set_by_player.infos = infoValues;
+
+  // info_big
+  out.set_by_player.info_big = getValueByKey('info_big');
+
+  // freetexts array
+  const freetextValues = [];
+  const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
+  freetextInputs.forEach((ta) => {
+    const idx = Number(ta.dataset.freetextIndex);
+    freetextValues[idx] = ta.value || '';
+  });
+  out.set_by_player.freetexts = freetextValues;
+
+  // other_players array
+  const otherPlayerValues = [];
+  const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
+  otherPlayerInputs.forEach((ta) => {
+    const idx = Number(ta.dataset.otherPlayerIndex);
+    otherPlayerValues[idx] = ta.value || '';
+  });
+  out.set_by_player.other_players = otherPlayerValues;
+
+  // scales array
+  const scaleValues = [];
+  const scaleInputs = document.querySelectorAll('input[data-scale-index]');
+  scaleInputs.forEach((input) => {
+    const idx = Number(input.dataset.scaleIndex);
+    scaleValues[idx] = input.value || '';
+  });
+  out.set_by_player.scales = scaleValues;
+
+  // attributes from playerData
+  out.set_by_player.attributes = (playerData.attributes || []).map(a => ({
+    points: a.points || 0,
+    sub_attributes: a.sub_attributes || []
+  }));
+
+  // save visibility flags
+  out.set_by_player.crewVisible = crewVisible;
+  out.set_by_player.bgVisible = bgVisible;
+
+  return out;
 }
 
 function handleExport() {

@@ -23,7 +23,14 @@
             "user_count_tooltip": "Online außerdem dabei",
             "link_copied": "Link in die Zwischenablage kopiert :)",
             "import_modal_info": "Starte von einer Vorlage oder einem eigenen Charakterbogen. Achtung: Das löscht den aktuellen Bogen.",
-            "import_modal_upload": "Datei öffnen ..."
+            "import_modal_upload": "Datei öffnen ...",
+            "upload_prompt_title": "Unter welchem Link möchtest du den Bogen hochladen?",
+            "upload_prompt_placeholder": "z.B. 2026-02-13-maxmustermann",
+            "uploading": "Wird hochgeladen...",
+            "upload_success": "Bogen hochgeladen!",
+            "upload_error_exists": "Fehler beim Hochladen: Unter diesem Namen existiert bereits ein Bogen.",
+            "upload_error_empty": "Dieser Link funktioniert leider nicht. Versuche einen anderen.",
+            "upload_error_general": "Fehler beim Hochladen des Bogens."
         },
         "style": {
             "font-family":"Segoe UI, Roboto, Arial, sans-serif",

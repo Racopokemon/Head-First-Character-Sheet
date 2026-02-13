@@ -18,6 +18,9 @@ const io = new Server(httpServer, {
   }
 });
 
+// Parse JSON bodies
+app.use(express.json({ limit: '10mb' }));
+
 // Serve static files from public directory
 const publicPath = path.join(__dirname, '../public');
 app.use(express.static(publicPath));
@@ -31,6 +34,60 @@ app.get('/', (req, res) => {
 // Default file for nosync editor can be set by env variable (so providing your friends that one sheet is just one env away)
 app.get('/nosync-default.json', (req, res) => {
   res.sendFile(path.join(publicPath, config.defaultFile));
+});
+
+// Upload endpoint for creating a new synced sheet from nosync mode
+app.post('/upload', async (req, res) => {
+  const { sheetId: rawSheetId, data } = req.body;
+
+  // Validate request body
+  if (!rawSheetId || !data) {
+    return res.status(400).json({
+      error: 'invalid',
+      message: 'Missing sheetId or data'
+    });
+  }
+
+  // Import sheetBuffer functions
+  const { isValidSheetId, normalizeSheetId, computeGmHash } = require('./services/sheetBuffer');
+  const Sheet = require('./db/models/Sheet');
+
+  // Validate sheet ID
+  if (!isValidSheetId(rawSheetId))
+    return res.status(400).json({error: 'invalid', message: 'Invalid sheet ID format'});
+
+  // Normalize sheet ID (lowercase)
+  const sheetId = normalizeSheetId(rawSheetId);
+
+  // Check for reserved names
+  if (sheetId === 'nosync')
+    return res.status(400).json({error: 'reserved', message: 'This name is reserved'});
+
+  // Check if sheet already exists
+  try {
+    const existing = await Sheet.findOne({ sheetId });
+    if (existing) 
+      return res.status(409).json({error: 'exists', message: 'Sheet already exists'});
+
+    // Create new sheet
+    const gmHash = computeGmHash(data.set_by_gm);
+    const newSheet = new Sheet({
+      sheetId,
+      set_by_gm: data.set_by_gm,
+      set_by_player: data.set_by_player || {},
+      gmHash,
+      lastAccessed: new Date(),
+      createdAt: new Date()
+    });
+    await newSheet.save();
+    // Return success with the sheet URL
+    return res.status(200).json({success: true, sheetId, url: `/${sheetId}`
+    });
+  } catch (error) {
+    console.error('Error creating sheet:', error);
+    return res.status(500).json({error: 'server', message: 'Server error while creating sheet'
+    });
+  }
 });
 
 // Serve index.html for /nosync (explicit no-sync mode)

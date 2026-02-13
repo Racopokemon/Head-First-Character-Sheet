@@ -317,23 +317,28 @@ function debouncedBroadcast() {
 // UI Functions
 
 /**
- * Show reconnecting overlay
+ * Show an overlay with a custom message
+ * @param {string} message - The message to display
+ * @param {string} overlayId - ID for the overlay element (default: 'reconnecting-overlay')
  */
-function showReconnectingOverlay() {
-  let overlay = document.getElementById('reconnecting-overlay');
+function showOverlay(message, overlayId = 'reconnecting-overlay') {
+  let overlay = document.getElementById(overlayId);
   if (!overlay) {
     overlay = document.createElement('div');
-    overlay.id = 'reconnecting-overlay';
+    overlay.id = overlayId;
     overlay.className = 'reconnecting-overlay';
 
-    const loc = (typeof gmTemplate !== 'undefined' && gmTemplate && gmTemplate.localization) ? gmTemplate.localization : {};
     overlay.innerHTML = `
       <div class="reconnecting-content">
         <div class="reconnecting-spinner"></div>
-        <div class="reconnecting-text">${loc.reconnecting || 'Reconnecting...'}</div>
+        <div class="reconnecting-text">${message}</div>
       </div>
     `;
     document.body.appendChild(overlay);
+  } else {
+    // Update message if overlay already exists
+    const textEl = overlay.querySelector('.reconnecting-text');
+    if (textEl) textEl.textContent = message;
   }
   overlay.style.display = 'flex';
 
@@ -343,10 +348,11 @@ function showReconnectingOverlay() {
 }
 
 /**
- * Hide reconnecting overlay
+ * Hide an overlay
+ * @param {string} overlayId - ID for the overlay element (default: 'reconnecting-overlay')
  */
-function hideReconnectingOverlay() {
-  const overlay = document.getElementById('reconnecting-overlay');
+function hideOverlay(overlayId = 'reconnecting-overlay') {
+  const overlay = document.getElementById(overlayId);
   if (overlay) {
     overlay.style.display = 'none';
   }
@@ -354,6 +360,21 @@ function hideReconnectingOverlay() {
   // Re-enable interactions on main content
   const container = document.querySelector('.container');
   if (container) container.inert = false;
+}
+
+/**
+ * Show reconnecting overlay (legacy wrapper)
+ */
+function showReconnectingOverlay() {
+  const loc = (typeof gmTemplate !== 'undefined' && gmTemplate && gmTemplate.localization) ? gmTemplate.localization : {};
+  showOverlay(loc.reconnecting || 'Reconnecting...');
+}
+
+/**
+ * Hide reconnecting overlay (legacy wrapper)
+ */
+function hideReconnectingOverlay() {
+  hideOverlay();
 }
 
 /**
@@ -419,5 +440,7 @@ window.syncModule = {
   isSyncEnabled,
   isSyncOnline,
   collectCurrentState,
-  computeHash
+  computeHash,
+  showOverlay,
+  hideOverlay
 };
