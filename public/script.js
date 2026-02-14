@@ -1670,15 +1670,11 @@ async function handleUpload() {
       // Success: copy link and navigate
       const newUrl = window.location.origin + result.url;
 
-      // Copy to clipboard
-      try {
-        await navigator.clipboard.writeText(newUrl);
-      } catch (e) {
-        console.warn('Could not copy to clipboard:', e);
-      }
+      copyLinkToClipboard();
 
-      // Navigate to new URL
-      window.location.href = result.url;
+      // Navigate to new URL after short notice
+      window.setTimeout(() => {window.location.href = result.url;}, 1000);
+
     } else {
       // Handle errors
       if (result.error === 'exists') {
