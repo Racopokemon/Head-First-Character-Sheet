@@ -122,7 +122,9 @@ async function getSheet(sheetId) {
     stateToken: generateStateToken()
   };
   buffer.set(sheetId, newData);
-  dirtySheets.add(sheetId);
+
+  // Save immediately to DB to prevent duplicate uploads
+  await saveSheet(sheetId);
 
   return { data: newData, isNew: true };
 }
@@ -246,6 +248,71 @@ function getUserCount(sheetId) {
   return userCounts.get(sheetId) || 0;
 }
 
+/**
+ * Create a new sheet with custom data (for upload feature)
+ * Checks if sheet already exists in buffer OR database
+ * @param {string} sheetId
+ * @param {Object} data - Object with set_by_gm and set_by_player
+ * @returns {Promise<{success: boolean, error?: string, url?: string}>}
+ */
+async function createNewSheet(sheetId, data) {
+  // Validate sheet ID
+  if (!isValidSheetId(sheetId)) {
+    return { success: false, error: 'invalid' };
+  }
+
+  // Normalize sheet ID
+  const normalizedId = normalizeSheetId(sheetId);
+
+  // Check for reserved names
+  if (normalizedId === 'nosync' || normalizedId === '') {
+    return { success: false, error: 'reserved' };
+  }
+
+  // Check buffer first
+  if (buffer.has(normalizedId)) {
+    return { success: false, error: 'exists' };
+  }
+
+  // Check database
+  try {
+    const existing = await Sheet.findOne({ sheetId: normalizedId });
+    if (existing) {
+      return { success: false, error: 'exists' };
+    }
+
+    // Create new sheet
+    const gmHash = computeGmHash(data.set_by_gm);
+    const newSheet = new Sheet({
+      sheetId: normalizedId,
+      set_by_gm: data.set_by_gm,
+      set_by_player: data.set_by_player || {},
+      gmHash,
+      lastAccessed: new Date(),
+      createdAt: new Date()
+    });
+
+    await newSheet.save();
+
+    /* Neat, but ppl could (theoretically) cause memory leaks with this :D
+    // Also add to buffer for immediate availability
+    const bufferData = {
+      sheetId: normalizedId,
+      set_by_gm: data.set_by_gm,
+      set_by_player: data.set_by_player || {},
+      gmHash,
+      stateToken: generateStateToken()
+    };
+    buffer.set(normalizedId, bufferData);
+    */
+
+    return { success: true, url: `/${normalizedId}` };
+  } catch (error) {
+    console.error('Error creating new sheet:', error);
+    return { success: false, error: 'server' };
+  }
+}
+
 module.exports = {
   isValidSheetId,
   normalizeSheetId,
@@ -257,5 +324,6 @@ module.exports = {
   evictSheet,
   startSyncInterval,
   setUserCount,
-  getUserCount
+  getUserCount,
+  createNewSheet
 };

@@ -38,59 +38,44 @@ app.get('/nosync-default.json', (req, res) => {
 
 // Upload endpoint for creating a new synced sheet from nosync mode
 app.post('/upload', async (req, res) => {
-  const { sheetId: rawSheetId, data } = req.body;
+  const { sheetId, data } = req.body;
 
-  console.log('Requested to upload new sheet to /'+rawSheetId);
+  console.log('Requested to upload new sheet to /' + sheetId);
 
   // Validate request body
-  if (!rawSheetId || !data) {
+  if (!sheetId || !data) {
     return res.status(400).json({
       error: 'invalid',
       message: 'Missing sheetId or data'
     });
   }
 
-  // Import sheetBuffer functions
-  const { isValidSheetId, normalizeSheetId, computeGmHash } = require('./services/sheetBuffer');
-  const Sheet = require('./db/models/Sheet');
+  const { createNewSheet } = require('./services/sheetBuffer');
+  const result = await createNewSheet(sheetId, data);
 
-  // Validate sheet ID
-  if (!isValidSheetId(rawSheetId))
-    return res.status(400).json({error: 'invalid', message: 'Invalid sheet ID format'});
+  if (!result.success) {
+    // Handle different error types
+    const statusCodes = {
+      'invalid': 400,
+      'reserved': 400,
+      'exists': 409,
+      'server': 500
+    };
+    const status = statusCodes[result.error] || 500;
 
-  // Normalize sheet ID (lowercase)
-  const sheetId = normalizeSheetId(rawSheetId);
-
-  // Check for reserved names
-  if (sheetId === 'nosync')
-    return res.status(400).json({error: 'reserved', message: 'This name is reserved'});
-
-  // Check if sheet already exists
-  try {
-    const existing = await Sheet.findOne({ sheetId });
-    if (existing) 
-      return res.status(409).json({error: 'exists', message: 'Sheet already exists'});
-
-    // Create new sheet
-    const gmHash = computeGmHash(data.set_by_gm);
-    const newSheet = new Sheet({
-      sheetId,
-      set_by_gm: data.set_by_gm,
-      set_by_player: data.set_by_player || {},
-      gmHash,
-      lastAccessed: new Date(),
-      createdAt: new Date()
-    });
-    await newSheet.save();
-    // Return success with the sheet URL
-    console.log('Upload to /'+sheetId+' successful');
-    return res.status(200).json({success: true, sheetId, url: `/${sheetId}`
-    });
-  } catch (error) {
-    console.error('Error creating sheet:', error);
-    return res.status(500).json({error: 'server', message: 'Server error while creating sheet'
+    console.log(`Upload to /${sheetId} failed: ${result.error}`);
+    return res.status(status).json({
+      error: result.error,
+      message: `Failed to create sheet: ${result.error}`
     });
   }
+
+  console.log(`Upload to ${result.url} successful`);
+  return res.status(200).json({
+    success: true,
+    sheetId: sheetId.toLowerCase(),
+    url: result.url
+  });
 });
 
 // Serve index.html for /nosync (explicit no-sync mode)
