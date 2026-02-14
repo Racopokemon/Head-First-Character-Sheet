@@ -40,6 +40,8 @@ app.get('/nosync-default.json', (req, res) => {
 app.post('/upload', async (req, res) => {
   const { sheetId: rawSheetId, data } = req.body;
 
+  console.log('Requested to upload new sheet to /'+rawSheetId);
+
   // Validate request body
   if (!rawSheetId || !data) {
     return res.status(400).json({
@@ -81,6 +83,7 @@ app.post('/upload', async (req, res) => {
     });
     await newSheet.save();
     // Return success with the sheet URL
+    console.log('Upload to /'+sheetId+' successful');
     return res.status(200).json({success: true, sheetId, url: `/${sheetId}`
     });
   } catch (error) {

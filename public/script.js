@@ -1623,9 +1623,8 @@ async function handleUpload() {
 
   // Prompt user for sheet ID
   const promptTitle = loc.upload_prompt_title || 'Under which link do you want to upload the sheet?';
-  const promptPlaceholder = loc.upload_prompt_placeholder || 'e.g. 2026-02-13-maxmustermann';
 
-  let userInput = prompt(`${promptTitle}\n\n${promptPlaceholder}`, suggestion);
+  let userInput = prompt(promptTitle, suggestion);
 
   // User cancelled
   if (userInput === null) return;
@@ -1635,7 +1634,7 @@ async function handleUpload() {
 
   // Validate input
   if (!sheetId || sheetId.length === 0 || sheetId.length > 64 || sheetId === 'nosync') {
-    alert(loc.upload_error_empty || 'Please enter a valid name.');
+    alert(loc.upload_error_empty || 'Please enter another name, this one does not work :(');
     return;
   }
 
