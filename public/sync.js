@@ -217,69 +217,6 @@ function handleServerError(data) {
 }
 
 /**
- * Collect current state from the DOM and playerData
- * Extracted from handleExport logic
- * @returns {{set_by_gm: Object, set_by_player: Object}}
- */
-function collectCurrentState() {
-  if (!gmTemplate) return null;
-
-  const out = { set_by_gm: gmTemplate, set_by_player: {} };
-
-  // infos array
-  const infoValues = [];
-  const infoInputs = document.querySelectorAll('input[data-info-index]');
-  infoInputs.forEach((input) => {
-    const idx = Number(input.dataset.infoIndex);
-    infoValues[idx] = input.value || '';
-  });
-  out.set_by_player.infos = infoValues;
-
-  // info_big
-  const infoBigEl = document.querySelector('[data-key="info_big"]');
-  out.set_by_player.info_big = infoBigEl ? infoBigEl.value : '';
-
-  // freetexts array
-  const freetextValues = [];
-  const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
-  freetextInputs.forEach((ta) => {
-    const idx = Number(ta.dataset.freetextIndex);
-    freetextValues[idx] = ta.value || '';
-  });
-  out.set_by_player.freetexts = freetextValues;
-
-  // other_players array
-  const otherPlayerValues = [];
-  const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
-  otherPlayerInputs.forEach((ta) => {
-    const idx = Number(ta.dataset.otherPlayerIndex);
-    otherPlayerValues[idx] = ta.value || '';
-  });
-  out.set_by_player.other_players = otherPlayerValues;
-
-  // scales array
-  const scaleValues = [];
-  const scaleInputs = document.querySelectorAll('input[data-scale-index]');
-  scaleInputs.forEach((input) => {
-    const idx = Number(input.dataset.scaleIndex);
-    scaleValues[idx] = input.value || '';
-  });
-  out.set_by_player.scales = scaleValues;
-
-  // attributes from playerData
-  out.set_by_player.attributes = (playerData.attributes || []).map(a => ({
-    points: a.points || 0,
-    sub_attributes: a.sub_attributes || []
-  }));
-
-  // visibility flags
-  out.set_by_player.crewVisible = crewVisible;
-  out.set_by_player.bgVisible = bgVisible;
-
-  return out;
-}
-
-/**
  * Broadcast current state to other clients
  * Called after any local change
  */
@@ -292,7 +229,7 @@ function broadcastChange() {
   }
 
   broadcastTimeout = setTimeout(() => {
-    const state = collectCurrentState();
+    const state = window.mainModule?.collectCurrentState();
     if (!state) return;
 
     const newGmHash = computeHash(state.set_by_gm);
@@ -439,7 +376,6 @@ window.syncModule = {
   debouncedBroadcast,
   isSyncEnabled,
   isSyncOnline,
-  collectCurrentState,
   computeHash,
   showOverlay,
   hideOverlay

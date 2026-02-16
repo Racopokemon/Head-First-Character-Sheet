@@ -1644,7 +1644,7 @@ async function handleUpload() {
   }
 
   // Collect current sheet data
-  const data = collectSheetDataForUpload(); //pretty sure this doesnt have to be its own function-.-
+  const data = collectCurrentState();
 
   try {
     // Send POST request
@@ -1697,120 +1697,9 @@ async function handleUpload() {
   }
 }
 
-/**
- * Collect current sheet data for upload
- * Similar to handleExport but returns the object instead of downloading
- * @returns {Object}
- */
-function collectSheetDataForUpload() {
-  if (!gmTemplate) return null;
-
-  const out = { set_by_gm: gmTemplate, set_by_player: {} };
-
-  // infos array
-  const infoValues = [];
-  const infoInputs = document.querySelectorAll('input[data-info-index]');
-  infoInputs.forEach((input) => {
-    const idx = Number(input.dataset.infoIndex);
-    infoValues[idx] = input.value || '';
-  });
-  out.set_by_player.infos = infoValues;
-
-  // info_big
-  out.set_by_player.info_big = getValueByKey('info_big');
-
-  // freetexts array
-  const freetextValues = [];
-  const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
-  freetextInputs.forEach((ta) => {
-    const idx = Number(ta.dataset.freetextIndex);
-    freetextValues[idx] = ta.value || '';
-  });
-  out.set_by_player.freetexts = freetextValues;
-
-  // other_players array
-  const otherPlayerValues = [];
-  const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
-  otherPlayerInputs.forEach((ta) => {
-    const idx = Number(ta.dataset.otherPlayerIndex);
-    otherPlayerValues[idx] = ta.value || '';
-  });
-  out.set_by_player.other_players = otherPlayerValues;
-
-  // scales array
-  const scaleValues = [];
-  const scaleInputs = document.querySelectorAll('input[data-scale-index]');
-  scaleInputs.forEach((input) => {
-    const idx = Number(input.dataset.scaleIndex);
-    scaleValues[idx] = input.value || '';
-  });
-  out.set_by_player.scales = scaleValues;
-
-  // attributes from playerData
-  out.set_by_player.attributes = (playerData.attributes || []).map(a => ({
-    points: a.points || 0,
-    sub_attributes: a.sub_attributes || []
-  }));
-
-  // save visibility flags
-  out.set_by_player.crewVisible = crewVisible;
-  out.set_by_player.bgVisible = bgVisible;
-
-  return out;
-}
-
 function handleExport() {
-  if (!gmTemplate) return alert('No sheet loaded to export');
-  const out = { set_by_gm: gmTemplate, set_by_player: {} };
-
-  // infos array
-  const infoValues = [];
-  const infoInputs = document.querySelectorAll('input[data-info-index]');
-  infoInputs.forEach((input) => {
-    const idx = Number(input.dataset.infoIndex);
-    infoValues[idx] = input.value || '';
-  });
-  out.set_by_player.infos = infoValues;
-
-  // info_big
-  out.set_by_player.info_big = getValueByKey('info_big');
-
-  // freetexts array
-  const freetextValues = [];
-  const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
-  freetextInputs.forEach((ta) => {
-    const idx = Number(ta.dataset.freetextIndex);
-    freetextValues[idx] = ta.value || '';
-  });
-  out.set_by_player.freetexts = freetextValues;
-
-  // other_players array
-  const otherPlayerValues = [];
-  const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
-  otherPlayerInputs.forEach((ta) => {
-    const idx = Number(ta.dataset.otherPlayerIndex);
-    otherPlayerValues[idx] = ta.value || '';
-  });
-  out.set_by_player.other_players = otherPlayerValues;
-
-  // scales array
-  const scaleValues = [];
-  const scaleInputs = document.querySelectorAll('input[data-scale-index]');
-  scaleInputs.forEach((input) => {
-    const idx = Number(input.dataset.scaleIndex);
-    scaleValues[idx] = input.value || '';
-  });
-  out.set_by_player.scales = scaleValues;
-
-  // attributes from playerData
-  out.set_by_player.attributes = (playerData.attributes || []).map(a => ({
-    points: a.points || 0,
-    sub_attributes: a.sub_attributes || []
-  }));
-
-  // save visibility flags
-  out.set_by_player.crewVisible = crewVisible;
-  out.set_by_player.bgVisible = bgVisible;
+  const out = collectCurrentState();
+  if (!out) return alert('Error while exporting sheet: Could not collect sheet data :(');
 
   const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -1826,7 +1715,7 @@ function handleExport() {
   let name = (infoValues[0] || 'character').toString().trim();
   // sanitize name to safe filename
   name = name.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_\-]/g,'');
-  a.href = url; a.download = `${y}_${mo}_${d}-${hh}_${mm}_${name}.char`;
+  a.href = url; a.download = `${y}_${mo}_${d}-${hh}_${mm}_${name}.json`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
 }
@@ -2358,3 +2247,68 @@ function setInputValue(key, value) {
   if (!el) return;
   el.value = value;
 }
+
+/**
+ * Collect current state from the DOM and playerData
+ * Extracted from handleExport logic
+ * @returns {{set_by_gm: Object, set_by_player: Object}}
+ */
+function collectCurrentState() {
+  if (!gmTemplate) return null;
+
+  const out = { set_by_gm: gmTemplate, set_by_player: {} };
+
+  // infos array
+  const infoValues = [];
+  const infoInputs = document.querySelectorAll('input[data-info-index]');
+  infoInputs.forEach((input) => {
+    const idx = Number(input.dataset.infoIndex);
+    infoValues[idx] = input.value || '';
+  });
+  out.set_by_player.infos = infoValues;
+
+  // info_big
+  const infoBigEl = document.querySelector('[data-key="info_big"]');
+  out.set_by_player.info_big = infoBigEl ? infoBigEl.value : '';
+
+  // freetexts array
+  const freetextValues = [];
+  const freetextInputs = document.querySelectorAll('textarea[data-freetext-index]');
+  freetextInputs.forEach((ta) => {
+    const idx = Number(ta.dataset.freetextIndex);
+    freetextValues[idx] = ta.value || '';
+  });
+  out.set_by_player.freetexts = freetextValues;
+
+  // other_players array
+  const otherPlayerValues = [];
+  const otherPlayerInputs = document.querySelectorAll('textarea[data-other-player-index]');
+  otherPlayerInputs.forEach((ta) => {
+    const idx = Number(ta.dataset.otherPlayerIndex);
+    otherPlayerValues[idx] = ta.value || '';
+  });
+  out.set_by_player.other_players = otherPlayerValues;
+
+  // scales array
+  const scaleValues = [];
+  const scaleInputs = document.querySelectorAll('input[data-scale-index]');
+  scaleInputs.forEach((input) => {
+    const idx = Number(input.dataset.scaleIndex);
+    scaleValues[idx] = input.value || '';
+  });
+  out.set_by_player.scales = scaleValues;
+
+  // attributes from playerData
+  out.set_by_player.attributes = (playerData.attributes || []).map(a => ({
+    points: a.points || 0,
+    sub_attributes: a.sub_attributes || []
+  }));
+
+  // visibility flags
+  out.set_by_player.crewVisible = crewVisible;
+  out.set_by_player.bgVisible = bgVisible;
+
+  return out;
+}
+
+window.mainModule = {collectCurrentState};
