@@ -1712,7 +1712,7 @@ function handleExport() {
   const d = pad(now.getDate());
   const hh = pad(now.getHours());
   const mm = pad(now.getMinutes());
-  let name = (infoValues[0] || 'character').toString().trim();
+  let name = (out.set_by_player.infos[0] || 'character').toString().trim();
   // sanitize name to safe filename
   name = name.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_\-]/g,'');
   a.href = url; a.download = `${y}_${mo}_${d}-${hh}_${mm}_${name}.json`;
