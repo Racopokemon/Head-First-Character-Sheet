@@ -1522,7 +1522,7 @@ function handleShare() {
 
   if (isSyncMode) {
     // Sync mode: just copy the link
-    copyLinkToClipboard();
+    copyLinkToClipboard(window.location.hostname + window.location.pathname);
   } else {
     // No sync mode: upload first
     handleUpload();
@@ -1532,8 +1532,8 @@ function handleShare() {
 /**
  * Copy current URL to clipboard and show toast
  */
-function copyLinkToClipboard() {
-  navigator.clipboard.writeText(window.location.hostname + window.location.pathname).then(() => {
+function copyLinkToClipboard(link) {
+  navigator.clipboard.writeText(link).then(() => {
     const loc = gmTemplate && gmTemplate.localization ? gmTemplate.localization : {};
     const toast = document.getElementById('toast');
     toast.textContent = loc.link_copied || 'Copied link to clipboard :)';
@@ -1667,10 +1667,7 @@ async function handleUpload() {
     }
 
     if (response.ok && result.success) {
-      // Success: copy link and navigate
-      const newUrl = window.location.origin + result.url;
-
-      copyLinkToClipboard();
+      copyLinkToClipboard(window.location.origin + result.url);
 
       // Clear the flag to prevent beforeunload confirmation during redirect
       hasEnteredEditMode = false;
