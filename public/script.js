@@ -1672,6 +1672,9 @@ async function handleUpload() {
 
       copyLinkToClipboard();
 
+      // Clear the flag to prevent beforeunload confirmation during redirect
+      hasEnteredEditMode = false;
+
       // Navigate to new URL after short notice
       window.setTimeout(() => {window.location.href = result.url;}, 1000);
 
