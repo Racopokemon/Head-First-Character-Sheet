@@ -144,3 +144,6 @@ Elements use `data-*` attributes for efficient querying:
 - `data-info-index`, `data-scale-index`, `data-freetext-index`
 - `data-attr-index`, `data-attr-label`
 - `data-sub-input`, `data-sub-input-val`, `data-sub-label`
+
+## Validation & Testing
+*Please do not* try to run this as a coding agent to verify the changes you made, youre dependent on MongoDB and you'll just waste tokens :D A quick re-read entirely suffices, this is just a hobby project and I'll review and test the changes you made myself :)
