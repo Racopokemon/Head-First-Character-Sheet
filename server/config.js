@@ -5,5 +5,5 @@ module.exports = {
   port: parseInt(process.env.PORT, 10) || 3000,
   bufferSyncInterval: parseInt(process.env.BUFFER_SYNC_INTERVAL, 10) || 5, // minutes
   cleanupDays: parseInt(process.env.CLEANUP_DAYS, 10) || 30, // days
-  defaultFile: process.env.DEFAULT_FILE || 'default.json' //only nosync mode (always default.json for synced links)
+  defaultFile: process.env.DEFAULT_FILE || 'default.json' //synced and no-sync
 };

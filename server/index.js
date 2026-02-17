@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 
-// Default file for nosync editor can be set by env variable (so providing your friends that one sheet is just one env away)
+// Default file can be set by env variable (so providing your friends that one sheet is just one env away)
 app.get('/nosync-default.json', (req, res) => {
   res.sendFile(path.join(publicPath, config.defaultFile));
 });

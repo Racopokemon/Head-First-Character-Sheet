@@ -62,16 +62,16 @@ function computeGmHash(setByGm) {
 }
 
 /**
- * Load default.json template
+ * Load default template (can be specified in env)
  * @returns {Object}
  */
 function loadDefaultTemplate() {
   try {
-    const defaultPath = path.join(__dirname, '../../public/default.json');
+    const defaultPath = path.join(__dirname, '../../public/' + config.defaultFile);
     const content = fs.readFileSync(defaultPath, 'utf-8');
     return JSON.parse(content);
   } catch (error) {
-    console.error('Error loading default.json:', error);
+    console.error('Error loading starting file:', error);
     // Return minimal default if file not found
     return {
       set_by_gm: {

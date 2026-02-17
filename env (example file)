@@ -8,7 +8,7 @@ MONGODB_URI - copy-paste the link (including your admin password) from the mongo
 PORT - well
 BUFFER_SYNC_INTERVAL - time in minutes before sheets are backuped to the db (they are always backed up once the last user closes their tab)
 CLEANUP_DAYS - remove sheets not accessed after so many days
-DEFAULT_FILE - File to fetch for new sheets (offline only, online is always default.json)
+DEFAULT_FILE - File to fetch for new sheets (online & offline)
 
 
 MONGODB_URI=mongodb://localhost:27017/headfirst
