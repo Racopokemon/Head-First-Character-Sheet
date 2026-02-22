@@ -1753,9 +1753,6 @@ function openImportModal() {
   const loc = (gmTemplate && gmTemplate.localization) || {};
   const infoText = loc.import_modal_info || 'Start from a new template or upload your own sheet. Be advised: This overrides the current sheet.';
   const uploadLabel = loc.import_modal_upload || 'From file ...';
-  const confirmText = window.syncModule?.isSyncEnabled() ? 
-    loc.import_confirm_online || 'Please confirm that you want to override the current sheet at its current link on the server' :
-    loc.import_confirm_offline || 'Please confirm that you want to override the current sheet.';
 
   const overlay = document.createElement('div');
   overlay.id = 'import-modal-overlay';
@@ -1779,7 +1776,7 @@ function openImportModal() {
   uploadBtn.addEventListener('click', () => {
     closeImportModal(noAnimation=true);
     window.setTimeout(() => {
-      if (!confirm(confirmText)) return;
+      if (!confirm(getLoadConfirmationText())) return;
       document.getElementById('file-input').click();
     }, 0);
     
@@ -1800,7 +1797,7 @@ function openImportModal() {
     btn.addEventListener('click', () => {
       closeImportModal(noAnimation=true);
       window.setTimeout(() => {
-        if (!confirm(confirmText)) return;
+        if (!confirm(getLoadConfirmationText())) return;
         loadPresetTemplate(preset.file);
       }, 0);
     });
@@ -1822,6 +1819,14 @@ function openImportModal() {
   document.addEventListener('keydown', overlay._escHandler);
 
   document.body.appendChild(overlay);
+}
+
+function getLoadConfirmationText() {
+    const loc = (gmTemplate && gmTemplate.localization) || {};
+    return window.syncModule?.isSyncEnabled() ? 
+    loc.import_confirm_online || 'Please confirm that you want to override the current sheet at its current link on the server' :
+    loc.import_confirm_offline || 'Please confirm that you want to override the current sheet.';
+
 }
 
 function closeImportModal(noAnimation=false) {
@@ -1888,6 +1893,7 @@ function handleDrop(e) {
   reader.onload = ev => {
     try {
       const json = JSON.parse(ev.target.result);
+      if (!confirm(getLoadConfirmationText())) return;
       applyImported(json);
       // Broadcast change to other clients if sync is enabled
       if (window.syncModule && window.syncModule.isSyncEnabled()) {
