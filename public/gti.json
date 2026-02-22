@@ -23,6 +23,7 @@
             "user_count_tooltip": "Online außerdem dabei",
             "link_copied": "Link in die Zwischenablage kopiert :)",
             "import_modal_info": "Starte von einer Vorlage oder einem eigenen Charakterbogen. Achtung: Das löscht den aktuellen Bogen.",
+            "import_confirm": "Bist du dir sicher? Dies überschreibt den aktuellen Bogen!",
             "import_modal_upload": "Datei öffnen ...",
             "upload_prompt_title": "Unter welchem Link möchtest du den Bogen hochladen?",
             "uploading": "Wird hochgeladen...",
@@ -38,13 +39,13 @@
 
         "infopage": {
             "text_l": "Fürs schnelle Spiel einfach 300 Punkte auf die Attribute verteilen, z.B. 80 70 60 40 30 20, und der Char ist reif für die Insel! Im Bereich 10-80 bleiben. Falls die Gruppe ihre Skills feiner ausarbeiten möchte, verteilt sie nur 150 Punkte auf die Attribute, z.B. 40 30 30 20 20 10 (Bereich 10-40). Zusätzlich können dann 250 Punkte auf Spezialisierungen verteilt werden.",
-            "text_r": "Im Reiseprospekt steht, dass mit einem Stern (*) markierte Spezialisierungen besonders geeignet sind, um eine gute Zeit auf der Good Times Island zu haben. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind immer willkommen! Mögliche Charakterkonzepte: ..."
+            "text_r": "Im Reiseprospekt steht, dass mit einem Stern (*) markierte Spezialisierungen besonders geeignet sind, um eine gute Zeit auf der Good Times Island zu haben. Alle hier angegebenen Spezialisierungen sind nur Vorschläge und eigene Skills sind immer willkommen!"
         },
 
         "infos": [
             "Name",
-            "Alter",
-            "Beruf"
+            "Beruf",
+            "Alter"
         ],
         "info_big": "Beschreibung",
 
@@ -68,7 +69,7 @@
         "sub_attribute_points_max": 80,
 
         "freetexts": [
-            "Zwei ungewöhnliche Gegenstände, die ich auf GTI mitnehme:",
+            "Zwei spezielle Gegenstände, die ich auf GTI mitnehme:",
             "Warum ich nach GTI fliege (obwohl ich gar nicht unbedingt stinkreich bin):",
             "Warum ich nicht nur einen Chilligen auf GTI machen werde:"
         ],
