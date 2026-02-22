@@ -1777,7 +1777,7 @@ function openImportModal() {
   uploadBtn.className = 'toggle-btn import-modal-btn-upload';
   uploadBtn.textContent = uploadLabel;
   uploadBtn.addEventListener('click', () => {
-    closeImportModal();
+    closeImportModal(noAnimation=true);
     window.setTimeout(() => {
       if (!confirm(confirmText)) return;
       document.getElementById('file-input').click();
@@ -1798,7 +1798,7 @@ function openImportModal() {
     btn.appendChild(spacer);
     btn.appendChild(lang);
     btn.addEventListener('click', () => {
-      closeImportModal();
+      closeImportModal(noAnimation=true);
       window.setTimeout(() => {
         if (!confirm(confirmText)) return;
         loadPresetTemplate(preset.file);
@@ -1824,11 +1824,19 @@ function openImportModal() {
   document.body.appendChild(overlay);
 }
 
-function closeImportModal() {
+function closeImportModal(noAnimation=false) {
   const overlay = document.getElementById('import-modal-overlay');
   if (!overlay) return;
+  if (overlay.classList.contains('closing')) return; // Already closing
   document.removeEventListener('keydown', overlay._escHandler);
-  overlay.remove();
+  if (noAnimation) {
+    overlay.remove();
+  } else {
+    overlay.classList.add('closing');
+    overlay.addEventListener('animationend', () => {
+      overlay.remove();
+    }, { once: true });
+  }
 }
 
 function loadPresetTemplate(filename) {
