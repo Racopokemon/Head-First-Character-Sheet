@@ -1753,7 +1753,9 @@ function openImportModal() {
   const loc = (gmTemplate && gmTemplate.localization) || {};
   const infoText = loc.import_modal_info || 'Start from a new template or upload your own sheet. Be advised: This overrides the current sheet.';
   const uploadLabel = loc.import_modal_upload || 'From file ...';
-  const confirmText = loc.import_confirm || 'Please confirm that you want to override the current sheet.';
+  const confirmText = window.syncModule?.isSyncEnabled() ? 
+    loc.import_confirm_online || 'Please confirm that you want to override the current sheet at its current link on the server' :
+    loc.import_confirm_offline || 'Please confirm that you want to override the current sheet.';
 
   const overlay = document.createElement('div');
   overlay.id = 'import-modal-overlay';
@@ -1775,9 +1777,12 @@ function openImportModal() {
   uploadBtn.className = 'toggle-btn import-modal-btn-upload';
   uploadBtn.textContent = uploadLabel;
   uploadBtn.addEventListener('click', () => {
-    if (!confirm(confirmText)) return;
     closeImportModal();
-    document.getElementById('file-input').click();
+    window.setTimeout(() => {
+      if (!confirm(confirmText)) return;
+      document.getElementById('file-input').click();
+    }, 0);
+    
   });
   grid.appendChild(uploadBtn);
 
@@ -1793,9 +1798,11 @@ function openImportModal() {
     btn.appendChild(spacer);
     btn.appendChild(lang);
     btn.addEventListener('click', () => {
-      if (!confirm(confirmText)) return;
       closeImportModal();
-      loadPresetTemplate(preset.file);
+      window.setTimeout(() => {
+        if (!confirm(confirmText)) return;
+        loadPresetTemplate(preset.file);
+      }, 0);
     });
     grid.appendChild(btn);
   });
