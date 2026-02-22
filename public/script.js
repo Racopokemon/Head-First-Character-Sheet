@@ -370,7 +370,7 @@ function applyLocalization() {
 
   // Set footer text
   const footerText = document.getElementById('footer-text');
-  if (footerText) footerText.textContent = loc.footer || 'Just another little TTRPG ruleset, by Ramin.';
+  if (footerText) footerText.textContent = loc.footer || 'A little collaborative character sheet, by Ramin. ';
 
   // Set subtitle text
   const subtitleEl = document.getElementById('subtitle');
