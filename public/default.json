@@ -155,7 +155,8 @@
                     "Autofahren",
                     "Mechanische Reparaturen",
                     "Holzverarbeitung",
-                    "Elektrische Reparaturen"
+                    "Elektrische Reparaturen",
+                    "Werfen"
                 ]
             },
             {
@@ -188,7 +189,11 @@
                     "Bibliotheksnutzung",
                     "PC-Nutzung",
                     "Schlösser knacken",
-                    "Social Media"
+                    "Social Media",
+                    "Überlebenstechniken",
+                    "Biologie", 
+                    "Spurensuche",
+                    "Medizin"
                 ]
             }
         ]
