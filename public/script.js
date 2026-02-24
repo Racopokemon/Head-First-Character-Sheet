@@ -2196,8 +2196,8 @@ function applyImported(json, options = {}) {
     // attributes array - store in playerData and re-render
     if (Array.isArray(sp.attributes)) {
       playerData.attributes = sp.attributes.map(a => ({
-        points: a.points || 0,
-        sub_attributes: a.sub_attributes || []
+        points: a?.points || 0,
+        sub_attributes: a?.sub_attributes || []
       }));
     }
 
