@@ -2185,13 +2185,11 @@ function applyImported(json, options = {}) {
     }
 
     // fill scales array
-    if (Array.isArray(sp.scales)) {
-      const scaleInputs = document.querySelectorAll('input[data-scale-index]');
-      scaleInputs.forEach((input) => {
-        const idx = Number(input.dataset.scaleIndex);
-        input.value = sp.scales[idx] || '';
-      });
-    }
+    const scaleInputs = document.querySelectorAll('input[data-scale-index]');
+    scaleInputs.forEach((input) => {
+      const idx = Number(input.dataset.scaleIndex);
+      input.value = (sp.scales ? sp.scales[idx] : null) || gmTemplate.scales[idx]?.initial || '';
+    });
 
     // attributes array - store in playerData and re-render
     if (Array.isArray(sp.attributes)) {
