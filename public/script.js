@@ -2,6 +2,7 @@ const PRESET_TEMPLATES = [
   { emoji: '⭐', lang: '🇩🇪', label: 'Head First! (Default)', file: 'default.json' },
   { emoji: '🌃', lang: '🇩🇪', label: 'Neon Shadows', file: 'neon shadows.json' },
   { emoji: '🏝️', lang: '🇩🇪', label: 'Good Times Island', file: 'gti.json' },
+  { emoji: '🔎', lang: '🇩🇪', label: 'Private Eye (kinda)', file: 'private eye.json' },
 ];
 
 let gmTemplate = null;
