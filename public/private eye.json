@@ -18,7 +18,7 @@
             "label_grundwerte": "Grundwerte",
             "label_spezialisierung": "Spezialisierung",
             "drop_file": "Datei importieren",
-            "footer": "A little collaborative character sheet, by Ramin. ",
+            "footer": "A little collaborative character sheet. ",
             "reconnecting": "Verbindungsaufbau...",
             "user_count_tooltip": "Online außerdem dabei",
             "link_copied": "Link in die Zwischenablage kopiert :)",
@@ -47,7 +47,7 @@
             "Name",
             "Beruf"
         ],
-        "info_big": "Beschreibung",
+        "info_big": "Charakterbeschreibung + Persönlicher Gegenstand",
 
         "scales": [
             {
