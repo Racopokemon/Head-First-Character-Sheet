@@ -3,6 +3,7 @@ const PRESET_TEMPLATES = [
   { emoji: '🌃', lang: '🇩🇪', label: 'Neon Shadows', file: 'neon shadows.json' },
   { emoji: '🏝️', lang: '🇩🇪', label: 'Good Times Island', file: 'gti.json' },
   { emoji: '🔎', lang: '🇩🇪', label: 'Private Eye (kinda)', file: 'private eye.json' },
+  { emoji: '🇸🇪', lang: '🇩🇪', label: 'Tales from the loop', file: 'tftl.json' },
 ];
 
 let gmTemplate = null;

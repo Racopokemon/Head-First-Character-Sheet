@@ -5,10 +5,7 @@ The idea that sets this one apart from other ones is its two-staged approach, st
 
 The character sheet may be customized by the gm to fit their needs: The localization, name and number of skills etc. can be set beforehand, by modifying a downloaded .json file and only sending the `set_by_gm` part back to the players. 
 
-Right now, I'm hosting it [here](https://racopokemon.github.io/Head-First-Character-Sheet/), feel free to try it :)
-
-
-
+Right now, I'm hosting it [here](https://head-first.onrender.com/), feel free to try it :)
 
 
 (This has to be fixed at some point)

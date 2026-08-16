@@ -1,0 +1,145 @@
+{
+    "set_by_gm": {
+        "localization": {
+            "title": "Tales From The Loop",
+            "subtitle_info": "Attributübersicht",
+            "btn_edit": "Bearbeiten",
+            "btn_compact": "Kompakt",
+            "btn_ec": "Erfolgsklassen",
+            "btn_import": "Charakterbogen laden",
+            "btn_export": "Charakterbogen herunterladen",
+            "btn_print": "Zur Druckansicht",
+            "btn_info": "Erklärungen anzeigen",
+            "btn_crew": "Meine Freunde anzeigen",
+            "btn_bg": "Meinen Background anzeigen",
+            "btn_pic": "Charakterbild anzeigen",
+            "btn_share": "Link teilen",
+            "btn_more": "Mehr ...",
+            "label_grundwerte": "Grundwerte",
+            "label_spezialisierung": "Spezialisierung",
+            "drop_file": "Datei importieren",
+            "footer": "© 1984, Riksenergi. ",
+            "reconnecting": "Verbindungsaufbau...",
+            "user_count_tooltip": "Online außerdem dabei",
+            "link_copied": "Link in die Zwischenablage kopiert :)",
+            "import_modal_info": "Starte von einer Vorlage oder einem eigenen Charakterbogen. Achtung: Das löscht den aktuellen Bogen.",
+            "import_modal_upload": "Datei öffnen ...",
+            "import_confirm_offline": "Dies überschreibt den aktuellen Bogen! Bist du dir sicher?",
+            "import_confirm_online": "Dies überschreibt den Bogen unter diesem Link! Bist du dir sicher?",
+            "upload_prompt_title": "Unter welchem Link möchtest du den Bogen hochladen?",
+            "uploading": "Wird hochgeladen...",
+            "upload_error_exists": "Fehler beim Hochladen: Unter diesem Namen existiert bereits ein Bogen.",
+            "upload_error_empty": "Dieser Link funktioniert leider nicht. Versuche es mit einen anderen :)",
+            "upload_error_general": "Fehler beim Hochladen des Bogens."
+        },
+        "style": {
+            "font-family":"Segoe UI, Roboto, Arial, sans-serif",
+            "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
+        },
+        "deco_svg": null,
+
+        "infopage": {
+            "text_l": "1) Wähle einen Archetypen und notiere seine Schlüsselfähigkeiten. 2) Wähle ein Alter von 10-15. 3) Verteile so viele Punkte auf die Attribute, wie du alt bist. 4) Dein Glück ist 15 minus dein Alter. 5) Verteile 10 Subattributspunkte. Schlüsselfähigkeiten bis zu 3 Punkte, der Rest max 1 Punkt.",
+            "text_r": "Proben: Würfel so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen, nach dem Wurf. Ikonischer Gegenstand: +2 Würfel. Jede der vier Einschränkungen gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe. Alle Einschränkungen werden in Szene mit Anker oder im Geheimversteck geheilt."
+        },
+
+        "infos": [
+            "Name",
+            "Archetyp",
+            "Alter"
+        ],
+        "info_big": "Details",
+
+        "scales": [
+            {
+                "label": "Glück",
+                "initial": 5
+            },
+            {
+                "label": "Aufgebracht (-1)",
+                "initial": 0,
+                "tick": true
+            },
+            {
+                "label": "Verängstigt (-1)",
+                "initial": 0,
+                "tick": true
+            },
+            {
+                "label": "Erschöpft (-1)",
+                "initial": 0,
+                "tick": true
+            },
+            {
+                "label": "Verletzt (-1)",
+                "initial": 0,
+                "tick": true
+            },
+            {
+                "label": "Gebrochen (-∞)",
+                "initial": 0,
+                "tick": true
+            }
+        ],
+
+        "show_subattributes": true,
+        "show_success_levels": false,
+        "show_infopage": true,
+        "show_freetext_button": true,
+        "show_others_button": true,
+
+        "attribute_points": 15,
+        "sub_attribute_points": 10,
+        "attribute_points_min": 1, 
+        "attribute_points_max": 5, 
+        "sub_attribute_points_max": 8,
+
+        "other_players": [
+            "Freund #1",
+            "Freund #2"
+        ],
+
+        "attributes": [
+            {
+                "name": "Körper",
+                "color": 1,
+                "column": 1,
+                "sub_attribute_suggestions": [
+                    "Kraft",
+                    "Bewegen",
+                    "Heimlich"
+                ]
+            },
+            {
+                "name": "Tech",
+                "color": 2,
+                "column": 2,
+                "sub_attribute_suggestions": [
+                    "Basteln",
+                    "Programmieren",
+                    "Tech verstehen"
+                ]
+            },
+            {
+                "name": "Herz",
+                "color": 3,
+                "column": 3,
+                "sub_attribute_suggestions": [
+                    "Charme",
+                    "Führen",
+                    "Kontakte"
+                ]
+            },
+            {
+                "name": "Geist",
+                "color": 4,
+                "column": 4,
+                "sub_attribute_suggestions": [
+                    "Untersuchen",
+                    "Wissen",
+                    "Empathie"
+                ]
+            }
+        ]
+    }
+}
