@@ -9,12 +9,12 @@
       "btn_import": "Charakterbogen laden",
       "btn_export": "Charakterbogen herunterladen",
       "btn_print": "Zur Druckansicht",
-      "btn_info": "Erklärungen anzeigen",
-      "btn_crew": "Meine Freunde anzeigen",
+      "btn_info": "Infoseite",
+      "btn_crew": "Meine Freunde",
       "btn_bg": "Meinen Background anzeigen",
       "btn_pic": "Charakterbild anzeigen",
       "btn_share": "Link teilen",
-      "btn_more": "Mehr ...",
+      "btn_more": "Mehr",
       "label_grundwerte": "Grundwerte",
       "label_spezialisierung": "Spezialisierung",
       "drop_file": "Datei importieren",
@@ -53,7 +53,7 @@
       "Alter"
     ],
     "info_big": "Details",
-    
+
     "scales": [
       {
         "label": "Glück",
