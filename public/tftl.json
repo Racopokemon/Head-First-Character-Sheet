@@ -2,7 +2,7 @@
     "set_by_gm": {
         "localization": {
             "title": "Tales From The Loop",
-            "subtitle_info": "Attributübersicht",
+            "subtitle_info": "Attribute und Regelübersicht",
             "btn_edit": "Bearbeiten",
             "btn_compact": "Kompakt",
             "btn_ec": "Erfolgsklassen",
@@ -40,7 +40,7 @@
 
         "infopage": {
             "text_l": "1) Wähle einen Archetypen und notiere seine Schlüsselfähigkeiten. \n2) Wähle ein Alter von 10-15. \n3) Verteile so viele Punkte auf die Attribute, wie du alt bist. \n4) Dein Glück ist 15 minus dein Alter. \n5) Verteile 10 Subattributspunkte. Schlüsselfähigkeiten bis zu 3 Punkte, der Rest max 1 Punkt.",
-            "text_r": "Proben: Würfel so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen, nach dem Wurf. Ikonischer Gegenstand: +2 Würfel. Jede der vier Einschränkungen gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe."
+            "text_r": "Proben: Würfel so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen, nach dem Wurf. Ikonischer Gegenstand: +2 Würfel. Jede der vier Einschränkungen gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe. Heilung bei Anker oder Geheimversteck [...]"
         },
 
         "infos": [
@@ -104,7 +104,7 @@
                 "name": "Körper",
                 "color": 8,
                 "column": 1,
-                "description": "Kraft (Force): \nHS",
+                "description": "Kraft (Force): \nHeben, Kämpfen, Aushalten\n\nBewegen (Move):\nKlettern, Balancieren, Rennen\n\nHeimlich (Sneak):\nVerstecken, Stehlen",
                 "sub_attribute_suggestions": [
                     "Kraft",
                     "Bewegen",
@@ -115,6 +115,7 @@
                 "name": "Tech",
                 "color": 9,
                 "column": 2,
+                "description": "Basteln (Tinker):\nMaschinen und Mechanik bauen und manipulieren\n\nProgrammieren (Program):\nComputer und Programme bauen und manipulieren\n\nTech verstehen (Calculate):\nMaschinen und Systeme verstehen",
                 "sub_attribute_suggestions": [
                     "Basteln",
                     "Programmieren",
@@ -125,6 +126,7 @@
                 "name": "Herz",
                 "color": 10,
                 "column": 3,
+                "description": "Charme (Charm):\nBefreunden und Verzaubern, Lügen und Manipulieren\n\nFühren (Lead):\nZusammenarbeiten, Aufrichten, Aufmuntern\n\nKontakte (Contact):\nJemanden kennen, der hilft",
                 "sub_attribute_suggestions": [
                     "Charme",
                     "Führen",
@@ -135,6 +137,7 @@
                 "name": "Geist",
                 "color": 2,
                 "column": 4,
+                "description": "Untersuchen (Investigate):\nVerstecktes erkennen und Hinweise verstehen\n\nWissen (Comprehend):\nPassende Info haben oder in der Bibliothek finden\n\nEmpathie (Emphatize): Beweggründe von Lebewesen verstehen, Schwäche finden",
                 "sub_attribute_suggestions": [
                     "Untersuchen",
                     "Wissen",
