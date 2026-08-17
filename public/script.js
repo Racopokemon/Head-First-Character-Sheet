@@ -808,6 +808,23 @@ function updateTitle() {
   }
 }
 
+// Scales with "tick": true are shown as checkboxes, but stored as 0/1 like any
+// other scale value, so import/export/sync stay unchanged.
+function getScaleInputValue(input) {
+  if (input.type === 'checkbox') return input.checked ? '1' : '0';
+  return input.value || '';
+}
+
+function setScaleInputValue(input, val) {
+  if (input.type === 'checkbox') {
+    const checked = !(val === '' || val === null || val === undefined || Number(val) === 0);
+    if (input.checked !== checked) input.checked = checked;
+  } else {
+    const newVal = (val === null || val === undefined) ? '' : String(val);
+    if (input.value !== newVal) input.value = newVal;
+  }
+}
+
 function renderScales() {
   const r = document.getElementById('scales');
   r.innerHTML = '';
@@ -825,36 +842,48 @@ function renderScales() {
 
 
   scales.forEach((scaleData, i) => {
+    const isTick = !!scaleData.tick;
     const row = document.createElement('div');
-    row.className = 'box scale-row';
+    row.className = 'box scale-row' + (isTick ? ' scale-row-tick' : '');
     const lbl = document.createElement('div');
     lbl.textContent = scaleData.label || `Scale ${i + 1}`;
     const input = document.createElement('input');
-    input.type = 'number';
-    input.value = 0;
+    if (isTick) {
+      input.type = 'checkbox';
+      input.className = 'scale-tick';
+      input.checked = false;
+    } else {
+      input.type = 'number';
+      input.value = 0;
+    }
     input.dataset.scaleIndex = i;
     row.appendChild(lbl);
     row.appendChild(input);
     r.appendChild(row);
-    // Focus input when clicking box
+    // Clicking the box focuses the input (or toggles it, for tick scales)
     row.addEventListener('click', (e) => {
       if (e.target !== input) {
-        input.focus();
-        //const len = input.value.length;
-        //input.setSelectionRange(len, len); //doesnt work for number input :(
+        if (isTick) {
+          input.checked = !input.checked;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        } else {
+          input.focus();
+          //const len = input.value.length;
+          //input.setSelectionRange(len, len); //doesnt work for number input :(
+        }
       }
     });
     // keyboard navigation: up/down/enter moves to next/prev scale input
     input.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown') {
-        if (e.shiftKey) {
+        if (e.shiftKey && !isTick) {
           // Shift+Down: decrement value (default behavior, don't prevent)
         } else {
           e.preventDefault();
           focusNextInContainer(input, container, 1);
         }
       } else if (e.key === 'ArrowUp') {
-        if (e.shiftKey) {
+        if (e.shiftKey && !isTick) {
           // Shift+Up: increment value (default behavior, don't prevent)
         } else {
           e.preventDefault();
@@ -1366,7 +1395,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
 
 function getSelectorFromType(type) {
   if (type == 1) {
-    return 'input[type="text"], input[type="number"], textarea';
+    return 'input[type="text"], input[type="number"], input[type="checkbox"], textarea';
   } else if (type == 2) {
     return 'input[type="number"]';
   } else {
@@ -1963,10 +1992,7 @@ function applyRemoteSmallChange(json) {
   if (Array.isArray(sp.scales)) {
     document.querySelectorAll('input[data-scale-index]').forEach(input => {
       const idx = Number(input.dataset.scaleIndex);
-      const newVal = sp.scales[idx] || '';
-      if (input.value !== newVal) {
-        input.value = newVal;
-      }
+      setScaleInputValue(input, sp.scales[idx] || '');
     });
   }
 
@@ -2149,7 +2175,7 @@ function applyImported(json, options = {}) {
     scales.forEach((scaleData, i) => {
       const scaleInput = document.querySelector(`input[data-scale-index="${i}"]`);
       if (scaleInput && scaleData.initial !== undefined) {
-        scaleInput.value = scaleData.initial;
+        setScaleInputValue(scaleInput, scaleData.initial);
       }
     });
     if (editMode) {
@@ -2190,7 +2216,7 @@ function applyImported(json, options = {}) {
     const scaleInputs = document.querySelectorAll('input[data-scale-index]');
     scaleInputs.forEach((input) => {
       const idx = Number(input.dataset.scaleIndex);
-      input.value = (sp.scales ? sp.scales[idx] : null) || gmTemplate.scales[idx]?.initial || '';
+      setScaleInputValue(input, (sp.scales ? sp.scales[idx] : null) || gmTemplate.scales[idx]?.initial || '');
     });
 
     // attributes array - store in playerData and re-render
@@ -2315,7 +2341,7 @@ function collectCurrentState() {
   const scaleInputs = document.querySelectorAll('input[data-scale-index]');
   scaleInputs.forEach((input) => {
     const idx = Number(input.dataset.scaleIndex);
-    scaleValues[idx] = input.value || '';
+    scaleValues[idx] = getScaleInputValue(input);
   });
   out.set_by_player.scales = scaleValues;
 

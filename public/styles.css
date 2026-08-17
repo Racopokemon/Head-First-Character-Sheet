@@ -65,6 +65,13 @@
   --scale-accent: #e8bde7;
   --scale-bg: #eee6ec;
 
+  /* Checkbox scales ("tick": true) */
+  --scale-tick-size: 28px;
+  --scale-tick-bg: #fff;
+  --scale-tick-border: #c9a8c8;
+  --scale-tick-checked-bg: #b978b7;
+  --scale-tick-check: #fff;
+
     /* Drag overlay, clearly most important styling option here */
   --drag-overlay-bg: rgba(208, 208, 208, 0.82);
   --drag-overlay-text: rgb(26, 26, 26);
@@ -111,6 +118,27 @@ textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: 
 .info-big{flex:1}
 .info-big textarea{font-size: var(--text-size-descr);}
 .scale-row{display:flex;padding:0px 8px;justify-content:space-between;align-items:center;height:var(--height);border-left: 6px solid var(--scale-accent);background-color:var(--scale-bg);}
+.scale-row-tick{cursor:pointer;}
+/* checkbox scales: sized so they sit centered in the same slot as the number inputs */
+.box input[type="checkbox"].scale-tick{
+  appearance:none;-webkit-appearance:none;
+  flex:0 0 auto;
+  width:var(--scale-tick-size);height:var(--scale-tick-size);
+  margin:0 calc((var(--number-width) - var(--scale-tick-size)) / 2);
+  /*border:2px solid var(--scale-tick-border);*/border-radius:6px;
+  background:var(--scale-tick-bg);
+  position:relative;cursor:pointer;
+  /*transition:background-color .12s ease,border-color .12s ease;*/
+}
+.box input[type="checkbox"].scale-tick:hover{border:2px solid var(--scale-tick-border);}
+.box input[type="checkbox"].scale-tick:checked{background:var(--scale-tick-checked-bg);border-color:var(--scale-tick-checked-bg);}
+.box input[type="checkbox"].scale-tick:checked::after{
+  content:'';position:absolute;box-sizing:border-box;
+  left:32%;top:18%;width:7px;height:13px;
+  border:solid var(--scale-tick-check);border-width:0 3px 3px 0;
+  transform:rotate(45deg);
+}
+.box input[type="checkbox"].scale-tick:focus-visible{outline:2px solid var(--scale-tick-checked-bg);outline-offset:2px;}
 .attr-box{display:flex;align-items:center;gap:var(--attr-box-gap);padding:0px 8px;height:var(--height);border-left-width:6px !important}
 .attr-box > div:first-child{flex:1}
 .attr-name{flex:1}
@@ -421,6 +449,16 @@ textarea::placeholder{color:var(--text-suggestion);}
 }
 
 .prt-preview .scale-value {color: white !important;}
+
+/* checkbox scales: outline + checkmark in black, so they stay visible when backgrounds aren't printed */
+.prt-preview input[type="checkbox"].scale-tick {
+  border: 2px solid black !important;
+  background: white !important;
+}
+.prt-preview input[type="checkbox"].scale-tick:checked::after {
+  border-color: black !important;
+  border-width: 0 3px 3px 0 !important;
+}
 
 .prt-preview .scale-row {border-color: black;border-left-width: 6px;}
 
