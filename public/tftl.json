@@ -39,8 +39,8 @@
         "deco_svg": null,
 
         "infopage": {
-            "text_l": "1) Wähle einen Archetypen und notiere seine Schlüsselfähigkeiten. 2) Wähle ein Alter von 10-15. 3) Verteile so viele Punkte auf die Attribute, wie du alt bist. 4) Dein Glück ist 15 minus dein Alter. 5) Verteile 10 Subattributspunkte. Schlüsselfähigkeiten bis zu 3 Punkte, der Rest max 1 Punkt.",
-            "text_r": "Proben: Würfel so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen, nach dem Wurf. Ikonischer Gegenstand: +2 Würfel. Jede der vier Einschränkungen gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe. Alle Einschränkungen werden in Szene mit Anker oder im Geheimversteck geheilt."
+            "text_l": "1) Wähle einen Archetypen und notiere seine Schlüsselfähigkeiten. \n2) Wähle ein Alter von 10-15. \n3) Verteile so viele Punkte auf die Attribute, wie du alt bist. \n4) Dein Glück ist 15 minus dein Alter. \n5) Verteile 10 Subattributspunkte. Schlüsselfähigkeiten bis zu 3 Punkte, der Rest max 1 Punkt.",
+            "text_r": "Proben: Würfel so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen, nach dem Wurf. Ikonischer Gegenstand: +2 Würfel. Jede der vier Einschränkungen gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe."
         },
 
         "infos": [
@@ -56,27 +56,27 @@
                 "initial": 5
             },
             {
-                "label": "Aufgebracht (-1)",
+                "label": "(-1) Aufgebracht",
                 "initial": 0,
                 "tick": true
             },
             {
-                "label": "Verängstigt (-1)",
+                "label": "(-1) Verängstigt",
                 "initial": 0,
                 "tick": true
             },
             {
-                "label": "Erschöpft (-1)",
+                "label": "(-1) Erschöpft",
                 "initial": 0,
                 "tick": true
             },
             {
-                "label": "Verletzt (-1)",
+                "label": "(-1) Verletzt",
                 "initial": 0,
                 "tick": true
             },
             {
-                "label": "Gebrochen (-∞)",
+                "label": "(-∞) Gebrochen",
                 "initial": 0,
                 "tick": true
             }
@@ -102,8 +102,9 @@
         "attributes": [
             {
                 "name": "Körper",
-                "color": 1,
+                "color": 8,
                 "column": 1,
+                "description": "Kraft (Force): \nHS",
                 "sub_attribute_suggestions": [
                     "Kraft",
                     "Bewegen",
@@ -112,7 +113,7 @@
             },
             {
                 "name": "Tech",
-                "color": 2,
+                "color": 9,
                 "column": 2,
                 "sub_attribute_suggestions": [
                     "Basteln",
@@ -122,7 +123,7 @@
             },
             {
                 "name": "Herz",
-                "color": 3,
+                "color": 10,
                 "column": 3,
                 "sub_attribute_suggestions": [
                     "Charme",
@@ -132,7 +133,7 @@
             },
             {
                 "name": "Geist",
-                "color": 4,
+                "color": 2,
                 "column": 4,
                 "sub_attribute_suggestions": [
                     "Untersuchen",

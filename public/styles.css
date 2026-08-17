@@ -125,19 +125,23 @@ textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: 
   flex:0 0 auto;
   width:var(--scale-tick-size);height:var(--scale-tick-size);
   margin:0 calc((var(--number-width) - var(--scale-tick-size)) / 2);
-  /*border:2px solid var(--scale-tick-border);*/border-radius:6px;
+  border:1px solid var(--input-border);
+  border-radius:6px;
   background:var(--scale-tick-bg);
   position:relative;cursor:pointer;
   /*transition:background-color .12s ease,border-color .12s ease;*/
 }
 .box input[type="checkbox"].scale-tick:hover{border:2px solid var(--scale-tick-border);}
 .box input[type="checkbox"].scale-tick:checked{background:var(--scale-tick-checked-bg);border-color:var(--scale-tick-checked-bg);}
+/* the checked mark: two bars crossing in the middle */
+.box input[type="checkbox"].scale-tick:checked::before,
 .box input[type="checkbox"].scale-tick:checked::after{
   content:'';position:absolute;box-sizing:border-box;
-  left:32%;top:18%;width:7px;height:13px;
-  border:solid var(--scale-tick-check);border-width:0 3px 3px 0;
-  transform:rotate(45deg);
+  left:50%;top:50%;width:3px;height:55%;
+  background:var(--scale-tick-check);border-radius:1px;
 }
+.box input[type="checkbox"].scale-tick:checked::before{transform:translate(-50%,-50%) rotate(45deg);}
+.box input[type="checkbox"].scale-tick:checked::after{transform:translate(-50%,-50%) rotate(-45deg);}
 .box input[type="checkbox"].scale-tick:focus-visible{outline:2px solid var(--scale-tick-checked-bg);outline-offset:2px;}
 .attr-box{display:flex;align-items:center;gap:var(--attr-box-gap);padding:0px 8px;height:var(--height);border-left-width:6px !important}
 .attr-box > div:first-child{flex:1}
@@ -186,10 +190,11 @@ textarea.other-player{min-height:80px;color:var(--text-suggestion); font-style: 
 .info-page-container{display:none;}
 .info-page-container.active{display:block;}
 .info-text-row{display:flex;gap:var(--gap);margin-bottom:var(--anim-margin-bottom);}
-.info-text-box{flex:1;padding:13px 24px 15px 24px;border-radius:8px;background-color:var(--box-bg);line-height:1.5;font-size:var(--text-size-infobox);align-content:center;}
+/* pre-wrap so \n in infopage text_l / text_r become real line breaks */
+.info-text-box{flex:1;padding:13px 24px 15px 24px;border-radius:8px;background-color:var(--box-bg);line-height:1.5;font-size:var(--text-size-infobox);align-content:center;white-space:pre-wrap;}
 .info-attr-box{padding:15px;border-radius:8px;gap:8px;display:flex;flex-direction:column;border-left-width: 6px !important;}
 .info-attr-name{font-weight:600;font-size:var(--text-size-normal);}
-.info-attr-description{line-height:1.5;font-size:var(--text-size-descr);font-style:italic;}
+.info-attr-description{line-height:1.5;font-size:var(--text-size-descr);font-style:italic;white-space:pre-wrap;}
 .info-attr-suggestions{margin-top:3px;padding-left:20px;margin-bottom:0;}
 .info-attr-suggestions li{margin-bottom:4px;font-size:var(--text-size-descr);}
 
@@ -450,14 +455,14 @@ textarea::placeholder{color:var(--text-suggestion);}
 
 .prt-preview .scale-value {color: white !important;}
 
-/* checkbox scales: outline + checkmark in black, so they stay visible when backgrounds aren't printed */
+/* checkbox scales: outline + cross in black, so they stay visible when backgrounds aren't printed */
 .prt-preview input[type="checkbox"].scale-tick {
   border: 2px solid black !important;
   background: white !important;
 }
+.prt-preview input[type="checkbox"].scale-tick:checked::before,
 .prt-preview input[type="checkbox"].scale-tick:checked::after {
-  border-color: black !important;
-  border-width: 0 3px 3px 0 !important;
+  background: black !important;
 }
 
 .prt-preview .scale-row {border-color: black;border-left-width: 6px;}
