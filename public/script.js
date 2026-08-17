@@ -891,7 +891,13 @@ function renderScales() {
         }
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        focusNextInContainer(input, container, 1);
+        if (isTick) {
+          // on a tick, Enter toggles instead of moving on (like Space does)
+          input.checked = !input.checked;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        } else {
+          focusNextInContainer(input, container, 1);
+        }
       }
     });
   });
