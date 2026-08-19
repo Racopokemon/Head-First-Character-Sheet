@@ -38,7 +38,7 @@
       "scale-bg": "#fbefd7",
       "scale-tick-border": "#d4a778",
       "scale-tick-checked-bg": "#dd8131",
-      "freetext-height": "90px",
+      "freetext-height": "110px",
 
       "info": "you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
     },
