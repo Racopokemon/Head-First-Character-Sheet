@@ -38,13 +38,15 @@
       "scale-bg": "#fbefd7",
       "scale-tick-border": "#d4a778",
       "scale-tick-checked-bg": "#dd8131",
+      "freetext-height": "90px",
+
       "info": "you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
     },
     "deco_svg": null,
 
     "infopage": {
       "text_l": "1) Wähle einen Archetypen und notiere seine Schlüsselfähigkeiten. \n2) Wähle ein Alter von 10-15. \n3) Verteile so viele Punkte auf die Attribute, wie du alt bist. \n4) Dein Glück ist 15 minus dein Alter. \n5) Verteile 10 Subattributspunkte. Schlüsselfähigkeiten bis zu 3 Punkte, der Rest max 1 Punkt.",
-      "text_r": "Proben: Würfel so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen, nach dem Wurf. Ikonischer Gegenstand: +2 Würfel. Jede der vier Einschränkungen gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe. Heilung bei Anker oder Geheimversteck [...]"
+      "text_r": "Proben: Wirf so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen, nach dem Wurf. Ikonischer Gegenstand: +2 Würfel. Jede der vier Einschränkungen gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe. Heilung bei Anker oder Geheimversteck [...]"
     },
 
     "infos": [
@@ -91,6 +93,12 @@
     "show_infopage": true,
     "show_freetext_button": true,
     "show_others_button": true,
+
+    "freetexts": [
+        "Antrieb",
+        "Problem",
+        "Lieblingslied"
+    ],
 
     "attribute_points": 15,
     "sub_attribute_points": 10,
@@ -158,7 +166,7 @@
       "",
       ""
     ],
-    "info_big": "Antrieb:\n\nProblem:\n\nStolz (+1 Erfolg, 1x):\n\nIkonischer Gegenstand (+2):\n\nLieblingslied:\n\nGeheimversteck: \n(gemeinsam)",
+    "info_big": "Stolz (+1 Erfolg, 1x):\n\n\nIkonischer Gegenstand (+2):\n\n\nAnker:\n\n\nGeheimversteck:",
     "freetexts": [],
     "other_players": [
       "",
@@ -243,6 +251,6 @@
       }
     ],
     "crewVisible": false,
-    "bgVisible": false
+    "bgVisible": true
   }
 }
