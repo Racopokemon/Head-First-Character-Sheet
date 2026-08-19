@@ -149,7 +149,7 @@
         "name": "Geist",
         "color": 2,
         "column": 4,
-        "description": "Untersuchen (Investigate):\nVerstecktes erkennen und Hinweise verstehen\n\nWissen (Comprehend):\nPassende Info haben oder in der Bibliothek finden\n\nEmpathie (Emphatize): Beweggründe von Lebewesen verstehen, Schwäche finden",
+        "description": "Untersuchen (Investigate):\nVerstecktes erkennen und Hinweise verstehen\n\nWissen (Comprehend):\nPassende Info haben oder in der Bibliothek finden\n\nEmpathie (Emphatize): \nBeweggründe von Lebewesen verstehen, Schwäche finden",
         "sub_attribute_suggestions": [
           "Untersuchen",
           "Wissen",
@@ -166,7 +166,7 @@
       "",
       ""
     ],
-    "info_big": "Stolz (+1 Erfolg, 1x):\n\n\nIkonischer Gegenstand (+2):\n\n\nAnker:\n\n\nGeheimversteck:",
+    "info_big": "Stolz (+1 Erfolg, 1x):\n\n\nIkonischer Gegenstand (+2):\n\n\nAnker:\n\n\nGeheimversteck:\n",
     "freetexts": [],
     "other_players": [
       "",
