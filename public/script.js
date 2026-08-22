@@ -2240,6 +2240,10 @@ function applyImported(json, options = {}) {
     if (typeof sp.bgVisible === 'boolean') {
       bgVisible = sp.bgVisible && shouldShowBgBtn;
     }
+    if (typeof sp.subattributesVisible === 'boolean' && showSubattributes) {
+      compactMode = sp.subattributesVisible;
+      if (toggleBtn) toggleBtn.dataset.active = compactMode ? 'true' : 'false';
+    }
   }
 
   updateVisibility();
@@ -2360,6 +2364,7 @@ function collectCurrentState() {
   // visibility flags
   out.set_by_player.crewVisible = crewVisible;
   out.set_by_player.bgVisible = bgVisible;
+  out.set_by_player.subattributesVisible = compactMode;
 
   return out;
 }
