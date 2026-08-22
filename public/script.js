@@ -2220,6 +2220,9 @@ function applyImported(json) {
         points: a?.points || 0,
         sub_attributes: a?.sub_attributes || []
       }));
+    } else {
+      // no attributes in this sheet - reset instead of leaking the previously loaded sheet's data
+      playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
     }
 
     // restore visibility flags (only if the corresponding button is shown)
