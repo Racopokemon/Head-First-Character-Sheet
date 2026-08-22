@@ -2097,19 +2097,7 @@ function updateAttributeValuesInPlace(attrs) {
   });
 }
 
-function applyImported(json, options = {}) {
-  // options.preserveUIState - if true, keep editMode, compactMode, ecMode, crewVisible, bgVisible, infoMode
-  const preserveUIState = options.preserveUIState || false;
-
-  // Save current UI state if preserving
-  const savedState = preserveUIState ? {
-    editMode,
-    compactMode,
-    ecMode,
-    crewVisible,
-    bgVisible,
-    infoMode
-  } : null;
+function applyImported(json) {
 
   // if set_by_gm present, replace template and re-render labels
   if (!json.set_by_gm) {
@@ -2139,6 +2127,7 @@ function applyImported(json, options = {}) {
       compactMode = true; // force compact mode
     } else {
       toggleBtn.style.display = '';
+      compactMode = false;
     }
   }
   // Show/hide sub-attribute points label based on show_subattributes setting
@@ -2240,61 +2229,21 @@ function applyImported(json, options = {}) {
     if (typeof sp.bgVisible === 'boolean') {
       bgVisible = sp.bgVisible && shouldShowBgBtn;
     }
-    if (typeof sp.subattributesVisible === 'boolean' && showSubattributes) {
-      compactMode = sp.subattributesVisible;
-      if (toggleBtn) toggleBtn.dataset.active = compactMode ? 'true' : 'false';
+    if (typeof sp.compactMode === 'boolean' && showSubattributes) {
+      compactMode = sp.compactMode;
     }
   }
+  if (toggleBtn) toggleBtn.dataset.active = compactMode ? 'true' : 'false';
 
   updateVisibility();
   renderAttributes();
   updatePointsDisplay();
 
-  if (preserveUIState && savedState) {
-    // Restore saved UI state without animations
-    editMode = savedState.editMode;
-    compactMode = savedState.compactMode;
-    ecMode = savedState.ecMode;
-    crewVisible = savedState.crewVisible;
-    bgVisible = savedState.bgVisible;
-    infoMode = savedState.infoMode;
+  infoMode = true;
+  toggleInfoMode(); //makes sure were never in boring info mode when loading a new sheet, and also plays the nice face-in animation
 
-    // Update button states
-    const editBtn = document.getElementById('edit-btn');
-    if (editBtn) editBtn.dataset.active = editMode ? 'true' : 'false';
-    const toggleBtn = document.getElementById('toggle-btn');
-    if (toggleBtn) toggleBtn.dataset.active = compactMode ? 'true' : 'false';
-    const ecBtn = document.getElementById('ec-btn');
-    if (ecBtn) ecBtn.dataset.active = ecMode ? 'true' : 'false';
-
-    updateVisibility();
-    renderAttributes();
-    updatePointsDisplay();
-
-    // Handle info mode display without animation
-    const infoPage = document.getElementById('info-page-container');
-    const charSheet = document.getElementById('char-sheet-container');
-    const subtitle = document.getElementById('subtitle');
-    if (infoMode) {
-      if (charSheet) charSheet.style.display = 'none';
-      if (subtitle) subtitle.style.display = 'block';
-      if (infoPage) infoPage.classList.add('active');
-    } else {
-      if (charSheet) charSheet.style.display = '';
-      if (subtitle) subtitle.style.display = 'none';
-      if (infoPage) infoPage.classList.remove('active');
-    }
-
-    // Handle edit mode points display
-    const row = document.getElementById('points-expander');
-    if (row) row.style.display = editMode ? null : 'none';
-  } else {
-    infoMode = true;
-    toggleInfoMode(); //makes sure were never in boring info mode when loading a new sheet, and also plays the nice face-in animation
-
-    if (editMode) {
-      toggleEditMode();
-    }
+  if (editMode) {
+    toggleEditMode();
   }
   updateTitle();
 }
@@ -2364,7 +2313,7 @@ function collectCurrentState() {
   // visibility flags
   out.set_by_player.crewVisible = crewVisible;
   out.set_by_player.bgVisible = bgVisible;
-  out.set_by_player.subattributesVisible = compactMode;
+  out.set_by_player.compactMode = compactMode;
 
   return out;
 }

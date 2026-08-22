@@ -251,6 +251,7 @@
       }
     ],
     "crewVisible": false,
-    "bgVisible": true
+    "bgVisible": true,
+    "compactMode": true
   }
 }
