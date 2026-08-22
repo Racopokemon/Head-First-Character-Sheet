@@ -147,3 +147,6 @@ Elements use `data-*` attributes for efficient querying:
 
 ## Validation & Testing
 *Please do not* try to run this as a coding agent to verify the changes you made, youre dependent on MongoDB and you'll just waste tokens :D A quick re-read entirely suffices, this is just a hobby project and I'll review and test the changes you made myself :)
+
+## Another note
+Many times I look through this code I stumble across stuff that feels rather lacking, and quite obviously stupid ... The reason is that many parts in this project were written by free and less skilled agents. So, if you just stumble across such things while doing something else, please point this out in the summary you give at the end of task, and I'll have a look :)

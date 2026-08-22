@@ -1327,7 +1327,6 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
         focusNextInContainer(valueInput, allColumnsContainer, 2);
       }
     });
-    validateSubAttributeInput(valueInput); // initial validation
 
     const totalLabel = document.createElement('div');
     totalLabel.className = 'attr-value-label';
@@ -1337,7 +1336,7 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
     const sum = mainPoints + subPoints;
     totalLabel.dataset.value = String(sum);
     totalLabel.textContent = sum;
-    
+
     // delete button for this subattribute
     const delBtn = document.createElement('button');
     delBtn.className = 'sub-del-btn';
@@ -1397,6 +1396,9 @@ function renderSubAttribute(container, attrIdx, subAttrIdx, parentColor) {
   }
   
   container.appendChild(box);
+
+  // Validate now that the label is actually attached to the document
+  validateSubAttributeInput(`${attrIdx}-${subAttrIdx}`);
 }
 
 function getSelectorFromType(type) {
