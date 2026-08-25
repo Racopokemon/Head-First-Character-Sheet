@@ -88,6 +88,7 @@
       }
     ],
 
+    "with_picture": true,
     "show_subattributes": true,
     "show_success_levels": false,
     "show_infopage": true,

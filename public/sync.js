@@ -137,6 +137,7 @@ function connectSocket() {
   socket.on('sheet-update', handleRemoteUpdate);
   socket.on('user-count', handleUserCount);
   socket.on('error', handleServerError);
+  socket.on('picture-update', (data) => syncPictureMeta(data.hasPicture, data.pictureVersion));
 }
 
 /**
@@ -158,6 +159,9 @@ function handleSheetData(data) {
   if (typeof applyImported === 'function') {
     applyImported(json);
   }
+
+  // Picture is never embedded in the socket payload - fetch it separately (see syncPictureMeta)
+  syncPictureMeta(data.hasPicture, data.pictureVersion);
 }
 
 function handleStateTokenUpdate(data) {
@@ -244,6 +248,93 @@ function broadcastChange() {
  */
 function debouncedBroadcast() {
   broadcastChange();
+}
+
+// Picture sync
+// The picture never travels through broadcastChange()/collectCurrentState() while in sync mode -
+// it has its own REST endpoints and a lightweight 'picture-update' ping so per-keystroke syncing
+// stays cheap regardless of how big the uploaded image is.
+
+/**
+ * Apply a {hasPicture, pictureVersion} announcement from the server (initial join or a live
+ * picture-update event) by fetching the actual bytes (or clearing) and updating playerData.
+ * @param {boolean} hasPicture
+ * @param {string|null} pictureVersion
+ */
+async function syncPictureMeta(hasPicture, pictureVersion) {
+  if (typeof playerData === 'undefined') return;
+
+  if (!hasPicture) {
+    playerData.picture = null;
+    if (typeof updatePictureDisplay === 'function') updatePictureDisplay();
+    return;
+  }
+
+  try {
+    const res = await fetch(`/sheet/${encodeURIComponent(currentSheetId)}/picture?v=${encodeURIComponent(pictureVersion || '')}`);
+    if (!res.ok) throw new Error('Picture fetch failed: ' + res.status);
+    const blob = await res.blob();
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+    playerData.picture = dataUrl;
+  } catch (err) {
+    console.error('Could not fetch picture:', err);
+    playerData.picture = null;
+  }
+  if (typeof updatePictureDisplay === 'function') updatePictureDisplay();
+}
+
+/**
+ * Upload a (already resized/re-encoded) image blob for the current sheet.
+ * @param {Blob} blob
+ */
+async function uploadPictureBlob(blob) {
+  if (!syncEnabled || !isOnline || !currentSheetId) return;
+  try {
+    await fetch(`/sheet/${encodeURIComponent(currentSheetId)}/picture`, {
+      method: 'POST',
+      headers: { 'Content-Type': blob.type || 'image/jpeg' },
+      body: blob
+    });
+  } catch (err) {
+    console.error('Could not upload picture:', err);
+  }
+}
+
+/**
+ * Delete the picture for the current sheet.
+ */
+async function deletePictureRemote() {
+  if (!syncEnabled || !isOnline || !currentSheetId) return;
+  try {
+    await fetch(`/sheet/${encodeURIComponent(currentSheetId)}/picture`, { method: 'DELETE' });
+  } catch (err) {
+    console.error('Could not delete picture:', err);
+  }
+}
+
+/**
+ * Push a picture that arrived via a full sheet import (drag-dropped .json, preset, etc.) to the
+ * server, separately from the regular broadcastChange() for the rest of the sheet's fields.
+ * @param {string|null} dataUrlOrNull
+ */
+async function syncPictureFromImport(dataUrlOrNull) {
+  if (!syncEnabled || !isOnline) return;
+  if (!dataUrlOrNull) {
+    await deletePictureRemote();
+    return;
+  }
+  try {
+    const res = await fetch(dataUrlOrNull);
+    const blob = await res.blob();
+    await uploadPictureBlob(blob);
+  } catch (err) {
+    console.error('Could not sync imported picture:', err);
+  }
 }
 
 // UI Functions
@@ -373,5 +464,8 @@ window.syncModule = {
   isSyncOnline,
   computeHash,
   showOverlay,
-  hideOverlay
+  hideOverlay,
+  uploadPictureBlob,
+  deletePictureRemote,
+  syncPictureFromImport
 };

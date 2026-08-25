@@ -29,6 +29,14 @@ const sheetSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  picture: {
+    data: Buffer,
+    contentType: String
+  },
+  pictureVersion: {
+    type: String,
+    default: null
+  },
   lastAccessed: {
     type: Date,
     default: Date.now,

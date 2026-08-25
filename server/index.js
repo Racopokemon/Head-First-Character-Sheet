@@ -6,7 +6,10 @@ const path = require('path');
 const config = require('./config');
 const { connectToDatabase } = require('./db/connection');
 const { setupSocketHandlers } = require('./socket/handlers');
-const { startSyncInterval, flushAllDirty } = require('./services/sheetBuffer');
+const {
+  startSyncInterval, flushAllDirty, isValidSheetId, normalizeSheetId,
+  setPicture, clearPicture, getPicture
+} = require('./services/sheetBuffer');
 const { scheduleCleanup } = require('./db/cleanup');
 
 const app = express();
@@ -76,6 +79,55 @@ app.post('/upload', async (req, res) => {
     sheetId: sheetId.toLowerCase(),
     url: result.url
   });
+});
+
+// Picture endpoints - bytes are kept out of the socket sheet-update payload (see sheetBuffer.js
+// setPicture/clearPicture/getPicture); clients just get a lightweight 'picture-update' ping and
+// fetch/re-fetch the actual image via GET, keyed by pictureVersion for cache-busting.
+app.post('/sheet/:sheetId/picture', express.raw({ type: 'image/*', limit: '8mb' }), async (req, res) => {
+  const { sheetId } = req.params;
+  if (!isValidSheetId(sheetId)) {
+    return res.status(400).json({ error: 'invalid' });
+  }
+  if (!Buffer.isBuffer(req.body) || req.body.length === 0) {
+    return res.status(400).json({ error: 'invalid', message: 'No image data received' });
+  }
+
+  const normalizedId = normalizeSheetId(sheetId);
+  const contentType = req.get('Content-Type') || 'image/jpeg';
+  const result = await setPicture(normalizedId, req.body, contentType);
+
+  io.to(normalizedId).emit('picture-update', { hasPicture: true, pictureVersion: result.pictureVersion });
+  return res.status(200).json({ success: true, pictureVersion: result.pictureVersion });
+});
+
+app.get('/sheet/:sheetId/picture', async (req, res) => {
+  const { sheetId } = req.params;
+  if (!isValidSheetId(sheetId)) {
+    return res.status(400).send('Invalid sheet ID');
+  }
+  const normalizedId = normalizeSheetId(sheetId);
+  const picture = await getPicture(normalizedId);
+  if (!picture) {
+    return res.status(404).send('No picture set for this sheet');
+  }
+
+  res.set('Content-Type', picture.contentType || 'image/jpeg');
+  res.set('Cache-Control', 'private, max-age=31536000, immutable');
+  if (picture.pictureVersion) res.set('ETag', picture.pictureVersion);
+  return res.send(picture.data);
+});
+
+app.delete('/sheet/:sheetId/picture', async (req, res) => {
+  const { sheetId } = req.params;
+  if (!isValidSheetId(sheetId)) {
+    return res.status(400).json({ error: 'invalid' });
+  }
+  const normalizedId = normalizeSheetId(sheetId);
+  const result = await clearPicture(normalizedId);
+
+  io.to(normalizedId).emit('picture-update', { hasPicture: false, pictureVersion: result.pictureVersion });
+  return res.status(200).json({ success: true });
 });
 
 // Serve index.html for /nosync (explicit no-sync mode)

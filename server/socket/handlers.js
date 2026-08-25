@@ -65,11 +65,15 @@ function setupSocketHandlers(io) {
       const { data, isNew } = await sheetBuffer.getSheet(normalizedId);
 
       // Send initial data to the client
+      // Note: the picture itself never rides this payload (or any sheet-update payload) - it's
+      // fetched separately via GET /sheet/:sheetId/picture, keyed off pictureVersion.
       socket.emit('sheet-data', {
         set_by_gm: data.set_by_gm,
         set_by_player: data.set_by_player,
         gmHash: data.gmHash,
         stateToken: data.stateToken,
+        hasPicture: !!(data.picture && data.picture.data),
+        pictureVersion: data.pictureVersion || null,
         isNew
       });
 
@@ -114,6 +118,8 @@ function setupSocketHandlers(io) {
           set_by_player: data.set_by_player,
           gmHash: data.gmHash,
           stateToken: data.stateToken,
+          hasPicture: !!(data && data.picture && data.picture.data),
+          pictureVersion: (data && data.pictureVersion) || null,
           isNew: false
         });
         console.log(`Sheet update in room ${currentRoom}: rejected (stale token)`);

@@ -65,6 +65,7 @@
             }
         ],
 
+        "with_picture": false,
         "show_subattributes": true,
         "show_success_levels": true,
         "show_infopage": true,

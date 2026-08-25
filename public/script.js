@@ -767,6 +767,8 @@ function renderInfos() {
   const ta4 = document.createElement('textarea');
   ta4.placeholder = infoBig;
   ta4.dataset.key = 'info_big';
+  // With with_picture, the description moves into the left column and the picture takes the
+  // middle column's spot (see renderPicture below). box4 is built the same way either way.
 
   // Focus textarea when clicking box
   box4.addEventListener('click', (e) => {
@@ -796,7 +798,158 @@ function renderInfos() {
   });
 
   box4.appendChild(ta4);
-  mid.appendChild(box4);
+
+  if (gmTemplate.with_picture === true) {
+    left.appendChild(box4);
+    renderPicture(mid);
+  } else {
+    mid.appendChild(box4);
+  }
+}
+
+// SVG markup for the picture panel's icon buttons, copied verbatim from /svg/*.svg (these are
+// built dynamically on every renderInfos() call, so it's simpler to inline them here than to
+// fetch the files each time).
+const PICTURE_ICON_FOLDER_OPEN = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.1,10L4,18V8H21A2,2 0 0,0 19,6H12L10,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H19C19.9,20 20.7,19.4 20.9,18.5L23.2,10H6.1M19,18H6L7.6,12H20.6L19,18Z" /></svg>';
+const PICTURE_ICON_DOWNLOAD = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></svg>';
+const PICTURE_ICON_DELETE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z" /></svg>';
+
+const PICTURE_MAX_DIMENSION = 1600;
+const PICTURE_JPEG_QUALITY = 0.85;
+
+function makePictureIconBtn(svgMarkup, title, onClick) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'picture-icon-btn';
+  btn.title = title;
+  btn.innerHTML = svgMarkup;
+  btn.addEventListener('click', (e) => { e.stopPropagation(); onClick(); });
+  return btn;
+}
+
+// Build the character picture box (img + empty-state placeholder + hover overlay) into `container`
+// (the middle column). Only called when gmTemplate.with_picture is true.
+function renderPicture(container) {
+  const loc = (gmTemplate && gmTemplate.localization) || {};
+  container.innerHTML = '';
+
+  const box = document.createElement('div');
+  box.className = 'box picture-box';
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.style.display = 'none';
+  fileInput.addEventListener('change', (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (f) handlePictureFile(f);
+    e.target.value = '';
+  });
+
+  const img = document.createElement('img');
+  img.className = 'picture-img';
+
+  // Not built via makePictureIconBtn: it needs its own (larger) sizing, not .picture-icon-btn's
+  const placeholderBtn = document.createElement('button');
+  placeholderBtn.type = 'button';
+  placeholderBtn.className = 'picture-placeholder-btn';
+  placeholderBtn.title = loc.btn_picture_upload || 'Bild hochladen';
+  placeholderBtn.innerHTML = PICTURE_ICON_FOLDER_OPEN;
+  placeholderBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
+
+  const overlay = document.createElement('div');
+  overlay.className = 'picture-overlay';
+  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_DOWNLOAD, loc.btn_picture_download || 'Bild herunterladen', downloadPicture));
+  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_FOLDER_OPEN, loc.btn_picture_replace || 'Anderes Bild wählen', () => fileInput.click()));
+  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_DELETE, loc.btn_picture_delete || 'Bild löschen', handleDeletePicture));
+
+  box.append(img, placeholderBtn, overlay, fileInput);
+  container.appendChild(box);
+
+  updatePictureDisplay();
+}
+
+// Refresh just the picture box's visible state (no-op if with_picture is off / not rendered).
+function updatePictureDisplay() {
+  const img = document.querySelector('.picture-img');
+  if (!img) return;
+  const placeholderBtn = document.querySelector('.picture-placeholder-btn');
+  const overlay = document.querySelector('.picture-overlay');
+  const has = !!(playerData && playerData.picture);
+
+  img.style.display = has ? '' : 'none';
+  img.src = has ? playerData.picture : '';
+  if (placeholderBtn) placeholderBtn.style.display = has ? 'none' : '';
+  if (overlay) overlay.style.display = has ? '' : 'none';
+}
+
+// Downscale (never upscale) and re-encode an uploaded image as JPEG via canvas, so raw multi-MB
+// phone photos never end up embedded in exports or POSTed to the server at full size.
+function resizeAndEncodeImage(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let { width, height } = img;
+      if (width > PICTURE_MAX_DIMENSION || height > PICTURE_MAX_DIMENSION) {
+        if (width >= height) {
+          height = Math.round(height * (PICTURE_MAX_DIMENSION / width));
+          width = PICTURE_MAX_DIMENSION;
+        } else {
+          width = Math.round(width * (PICTURE_MAX_DIMENSION / height));
+          height = PICTURE_MAX_DIMENSION;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL('image/jpeg', PICTURE_JPEG_QUALITY);
+      canvas.toBlob((blob) => resolve({ dataUrl, blob }), 'image/jpeg', PICTURE_JPEG_QUALITY);
+    };
+    img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('Could not load image')); };
+    img.src = objectUrl;
+  });
+}
+
+async function handlePictureFile(file) {
+  if (!file || !file.type || !file.type.startsWith('image/')) {
+    alert('Das ist keine Bilddatei :(');
+    return;
+  }
+  try {
+    const { dataUrl, blob } = await resizeAndEncodeImage(file);
+    playerData.picture = dataUrl;
+    updatePictureDisplay();
+    if (window.syncModule && window.syncModule.isSyncEnabled()) {
+      window.syncModule.uploadPictureBlob(blob);
+    }
+  } catch (err) {
+    console.error('Could not process image:', err);
+    alert('Bild konnte nicht verarbeitet werden :(');
+  }
+}
+
+function downloadPicture() {
+  if (!playerData.picture) return;
+  const a = document.createElement('a');
+  a.href = playerData.picture;
+  a.download = 'picture.jpg';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function handleDeletePicture() {
+  if (!playerData.picture) return;
+  const loc = (gmTemplate && gmTemplate.localization) || {};
+  if (!confirm(loc.picture_delete_confirm || 'Bild wirklich löschen?')) return;
+  playerData.picture = null;
+  updatePictureDisplay();
+  if (window.syncModule && window.syncModule.isSyncEnabled()) {
+    window.syncModule.deletePictureRemote();
+  }
 }
 
 function updateTitle() {
@@ -1682,8 +1835,8 @@ async function handleUpload() {
     window.syncModule.showOverlay(loc.uploading || 'Uploading...', 'uploading-overlay');
   }
 
-  // Collect current sheet data
-  const data = collectCurrentState();
+  // Collect current sheet data (picture embedded - the /upload endpoint extracts it into its own field)
+  const data = collectCurrentState({ includePicture: true });
 
   try {
     // Send POST request
@@ -1734,7 +1887,7 @@ async function handleUpload() {
 }
 
 function handleExport() {
-  const out = collectCurrentState();
+  const out = collectCurrentState({ includePicture: true });
   if (!out) return alert('Error while exporting sheet: Could not collect sheet data :(');
 
   const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
@@ -1928,6 +2081,15 @@ function handleDrop(e) {
   if (!files || files.length === 0) return;
 
   const file = files[0];
+
+  if (file.type.startsWith('image/')) {
+    // Picture drop - only meaningful when the current template actually shows a picture
+    if (gmTemplate && gmTemplate.with_picture === true) {
+      handlePictureFile(file);
+    }
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = ev => {
     try {
@@ -2164,8 +2326,20 @@ function applyImported(json) {
     bgBtn.style.display = shouldShowBgBtn ? '' : 'none';
   }
 
+  // Picture: only ever touched when the incoming set_by_player explicitly carries a 'picture' key
+  // (a real full export/import always sets it, even to null). Sync-mode payloads from the server
+  // deliberately never include it (see sync.js), so a plain sheet-update/sheet-data can't
+  // accidentally wipe out a picture that's tracked out-of-band via the picture-update flow.
+  let pictureKeyProvided = false;
+  if (sp && Object.prototype.hasOwnProperty.call(sp, 'picture')) {
+    pictureKeyProvided = true;
+    playerData.picture = (typeof sp.picture === 'string') ? sp.picture : null;
+  }
+
   if (!sp) {
     // initialize playerData with empty attributes
+    pictureKeyProvided = true;
+    playerData.picture = null;
     playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
     // fill scales with initial values from gmTemplate
     const scales = gmTemplate.scales || [];
@@ -2243,6 +2417,11 @@ function applyImported(json) {
   updateVisibility();
   renderAttributes();
   updatePointsDisplay();
+  updatePictureDisplay();
+
+  if (pictureKeyProvided && window.syncModule && window.syncModule.isSyncEnabled()) {
+    window.syncModule.syncPictureFromImport(playerData.picture);
+  }
 
   infoMode = true;
   toggleInfoMode(); //makes sure were never in boring info mode when loading a new sheet, and also plays the nice face-in animation
@@ -2262,9 +2441,12 @@ function setInputValue(key, value) {
 /**
  * Collect current state from the DOM and playerData
  * Extracted from handleExport logic
+ * @param {{includePicture?: boolean}} opts - includePicture embeds the picture as a data URL
+ *   (used for full export/upload, where the file needs to be self-contained). Regular sync
+ *   broadcasts leave it out entirely - see sync.js's picture-update/GET .../picture flow.
  * @returns {{set_by_gm: Object, set_by_player: Object}}
  */
-function collectCurrentState() {
+function collectCurrentState(opts = {}) {
   if (!gmTemplate) return null;
 
   const out = { set_by_gm: gmTemplate, set_by_player: {} };
@@ -2319,6 +2501,10 @@ function collectCurrentState() {
   out.set_by_player.crewVisible = crewVisible;
   out.set_by_player.bgVisible = bgVisible;
   out.set_by_player.compactMode = compactMode;
+
+  if (opts.includePicture) {
+    out.set_by_player.picture = playerData.picture || null;
+  }
 
   return out;
 }

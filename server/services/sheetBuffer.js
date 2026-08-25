@@ -103,7 +103,9 @@ async function getSheet(sheetId) {
         set_by_gm: sheet.set_by_gm,
         set_by_player: sheet.set_by_player || {},
         gmHash: sheet.gmHash,
-        stateToken: generateStateToken() // Generate fresh token when loading into memory
+        stateToken: generateStateToken(), // Generate fresh token when loading into memory
+        picture: (sheet.picture && sheet.picture.data) ? { data: sheet.picture.data, contentType: sheet.picture.contentType } : null,
+        pictureVersion: sheet.pictureVersion || null
       };
       buffer.set(sheetId, data);
       return { data, isNew: false };
@@ -119,7 +121,9 @@ async function getSheet(sheetId) {
     set_by_gm: defaultData.set_by_gm,
     set_by_player: defaultData.set_by_player || {},
     gmHash: computeGmHash(defaultData.set_by_gm),
-    stateToken: generateStateToken()
+    stateToken: generateStateToken(),
+    picture: null,
+    pictureVersion: null
   };
   buffer.set(sheetId, newData);
 
@@ -149,13 +153,20 @@ function updateSheet(sheetId, setByGm, setByPlayer, newGmHash, clientStateToken)
   }
 
   // Token matches - accept update with new token
+  // Picture data never travels through the regular sheet-update payload (see setPicture/clearPicture) -
+  // strip it defensively so it can never get lost or duplicated here, and carry over the existing picture untouched.
+  const cleanSetByPlayer = { ...(setByPlayer || {}) };
+  delete cleanSetByPlayer.picture;
+
   const newStateToken = generateStateToken();
   const data = {
     sheetId,
     set_by_gm: setByGm,
-    set_by_player: setByPlayer || {},
+    set_by_player: cleanSetByPlayer,
     gmHash: newGmHash,
-    stateToken: newStateToken
+    stateToken: newStateToken,
+    picture: existing.picture || null,
+    pictureVersion: existing.pictureVersion || null
   };
 
   buffer.set(sheetId, data);
@@ -179,6 +190,8 @@ async function saveSheet(sheetId) {
         set_by_gm: data.set_by_gm,
         set_by_player: data.set_by_player,
         gmHash: data.gmHash,
+        picture: data.picture || null,
+        pictureVersion: data.pictureVersion || null,
         lastAccessed: new Date()
       },
       { upsert: true, new: true }
@@ -249,6 +262,73 @@ function getUserCount(sheetId) {
 }
 
 /**
+ * Parse a "data:<mime>;base64,<data>" URL into a Buffer + contentType
+ * @param {string} dataUrl
+ * @returns {{data: Buffer, contentType: string}|null}
+ */
+function parseDataUrl(dataUrl) {
+  if (typeof dataUrl !== 'string') return null;
+  const match = dataUrl.match(/^data:([^;]+);base64,(.*)$/s);
+  if (!match) return null;
+  return { data: Buffer.from(match[2], 'base64'), contentType: match[1] };
+}
+
+/**
+ * Set (or replace) the picture for a sheet. Persists immediately (not just marked dirty),
+ * since uploads are infrequent and losing one on a server restart before the next
+ * periodic flush would be a bad experience.
+ * @param {string} sheetId
+ * @param {Buffer} imageData
+ * @param {string} contentType
+ * @returns {Promise<{success: boolean, pictureVersion?: string, error?: string}>}
+ */
+async function setPicture(sheetId, imageData, contentType) {
+  const { data } = await getSheet(sheetId);
+  data.picture = { data: imageData, contentType };
+  data.pictureVersion = generateStateToken();
+  buffer.set(sheetId, data);
+  await saveSheet(sheetId);
+  return { success: true, pictureVersion: data.pictureVersion };
+}
+
+/**
+ * Clear the picture for a sheet. Persists immediately, see setPicture.
+ * @param {string} sheetId
+ * @returns {Promise<{success: boolean, pictureVersion?: string}>}
+ */
+async function clearPicture(sheetId) {
+  const { data } = await getSheet(sheetId);
+  data.picture = null;
+  data.pictureVersion = generateStateToken();
+  buffer.set(sheetId, data);
+  await saveSheet(sheetId);
+  return { success: true, pictureVersion: data.pictureVersion };
+}
+
+/**
+ * Get the picture for a sheet (buffer first, falls back to DB for a sheet with no active room)
+ * @param {string} sheetId
+ * @returns {Promise<{data: Buffer, contentType: string, pictureVersion: string}|null>}
+ */
+async function getPicture(sheetId) {
+  const existing = buffer.get(sheetId);
+  if (existing) {
+    if (!existing.picture || !existing.picture.data) return null;
+    return { data: existing.picture.data, contentType: existing.picture.contentType, pictureVersion: existing.pictureVersion };
+  }
+
+  try {
+    const sheet = await Sheet.findOne({ sheetId }).select('picture pictureVersion');
+    if (sheet && sheet.picture && sheet.picture.data) {
+      return { data: sheet.picture.data, contentType: sheet.picture.contentType, pictureVersion: sheet.pictureVersion };
+    }
+  } catch (error) {
+    console.error(`Error loading picture for ${sheetId}:`, error);
+  }
+  return null;
+}
+
+/**
  * Create a new sheet with custom data (for upload feature)
  * Checks if sheet already exists in buffer OR database
  * @param {string} sheetId
@@ -282,12 +362,21 @@ async function createNewSheet(sheetId, data) {
     }
 
     // Create new sheet
+    // The picture (if any) arrives embedded as a data URL in set_by_player.picture (that's the
+    // self-contained representation used by full sheet export/import/upload) - pull it out into
+    // its own field rather than storing it twice, keeping parity with the regular sync path.
+    const setByPlayer = { ...(data.set_by_player || {}) };
+    const embeddedPicture = parseDataUrl(setByPlayer.picture);
+    delete setByPlayer.picture;
+
     const gmHash = computeGmHash(data.set_by_gm);
     const newSheet = new Sheet({
       sheetId: normalizedId,
       set_by_gm: data.set_by_gm,
-      set_by_player: data.set_by_player || {},
+      set_by_player: setByPlayer,
       gmHash,
+      picture: embeddedPicture,
+      pictureVersion: embeddedPicture ? generateStateToken() : null,
       lastAccessed: new Date(),
       createdAt: new Date()
     });
@@ -325,5 +414,8 @@ module.exports = {
   startSyncInterval,
   setUserCount,
   getUserCount,
-  createNewSheet
+  createNewSheet,
+  setPicture,
+  clearPicture,
+  getPicture
 };

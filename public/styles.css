@@ -78,6 +78,14 @@
   --drag-overlay-bg: rgba(208, 208, 208, 0.82);
   --drag-overlay-text: rgb(26, 26, 26);
 
+  /* Character picture (with_picture) */
+  --picture-width: 260px;
+  --picture-height: 320px;
+  --picture-placeholder-color: #b5b5b5;
+  --picture-overlay-bg: rgba(0, 0, 0, 0.45);
+  --picture-overlay-icon: #fff;
+  --picture-overlay-icon-hover: #ddd;
+
   /* Decorative background SVG */
   --deco-color: #e6e6e6;
 }
@@ -101,6 +109,17 @@ h2{text-align:center;margin:-25px 0 var(--header-gap) 0;font-size:20px;color:var
 .row-3 .col-left{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-mid{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
 .row-3 .col-right{flex:0.82;display:flex;flex-direction:column;gap:var(--gap)}
+
+/* Character picture panel (with_picture) */
+.picture-box{width:var(--picture-width);height:var(--picture-height);max-width:100%;align-self:center;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.picture-img{width:100%;height:100%;object-fit:cover;display:block;}
+.picture-placeholder-btn{width:35%;height:35%;min-width:48px;min-height:48px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.picture-placeholder-btn svg{width:100%;height:100%;fill:var(--picture-placeholder-color);}
+.picture-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:14px;background:var(--picture-overlay-bg);opacity:0;transition:opacity .15s ease;}
+.picture-box:hover .picture-overlay{opacity:1;}
+.picture-icon-btn{background:transparent;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
+.picture-icon-btn svg{width:100%;height:100%;fill:var(--picture-overlay-icon);}
+.picture-icon-btn:hover svg{fill:var(--picture-overlay-icon-hover);}
 .attributes-row{display:flex;gap:var(--gap);margin-bottom: 30px;}
 .attr-col{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
 .freetext-grid{display:grid;grid-template-columns:repeat(var(--freetext-column-count),1fr);grid-auto-rows:minmax(var(--freetext-height),1fr);gap:var(--gap);}
@@ -506,6 +525,10 @@ textarea::placeholder{color:var(--text-suggestion);}
   .freetext-grid{grid-template-columns:1fr}
   .row-4{flex-direction:column;}
   .info-big{min-height: 160px};
+
+  /* :hover never fires on touch, so the picture's icons need to just be visible on mobile
+     (lighter tint than the hover-reveal version, so it's less intrusive being on all the time) */
+  .picture-overlay{opacity:1;background:rgba(0,0,0,0.25);}
   /*.top-buttons-row{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);}*/
   .toggle-btn:hover{border-bottom: 4px solid var(--btn-side-default);}
   .toggle-btn:hover[data-active="true"]{border-bottom-width:2px;}
