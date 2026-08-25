@@ -46,7 +46,7 @@
 
     "infopage": {
       "text_l": "1) Wähle einen Archetypen und notiere seine Schlüsselfähigkeiten. \n2) Wähle ein Alter von 10-15. \n3) Verteile so viele Punkte auf die Attribute, wie du alt bist. \n4) Dein Glück ist 15 minus dein Alter. \n5) Verteile 10 Subattributspunkte. Schlüsselfähigkeiten bis zu 3 Punkte, der Rest max 1 Punkt.",
-      "text_r": "Proben: Wirf so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Wurf pushen: Kreuze einn Zustand an, wirf nicht-6er erneut. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen, nach dem Wurf. Ikonischer Gegenstand: +2 Würfel. Jede der vier Zustände gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe. Heilung bei Anker oder Geheimversteck [...]"
+      "text_r": "Proben: Wirf so viele W6, wie du insgesamt Punkte auf die Fähigkeit hast, schaffe mindestens einen 6er. Investiere 1 Glück, um alle Würfel erneut zu werfen. Wurf pushen: Kreuze einen Zustand an, wirf nicht-6er erneut. Nutze einmalig deinen Stolz, um einen 6er hinzuzufügen. Ikonischer Gegenstand: +2 Würfel. Jeder der vier Zustände gibt -1 Würfel (kumulativ), gebrochene Kinder bestehen keine Probe. Heilung bei Anker oder Geheimversteck [...]"
     },
 
     "infos": [
