@@ -525,10 +525,6 @@ textarea::placeholder{color:var(--text-suggestion);}
   .freetext-grid{grid-template-columns:1fr}
   .row-4{flex-direction:column;}
   .info-big{min-height: 160px};
-
-  /* :hover never fires on touch, so the picture's icons need to just be visible on mobile
-     (lighter tint than the hover-reveal version, so it's less intrusive being on all the time) */
-  .picture-overlay{opacity:1;background:rgba(0,0,0,0.25);}
   /*.top-buttons-row{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);}*/
   .toggle-btn:hover{border-bottom: 4px solid var(--btn-side-default);}
   .toggle-btn:hover[data-active="true"]{border-bottom-width:2px;}

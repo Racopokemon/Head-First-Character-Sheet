@@ -155,9 +155,11 @@ function handleSheetData(data) {
     set_by_player: data.set_by_player
   };
 
-  // Use the existing applyImported function
+  // Use the existing applyImported function. isSyncPayload:true tells it this JSON deliberately
+  // never carries a 'picture' key (see syncPictureMeta below) - a real file import/preset load
+  // treats a missing key as "no picture", but a sync payload must leave the current one alone.
   if (typeof applyImported === 'function') {
-    applyImported(json);
+    applyImported(json, { isSyncPayload: true });
   }
 
   // Picture is never embedded in the socket payload - fetch it separately (see syncPictureMeta)
@@ -187,9 +189,9 @@ function handleRemoteUpdate(data) {
   };
 
   if (isBreakingChange) {
-    // Full re-render with animations
+    // Full re-render with animations (see handleSheetData for why isSyncPayload:true)
     if (typeof applyImported === 'function') {
-      applyImported(json);
+      applyImported(json, { isSyncPayload: true });
     }
   } else {
     // Small change - try in-place update to preserve focus

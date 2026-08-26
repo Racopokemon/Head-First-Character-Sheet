@@ -933,9 +933,10 @@ async function handlePictureFile(file) {
 
 function downloadPicture() {
   if (!playerData.picture) return;
+  const nameInput = document.querySelector('input[data-info-index="0"]');
   const a = document.createElement('a');
   a.href = playerData.picture;
-  a.download = 'picture.jpg';
+  a.download = `${getSheetFilenameBase(nameInput ? nameInput.value : '')}.jpg`;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -1886,14 +1887,9 @@ async function handleUpload() {
   }
 }
 
-function handleExport() {
-  const out = collectCurrentState({ includePicture: true });
-  if (!out) return alert('Error while exporting sheet: Could not collect sheet data :(');
-
-  const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  // filename: yyyy_mm_dd-hh_mm-<charname>.json
+// Shared "yyyy_mm_dd-hh_mm_<charname>" filename base for the sheet export and the picture
+// download, so a picture downloaded from a given sheet is named after that same sheet.
+function getSheetFilenameBase(charName) {
   const now = new Date();
   const pad = (n) => String(n).padStart(2,'0');
   const y = now.getFullYear();
@@ -1901,10 +1897,20 @@ function handleExport() {
   const d = pad(now.getDate());
   const hh = pad(now.getHours());
   const mm = pad(now.getMinutes());
-  let name = (out.set_by_player.infos[0] || 'character').toString().trim();
+  let name = (charName || 'character').toString().trim();
   // sanitize name to safe filename
   name = name.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_\-]/g,'');
-  a.href = url; a.download = `${y}_${mo}_${d}-${hh}_${mm}_${name}.json`;
+  return `${y}_${mo}_${d}-${hh}_${mm}_${name}`;
+}
+
+function handleExport() {
+  const out = collectCurrentState({ includePicture: true });
+  if (!out) return alert('Error while exporting sheet: Could not collect sheet data :(');
+
+  const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${getSheetFilenameBase(out.set_by_player.infos[0])}.json`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
 }
@@ -2261,7 +2267,7 @@ function updateAttributeValuesInPlace(attrs) {
   });
 }
 
-function applyImported(json) {
+function applyImported(json, opts = {}) {
 
   // if set_by_gm present, replace template and re-render labels
   if (!json.set_by_gm) {
@@ -2326,20 +2332,22 @@ function applyImported(json) {
     bgBtn.style.display = shouldShowBgBtn ? '' : 'none';
   }
 
-  // Picture: only ever touched when the incoming set_by_player explicitly carries a 'picture' key
-  // (a real full export/import always sets it, even to null). Sync-mode payloads from the server
-  // deliberately never include it (see sync.js), so a plain sheet-update/sheet-data can't
-  // accidentally wipe out a picture that's tracked out-of-band via the picture-update flow.
-  let pictureKeyProvided = false;
-  if (sp && Object.prototype.hasOwnProperty.call(sp, 'picture')) {
-    pictureKeyProvided = true;
-    playerData.picture = (typeof sp.picture === 'string') ? sp.picture : null;
+  // Picture: a real full import (file, preset, drag-drop) is fully authoritative, same as every
+  // other field here - a missing 'picture' key means "no picture", just like a missing
+  // 'attributes' key below means "reset to defaults". Sync-mode payloads are the one exception:
+  // opts.isSyncPayload is set by sync.js because those deliberately never carry the key at all
+  // (the picture travels via the separate picture-update/GET flow instead), so here a missing key
+  // must mean "unrelated to picture, leave it alone" rather than "clear it".
+  let pictureKeyProvided = true;
+  if (opts.isSyncPayload) {
+    pictureKeyProvided = !!(sp && Object.prototype.hasOwnProperty.call(sp, 'picture'));
+  }
+  if (pictureKeyProvided) {
+    playerData.picture = (sp && typeof sp.picture === 'string') ? sp.picture : null;
   }
 
   if (!sp) {
     // initialize playerData with empty attributes
-    pictureKeyProvided = true;
-    playerData.picture = null;
     playerData.attributes = (gmTemplate.attributes || []).map(() => ({ points: 0, sub_attributes: [] }));
     // fill scales with initial values from gmTemplate
     const scales = gmTemplate.scales || [];
