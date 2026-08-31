@@ -116,8 +116,8 @@ h2{text-align:center;margin:-25px 0 var(--header-gap) 0;font-size:20px;color:var
    col-left/col-right's width in that case, or it just leaves empty gaps on either side of it.
    col-mid-picture is toggled on #info-big by renderInfos() alongside with_picture. */
 .row-3 .col-mid.col-mid-picture{flex:0 1 auto;}
-.picture-box{width:var(--picture-width);height:var(--picture-height);max-width:100%;align-self:center;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;filter:var(--picture-filter)}
-.picture-img{width:100%;height:100%;object-fit:cover;display:block;}
+.picture-box{width:var(--picture-width);height:var(--picture-height);max-width:100%;align-self:center;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.picture-img{width:100%;height:100%;object-fit:cover;display:block;filter:var(--picture-filter);}
 .picture-placeholder-btn{width:35%;height:35%;min-width:48px;min-height:48px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .picture-placeholder-btn svg{width:100%;height:100%;fill:var(--picture-placeholder-color);}
 .picture-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:14px;background:var(--picture-overlay-bg);opacity:0;transition:opacity .15s ease;}
