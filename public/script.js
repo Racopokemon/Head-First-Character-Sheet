@@ -799,7 +799,9 @@ function renderInfos() {
 
   box4.appendChild(ta4);
 
-  if (gmTemplate.with_picture === true) {
+  const withPicture = gmTemplate.with_picture === true;
+  mid.classList.toggle('col-mid-picture', withPicture);
+  if (withPicture) {
     left.appendChild(box4);
     renderPicture(mid);
   } else {

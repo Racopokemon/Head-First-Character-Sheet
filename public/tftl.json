@@ -39,14 +39,16 @@
       "picture_upload_error": "Fehler beim Lesen des Charakterbildes :("
     },
     "style": {
+      "info": "you can overwrite all variables in the /styles.css from here to give your sheet its very own style",
+
       "font-family": "Segoe UI, Roboto, Arial, sans-serif",
       "scale-accent": "#f4bd8b",
       "scale-bg": "#fbefd7",
       "scale-tick-border": "#d4a778",
       "scale-tick-checked-bg": "#dd8131",
       "freetext-height": "110px",
-
-      "info": "you can overwrite all variables in the /styles.css from here to give your sheet its very own style"
+      "picture-width":"260px",
+      "picture-height":"365px"
     },
     "deco_svg": null,
 
