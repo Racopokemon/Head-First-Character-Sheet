@@ -196,7 +196,13 @@ async function saveSheet(sheetId) {
       },
       { upsert: true, new: true }
     );
-    dirtySheets.delete(sheetId);
+    // Only clear the dirty flag if the buffer entry we just persisted is still the current one -
+    // a concurrent updateSheet()/setPicture()/clearPicture() call can replace it with a newer
+    // object while this write was in flight (awaiting Mongo). If that happened, that newer change
+    // was never part of what we just saved, so it must stay marked dirty for the next save.
+    if (buffer.get(sheetId) === data) {
+      dirtySheets.delete(sheetId);
+    }
     console.log(`Saved sheet: ${sheetId}`);
   } catch (error) {
     console.error(`Error saving sheet ${sheetId}:`, error);
@@ -277,13 +283,20 @@ function parseDataUrl(dataUrl) {
  * Set (or replace) the picture for a sheet. Persists immediately (not just marked dirty),
  * since uploads are infrequent and losing one on a server restart before the next
  * periodic flush would be a bad experience.
+ *
+ * Only operates on a sheet that's already buffered (i.e. someone currently has it open) rather
+ * than routing through getSheet()'s create-on-demand behavior - otherwise a POST to an arbitrary
+ * sheet ID nobody ever visited would silently create a brand-new sheet that then never enters the
+ * normal join/leave eviction lifecycle (see evictSheet, only wired into socket handlers) and
+ * leaks in memory for the life of the process.
  * @param {string} sheetId
  * @param {Buffer} imageData
  * @param {string} contentType
  * @returns {Promise<{success: boolean, pictureVersion?: string, error?: string}>}
  */
 async function setPicture(sheetId, imageData, contentType) {
-  const { data } = await getSheet(sheetId);
+  const data = buffer.get(sheetId);
+  if (!data) return { success: false, error: 'not_found' };
   data.picture = { data: imageData, contentType };
   data.pictureVersion = generateStateToken();
   buffer.set(sheetId, data);
@@ -292,12 +305,14 @@ async function setPicture(sheetId, imageData, contentType) {
 }
 
 /**
- * Clear the picture for a sheet. Persists immediately, see setPicture.
+ * Clear the picture for a sheet. Persists immediately, see setPicture (including the same
+ * "only touch an already-buffered sheet" reasoning).
  * @param {string} sheetId
- * @returns {Promise<{success: boolean, pictureVersion?: string}>}
+ * @returns {Promise<{success: boolean, pictureVersion?: string, error?: string}>}
  */
 async function clearPicture(sheetId) {
-  const { data } = await getSheet(sheetId);
+  const data = buffer.get(sheetId);
+  if (!data) return { success: false, error: 'not_found' };
   data.picture = null;
   data.pictureVersion = generateStateToken();
   buffer.set(sheetId, data);

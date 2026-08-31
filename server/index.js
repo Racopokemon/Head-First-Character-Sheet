@@ -96,6 +96,11 @@ app.post('/sheet/:sheetId/picture', express.raw({ type: 'image/*', limit: '8mb' 
   const normalizedId = normalizeSheetId(sheetId);
   const contentType = req.get('Content-Type') || 'image/jpeg';
   const result = await setPicture(normalizedId, req.body, contentType);
+  if (!result.success) {
+    // Sheet isn't currently buffered (nobody has it open) - setPicture deliberately won't
+    // create one on the fly here, see its comment for why.
+    return res.status(404).json({ error: result.error });
+  }
 
   io.to(normalizedId).emit('picture-update', { hasPicture: true, pictureVersion: result.pictureVersion });
   return res.status(200).json({ success: true, pictureVersion: result.pictureVersion });
@@ -125,6 +130,9 @@ app.delete('/sheet/:sheetId/picture', async (req, res) => {
   }
   const normalizedId = normalizeSheetId(sheetId);
   const result = await clearPicture(normalizedId);
+  if (!result.success) {
+    return res.status(404).json({ error: result.error });
+  }
 
   io.to(normalizedId).emit('picture-update', { hasPicture: false, pictureVersion: result.pictureVersion });
   return res.status(200).json({ success: true });
