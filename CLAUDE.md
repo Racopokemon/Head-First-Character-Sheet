@@ -134,6 +134,9 @@ Templates use `set_by_gm` object containing:
 
 ## Important Patterns
 
+### Localization
+If you introduce new Strings shown to the user, look it up from the loaded character sheet, from line 3 on there is the "localization" entry. In code, use english language for the fallback String. Append your newly introduced localization strings to the end of the default.json preset, use German language here. 
+
 ### Focus Preservation on Sync
 
 When receiving remote updates, use `applyRemoteSmallChange()` instead of full `applyImported()` to avoid losing focus/keyboard on mobile. It updates input values in-place without recreating DOM elements.
@@ -146,7 +149,7 @@ Elements use `data-*` attributes for efficient querying:
 - `data-sub-input`, `data-sub-input-val`, `data-sub-label`
 
 ## Validation & Testing
-*Please do not* try to run this as a coding agent to verify the changes you made, youre dependent on MongoDB and you'll just waste tokens :D A quick re-read entirely suffices, this is just a hobby project and I'll review and test the changes you made myself :)
+*Please do not* try to run this as a agent in the cloud - you had to set up a MongoDB in the cloud. If you're on a local machine, there is a mongoDB installed and connected, so you can work with that. Otherwise, a quick re-read also suffices, this is just a hobby project and I'll review and test the changes you made myself :)
 
 ## Another note
 Many times I look through this code I stumble across stuff that feels rather lacking, and quite obviously stupid ... The reason is that many parts in this project were written by free and less skilled agents. So, if you just stumble across such things while doing something else, please point this out in the summary you give at the end of task, and I'll have a look :)
