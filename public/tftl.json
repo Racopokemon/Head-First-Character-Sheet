@@ -30,7 +30,13 @@
       "uploading": "Wird hochgeladen...",
       "upload_error_exists": "Fehler beim Hochladen: Unter diesem Namen existiert bereits ein Bogen.",
       "upload_error_empty": "Dieser Link funktioniert leider nicht. Versuche es mit einen anderen :)",
-      "upload_error_general": "Fehler beim Hochladen des Bogens."
+      "upload_error_general": "Fehler beim Hochladen des Bogens.",
+      "btn_picture_upload": "Charakterbild hochladen",
+      "btn_picture_download": "Bild herunterladen",
+      "btn_picture_replace": "Anderes Charakterbild wählen",
+      "btn_picture_delete": "Charakterbild löschen",
+      "picture_delete_confirm": "Soll das Charakterbild wirklich entfernt werden?",
+      "picture_upload_error": "Fehler beim Lesen des Charakterbildes :("
     },
     "style": {
       "font-family": "Segoe UI, Roboto, Arial, sans-serif",

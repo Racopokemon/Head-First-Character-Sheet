@@ -815,7 +815,7 @@ const PICTURE_ICON_DOWNLOAD = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="
 const PICTURE_ICON_DELETE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z" /></svg>';
 
 const PICTURE_MAX_DIMENSION = 1600;
-const PICTURE_JPEG_QUALITY = 0.85;
+const PICTURE_JPEG_QUALITY = 0.90;
 
 function makePictureIconBtn(svgMarkup, title, onClick) {
   const btn = document.createElement('button');
@@ -853,15 +853,15 @@ function renderPicture(container) {
   const placeholderBtn = document.createElement('button');
   placeholderBtn.type = 'button';
   placeholderBtn.className = 'picture-placeholder-btn';
-  placeholderBtn.title = loc.btn_picture_upload || 'Bild hochladen';
+  placeholderBtn.title = loc.btn_picture_upload || 'Upload picture';
   placeholderBtn.innerHTML = PICTURE_ICON_FOLDER_OPEN;
   placeholderBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
 
   const overlay = document.createElement('div');
   overlay.className = 'picture-overlay';
-  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_DOWNLOAD, loc.btn_picture_download || 'Bild herunterladen', downloadPicture));
-  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_FOLDER_OPEN, loc.btn_picture_replace || 'Anderes Bild wählen', () => fileInput.click()));
-  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_DELETE, loc.btn_picture_delete || 'Bild löschen', handleDeletePicture));
+  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_DOWNLOAD, loc.btn_picture_download || 'Download picture', downloadPicture));
+  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_FOLDER_OPEN, loc.btn_picture_replace || 'Replace from file', () => fileInput.click()));
+  overlay.appendChild(makePictureIconBtn(PICTURE_ICON_DELETE, loc.btn_picture_delete || 'Delete picture', handleDeletePicture));
 
   box.append(img, placeholderBtn, overlay, fileInput);
   container.appendChild(box);
@@ -915,7 +915,7 @@ function resizeAndEncodeImage(file) {
 
 async function handlePictureFile(file) {
   if (!file || !file.type || !file.type.startsWith('image/')) {
-    alert('Das ist keine Bilddatei :(');
+    alert(loc.picture_upload_error || 'Error while reading the character picture :(');
     return;
   }
   try {
@@ -927,7 +927,7 @@ async function handlePictureFile(file) {
     }
   } catch (err) {
     console.error('Could not process image:', err);
-    alert('Bild konnte nicht verarbeitet werden :(');
+    alert(loc.picture_upload_error || 'Error while reading the character picture :(');
   }
 }
 
@@ -945,7 +945,7 @@ function downloadPicture() {
 function handleDeletePicture() {
   if (!playerData.picture) return;
   const loc = (gmTemplate && gmTemplate.localization) || {};
-  if (!confirm(loc.picture_delete_confirm || 'Bild wirklich löschen?')) return;
+  if (!confirm(loc.picture_delete_confirm || 'Should this picture really be deleted?')) return;
   playerData.picture = null;
   updatePictureDisplay();
   if (window.syncModule && window.syncModule.isSyncEnabled()) {
@@ -1657,8 +1657,8 @@ function updatePointsDisplay() {
   const maxPoints = gmTemplate.attribute_points || 150;
   const maxSubPoints = gmTemplate.sub_attribute_points || 250;
   const loc = gmTemplate.localization || {};
-  const labelGrundwerte = loc.label_grundwerte || 'Grundwerte';
-  const labelSpezialisierung = loc.label_spezialisierung || 'Spezialisierung';
+  const labelGrundwerte = loc.label_grundwerte || 'Base values';
+  const labelSpezialisierung = loc.label_spezialisierung || 'Specializations';
 
   const label = document.getElementById('attr-points-label');
   if (label) {
