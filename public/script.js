@@ -163,6 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
     syncActive = window.syncModule.initSync();
   }
 
+  // "New" button: only meaningful in sync mode (a nosync sheet already just lives in this tab -
+  // reloading it wouldn't start anything new). Opens a fresh, unsynced tab.
+  const newBtn = document.getElementById('new-btn');
+  if (newBtn) {
+    newBtn.style.display = syncActive ? '' : 'none';
+    newBtn.addEventListener('click', () => {
+      window.open('/', '_blank', 'noopener');
+    });
+  }
+
   // Only load default.json if sync is not active (sync will load data from server)
   if (!syncActive) {
     fetch('nosync-default.json')
@@ -340,6 +350,9 @@ function applyLocalization() {
   if (ecBtn) ecBtn.textContent = loc.btn_ec || 'Success Levels';
 
   // Set icon button tooltips
+  const newBtn = document.getElementById('new-btn');
+  if (newBtn) newBtn.title = loc.btn_new || 'Start a new character sheet';
+
   const importBtn = document.getElementById('import-btn');
   if (importBtn) importBtn.title = loc.btn_import || 'Import character sheet';
 

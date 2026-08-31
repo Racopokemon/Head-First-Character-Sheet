@@ -37,7 +37,8 @@
             "btn_picture_delete": "Charakterbild löschen",
             "picture_delete_confirm": "Soll das Charakterbild wirklich entfernt werden?",
             "picture_upload_error": "Fehler beim Lesen des Charakterbildes :(",
-            "picture_drag_label": "Charakterbild hochladen"
+            "picture_drag_label": "Charakterbild hochladen",
+            "btn_new": "Einen neuen Charakterbogen beginnen"
         },
         "style": {
             "info":"you can overwrite all variables in the /styles.css from here to give your sheet its very own style",
