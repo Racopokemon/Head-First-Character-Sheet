@@ -294,13 +294,13 @@ function parseDataUrl(dataUrl) {
  * @param {string} contentType
  * @returns {Promise<{success: boolean, pictureVersion?: string, error?: string}>}
  */
-async function setPicture(sheetId, imageData, contentType) {
+function setPicture(sheetId, imageData, contentType) {
   const data = buffer.get(sheetId);
   if (!data) return { success: false, error: 'not_found' };
   data.picture = { data: imageData, contentType };
   data.pictureVersion = generateStateToken();
   buffer.set(sheetId, data);
-  await saveSheet(sheetId);
+  saveSheet(sheetId);
   return { success: true, pictureVersion: data.pictureVersion };
 }
 
@@ -310,13 +310,13 @@ async function setPicture(sheetId, imageData, contentType) {
  * @param {string} sheetId
  * @returns {Promise<{success: boolean, pictureVersion?: string, error?: string}>}
  */
-async function clearPicture(sheetId) {
+function clearPicture(sheetId) {
   const data = buffer.get(sheetId);
   if (!data) return { success: false, error: 'not_found' };
   data.picture = null;
   data.pictureVersion = generateStateToken();
   buffer.set(sheetId, data);
-  await saveSheet(sheetId);
+  saveSheet(sheetId);
   return { success: true, pictureVersion: data.pictureVersion };
 }
 
