@@ -125,6 +125,11 @@ h2{text-align:center;margin:-25px 0 var(--header-gap) 0;font-size:20px;color:var
 .picture-icon-btn{background:transparent;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
 .picture-icon-btn svg{width:100%;height:100%;fill:var(--picture-overlay-icon);}
 .picture-icon-btn:hover svg{fill:var(--picture-overlay-icon-hover);}
+/* Dragging an image over the picture (instead of a sheet .json over the page) - scoped to the
+   picture box itself instead of the usual whole-screen drag-over-overlay. Reuses the same
+   drag-overlay-bg/text tokens for visual consistency with that overlay. */
+.picture-box.picture-drag-active{outline:3px dashed var(--drag-overlay-text);outline-offset:-3px;}
+.picture-drag-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;background:var(--drag-overlay-bg);color:var(--drag-overlay-text);}
 .attributes-row{display:flex;gap:var(--gap);margin-bottom: 30px;}
 .attr-col{flex:1;display:flex;flex-direction:column;gap:var(--gap)}
 .freetext-grid{display:grid;grid-template-columns:repeat(var(--freetext-column-count),1fr);grid-auto-rows:minmax(var(--freetext-height),1fr);gap:var(--gap);}

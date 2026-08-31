@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('dragleave', (e) => {
     //if (e.clientX === 0 && e.clientY === 0) { // works on chrome to detect leaving the window, but not on firefox, where the ui never changes then, so were doing a delay based approach instead
       hideDragOverlay();
+      hidePictureDragHighlight();
     //}
   });
 
@@ -916,6 +917,7 @@ function resizeAndEncodeImage(file) {
 }
 
 async function handlePictureFile(file) {
+  const loc = (gmTemplate && gmTemplate.localization) || {};
   if (!file || !file.type || !file.type.startsWith('image/')) {
     alert(loc.picture_upload_error || 'Error while reading the character picture :(');
     return;
@@ -2061,6 +2063,17 @@ function loadPresetTemplate(filename) {
     });
 }
 
+// While dragging (before drop), dataTransfer.items exposes each dragged file's type - unlike
+// .files, which stays empty until the actual drop. Used to tell an image-onto-the-picture drag
+// apart from a sheet-onto-the-page drag while the user is still hovering.
+function isPictureDragCandidate(e) {
+  if (!gmTemplate || gmTemplate.with_picture !== true) return false;
+  const items = e.dataTransfer.items;
+  if (!items || items.length !== 1) return false;
+  const item = items[0];
+  return item.kind === 'file' && item.type.startsWith('image/');
+}
+
 function handleDragOver(e) {
   e.preventDefault();
   e.stopPropagation();
@@ -2071,7 +2084,13 @@ function handleDragOver(e) {
     if (window.syncModule && window.syncModule.isSyncEnabled() && !window.syncModule.isSyncOnline()) {
       return;
     }
-    showDragOverlay();
+    if (isPictureDragCandidate(e)) {
+      hideDragOverlay();
+      showPictureDragHighlight();
+    } else {
+      hidePictureDragHighlight();
+      showDragOverlay();
+    }
   }
 }
 
@@ -2079,6 +2098,7 @@ function handleDrop(e) {
   e.preventDefault();
   e.stopPropagation();
   hideDragOverlay();
+  hidePictureDragHighlight();
 
   // Silently ignore drop when offline in sync mode
   if (window.syncModule && window.syncModule.isSyncEnabled() && !window.syncModule.isSyncOnline()) {
@@ -2137,6 +2157,34 @@ function hideDragOverlay() {
       if (overlay) {
         overlay.remove();
       }
+  }, 30);
+}
+
+// Same idea as showDragOverlay/hideDragOverlay, but scoped to the picture box itself instead of
+// the whole screen, for when the dragged file is recognized as an image (see isPictureDragCandidate).
+var dropHideTimer2;
+function showPictureDragHighlight() {
+  window.clearTimeout(dropHideTimer2);
+  const box = document.querySelector('.picture-box');
+  if (!box) return;
+  box.classList.add('picture-drag-active');
+  if (!box.querySelector('.picture-drag-label')) {
+    const loc = (gmTemplate && gmTemplate.localization) || {};
+    const label = document.createElement('div');
+    label.className = 'picture-drag-label';
+    label.textContent = loc.picture_drag_label || 'Upload character picture';
+    box.appendChild(label);
+  }
+}
+
+function hidePictureDragHighlight() {
+  window.clearTimeout(dropHideTimer2);
+  dropHideTimer2 = window.setTimeout(() => {
+    const box = document.querySelector('.picture-box');
+    if (!box) return;
+    box.classList.remove('picture-drag-active');
+    const label = box.querySelector('.picture-drag-label');
+    if (label) label.remove();
   }, 30);
 }
 
