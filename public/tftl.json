@@ -48,7 +48,8 @@
       "scale-tick-checked-bg": "#dd8131",
       "freetext-height": "110px",
       "picture-width":"260px",
-      "picture-height":"365px"
+      "picture-height":"365px",
+      "picture-filter":"sepia(25%) opacity(95%)"
     },
     "deco_svg": null,
 
