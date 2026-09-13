@@ -24,7 +24,7 @@
             "link_copied": "Link in die Zwischenablage kopiert :)",
             "import_modal_info": "Wähle eine Vorlage oder lade einen existierenden Charakterbogen hoch.",
             "import_confirm_offline": "Dies überschreibt den aktuellen Bogen! Bist du dir sicher?",
-            "import_confirm_online": "Dies überschreibt den Bogen unter diesem Link! Bist du dir sicher?",
+            "import_confirm_online": "ACHTUNG: Dies ÜBERSCHREIBT den Bogen, unter diesem Link, sofort, für alle Nutzer! Bist du dir sicher?",
             "import_modal_upload": "Datei öffnen ...",
             "upload_prompt_title": "Unter welchem Link möchtest du den Bogen hochladen?",
             "uploading": "Wird hochgeladen...",

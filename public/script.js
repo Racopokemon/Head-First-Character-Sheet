@@ -1986,12 +1986,9 @@ function openImportModal({ skipConfirmation = false } = {}) {
   uploadBtn.className = 'toggle-btn import-modal-btn-upload';
   uploadBtn.textContent = uploadLabel;
   uploadBtn.addEventListener('click', () => {
-    closeImportModal(noAnimation=true);
-    window.setTimeout(() => {
-      if (!skipConfirmation && !confirm(getLoadConfirmationText())) return;
-      document.getElementById('file-input').click();
-    }, 0);
-    
+    if (!skipConfirmation && !confirm(getLoadConfirmationText())) return;
+    closeImportModal(true);
+    document.getElementById('file-input').click();
   });
   grid.appendChild(uploadBtn);
 
@@ -2007,11 +2004,9 @@ function openImportModal({ skipConfirmation = false } = {}) {
     btn.appendChild(spacer);
     btn.appendChild(lang);
     btn.addEventListener('click', () => {
-      closeImportModal(noAnimation=true);
-      window.setTimeout(() => {
-        if (!skipConfirmation && !confirm(getLoadConfirmationText())) return;
-        loadPresetTemplate(preset.file);
-      }, 0);
+      if (!skipConfirmation && !confirm(getLoadConfirmationText())) return;
+      closeImportModal(true);
+      loadPresetTemplate(preset.file);
     });
     grid.appendChild(btn);
   });

@@ -25,7 +25,7 @@
       "import_modal_info": "Wähle eine Vorlage oder öffne einen eigenen Charakterbogen.",
       "import_modal_upload": "Datei öffnen ...",
       "import_confirm_offline": "Dies überschreibt den aktuellen Bogen! Bist du dir sicher?",
-      "import_confirm_online": "Dies überschreibt den Bogen unter diesem Link! Bist du dir sicher?",
+      "import_confirm_online": "ACHTUNG: Dies ÜBERSCHREIBT den Bogen, unter diesem Link, sofort, für alle Nutzer! Bist du dir sicher?",
       "upload_prompt_title": "Unter welchem Link möchtest du den Bogen hochladen?",
       "uploading": "Wird hochgeladen...",
       "upload_error_exists": "Fehler beim Hochladen: Unter diesem Namen existiert bereits ein Bogen.",
