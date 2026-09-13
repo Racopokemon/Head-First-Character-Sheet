@@ -2031,7 +2031,7 @@ function openImportModal({ skipConfirmation = false } = {}) {
 function getLoadConfirmationText() {
     const loc = (gmTemplate && gmTemplate.localization) || {};
     return window.syncModule?.isSyncEnabled() ? 
-    loc.import_confirm_online || 'Please confirm that you want to override the current sheet at its current link on the server' :
+    loc.import_confirm_online || 'WARNING: This OVERWRITES the current sheet, at this current link, for all users, right now. Should we continue?  to override the current sheet at its current link on the server' :
     loc.import_confirm_offline || 'Please confirm that you want to override the current sheet.';
 
 }
