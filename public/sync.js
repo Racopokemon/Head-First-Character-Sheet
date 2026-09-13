@@ -162,6 +162,10 @@ function handleSheetData(data) {
     applyImported(json, { isSyncPayload: true });
   }
 
+  if (data.isNew && typeof showStartupImportModal === 'function') {
+    showStartupImportModal();
+  }
+
   // Picture is never embedded in the socket payload - fetch it separately (see syncPictureMeta)
   syncPictureMeta(data.hasPicture, data.pictureVersion);
 }

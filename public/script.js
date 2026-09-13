@@ -19,10 +19,13 @@ let infoMode = false; // Track if info page is visible
 let printPreviewMode = false; // Track if print preview mode is active
 let shouldShowCrewBtn = true; // Track if crew button should be shown for current JSON
 let shouldShowBgBtn = true; // Track if bg button should be shown for current JSON
+let startupModalShown = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   // wire import/export buttons
-  document.getElementById('import-btn').addEventListener('click', openImportModal);
+  document.getElementById('import-btn').addEventListener('click', () => {
+    window.open('/', '_blank', 'noopener');
+  });
   document.getElementById('file-input').addEventListener('change', handleFileImport);
   document.getElementById('export-btn').addEventListener('click', handleExport);
 
@@ -163,22 +166,13 @@ document.addEventListener('DOMContentLoaded', () => {
     syncActive = window.syncModule.initSync();
   }
 
-  // "New" button: only meaningful in sync mode (a nosync sheet already just lives in this tab -
-  // reloading it wouldn't start anything new). Opens a fresh, unsynced tab.
-  const newBtn = document.getElementById('new-btn');
-  if (newBtn) {
-    newBtn.style.display = syncActive ? '' : 'none';
-    newBtn.addEventListener('click', () => {
-      window.open('/', '_blank', 'noopener');
-    });
-  }
-
   // Only load default.json if sync is not active (sync will load data from server)
   if (!syncActive) {
     fetch('nosync-default.json')
       .then(r => r.json())
       .then(data => {
         applyImported(data);
+        showStartupImportModal();
       })
       .catch(err => {
         console.error('Could not load nosync json', err);
@@ -350,11 +344,8 @@ function applyLocalization() {
   if (ecBtn) ecBtn.textContent = loc.btn_ec || 'Success Levels';
 
   // Set icon button tooltips
-  const newBtn = document.getElementById('new-btn');
-  if (newBtn) newBtn.title = loc.btn_new || 'Start a new character sheet';
-
   const importBtn = document.getElementById('import-btn');
-  if (importBtn) importBtn.title = loc.btn_import || 'Import character sheet';
+  if (importBtn) importBtn.title = loc.btn_import || 'Start a new character sheet';
 
   const exportBtn = document.getElementById('export-btn');
   if (exportBtn) exportBtn.title = loc.btn_export || 'Download character sheet';
@@ -1960,13 +1951,19 @@ function handleFileImport(e) {
   e.target.value = '';
 }
 
-function openImportModal() {
+function showStartupImportModal() {
+  if (startupModalShown) return;
+  startupModalShown = true;
+  openImportModal({ skipConfirmation: true });
+}
+
+function openImportModal({ skipConfirmation = false } = {}) {
   // Remove existing modal if any
   const existing = document.getElementById('import-modal-overlay');
   if (existing) existing.remove();
 
   const loc = (gmTemplate && gmTemplate.localization) || {};
-  const infoText = loc.import_modal_info || 'Start from a new template or upload your own sheet. Be advised: This overrides the current sheet.';
+  const infoText = loc.import_modal_info || 'Choose a template or open your own character sheet.';
   const uploadLabel = loc.import_modal_upload || 'From file ...';
 
   const overlay = document.createElement('div');
@@ -1991,7 +1988,7 @@ function openImportModal() {
   uploadBtn.addEventListener('click', () => {
     closeImportModal(noAnimation=true);
     window.setTimeout(() => {
-      if (!confirm(getLoadConfirmationText())) return;
+      if (!skipConfirmation && !confirm(getLoadConfirmationText())) return;
       document.getElementById('file-input').click();
     }, 0);
     
@@ -2012,7 +2009,7 @@ function openImportModal() {
     btn.addEventListener('click', () => {
       closeImportModal(noAnimation=true);
       window.setTimeout(() => {
-        if (!confirm(getLoadConfirmationText())) return;
+        if (!skipConfirmation && !confirm(getLoadConfirmationText())) return;
         loadPresetTemplate(preset.file);
       }, 0);
     });
