@@ -1942,6 +1942,7 @@ function handleFileImport(e) {
       if (window.syncModule && window.syncModule.isSyncEnabled()) {
         window.syncModule.broadcastChange();
       }
+      closeImportModal();
     } catch (err) {
       alert('Could not parse json data :(');
     }
@@ -1987,7 +1988,6 @@ function openImportModal({ skipConfirmation = false } = {}) {
   uploadBtn.textContent = uploadLabel;
   uploadBtn.addEventListener('click', () => {
     if (!skipConfirmation && !confirm(getLoadConfirmationText())) return;
-    closeImportModal(true);
     document.getElementById('file-input').click();
   });
   grid.appendChild(uploadBtn);
@@ -2005,7 +2005,7 @@ function openImportModal({ skipConfirmation = false } = {}) {
     btn.appendChild(lang);
     btn.addEventListener('click', () => {
       if (!skipConfirmation && !confirm(getLoadConfirmationText())) return;
-      closeImportModal(true);
+      closeImportModal();
       loadPresetTemplate(preset.file);
     });
     grid.appendChild(btn);
@@ -2013,17 +2013,6 @@ function openImportModal({ skipConfirmation = false } = {}) {
 
   modal.appendChild(grid);
   overlay.appendChild(modal);
-
-  // Close on overlay click (outside modal)
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeImportModal();
-  });
-
-  // Close on Escape key
-  overlay._escHandler = (e) => {
-    if (e.key === 'Escape') closeImportModal();
-  };
-  document.addEventListener('keydown', overlay._escHandler);
 
   document.body.appendChild(overlay);
 }
@@ -2036,19 +2025,16 @@ function getLoadConfirmationText() {
 
 }
 
-function closeImportModal(noAnimation=false) {
+function closeImportModal() {
   const overlay = document.getElementById('import-modal-overlay');
   if (!overlay) return;
   if (overlay.classList.contains('closing')) return; // Already closing
-  document.removeEventListener('keydown', overlay._escHandler);
-  if (noAnimation) {
+  //overlay.remove();
+  //now always w/o animation
+  overlay.classList.add('closing');
+  overlay.addEventListener('animationend', () => {
     overlay.remove();
-  } else {
-    overlay.classList.add('closing');
-    overlay.addEventListener('animationend', () => {
-      overlay.remove();
-    }, { once: true });
-  }
+  }, { once: true });
 }
 
 function loadPresetTemplate(filename) {
@@ -2083,6 +2069,9 @@ function handleDragOver(e) {
   e.preventDefault();
   e.stopPropagation();
   e.dataTransfer.dropEffect = 'copy';
+  if (document.getElementById('import-modal-overlay')) {
+    return;
+  }  
   // Only show overlay if dragging files and not offline in sync mode
   if (e.dataTransfer.types.includes('Files')) {
     // Don't show overlay if offline in sync mode
@@ -2104,6 +2093,11 @@ function handleDrop(e) {
   e.stopPropagation();
   hideDragOverlay();
   hidePictureDragHighlight();
+
+  // Silently ignonre during import modal
+  if (document.getElementById('import-modal-overlay')) {
+    return;
+  }
 
   // Silently ignore drop when offline in sync mode
   if (window.syncModule && window.syncModule.isSyncEnabled() && !window.syncModule.isSyncOnline()) {
@@ -2149,9 +2143,8 @@ function showDragOverlay() {
     overlay.id = 'drag-over-overlay';
     overlay.className = 'drag-over-overlay';
     const loc = gmTemplate && gmTemplate.localization ? gmTemplate.localization : {};
-    overlay.textContent = loc.drop_file || 'Drop file here';
+    overlay.textContent = loc.drop_file || 'Replace (!) current sheet';
     document.body.appendChild(overlay);
-    closeImportModal();
   }
 }
 
